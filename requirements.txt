@@ -1,0 +1,8 @@
+yfinance>=0.2.59
+curl_cffi>=0.7.0
+pandas>=2.0
+numpy
+lxml
+html5lib
+beautifulsoup4
+requests
