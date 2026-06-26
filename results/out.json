@@ -5,6 +5,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -58,7 +59,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=273.75 on fib (50=280.92/618=272.82); buyers_tail=False; bounced=False; confirmed via fib touch + volume climax",
+        "detail": "low=273.75 on fib (50=280.92/618=272.82); buyers_tail=False; bounced=False; confirmed via volume climax at floor",
         "value": 1.91,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -118,6 +119,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -231,6 +233,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -284,7 +287,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=191.80 on fib (50=193.41/618=193.41); buyers_tail=False; bounced=True; confirmed via fib touch + volume climax",
+        "detail": "low=191.80 on fib (50=193.41/618=193.41); buyers_tail=False; bounced=True; confirmed via volume climax at floor",
         "value": 1.86,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -344,6 +347,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -457,6 +461,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -570,6 +575,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -683,6 +689,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 6,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -736,7 +743,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=135.01 on none (low 135.01; fib50 125.42/618 122.66; best support 113.68/6x); buyers_tail=True; bounced=True; confirmed via RSI divergence",
+        "detail": "low=135.01 on none (low 135.01; fib50 125.42/618 122.66; best support 113.68/6x); buyers_tail=True; bounced=True; confirmed via RSI divergence + volume climax at floor",
         "value": 1.87,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -796,6 +803,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 8,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -849,7 +857,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=290.07 on fib (50=286.07/618=284.19); buyers_tail=False; bounced=True; confirmed via RSI divergence + fib/volume climax",
+        "detail": "low=290.07 on fib (50=286.07/618=284.19); buyers_tail=False; bounced=True; confirmed via RSI divergence + volume climax at floor",
         "value": 1.76,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -909,6 +917,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 3,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1022,6 +1031,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1135,6 +1145,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1188,7 +1199,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=350.06 on fib (50=354.44/618=346.48); buyers_tail=False; bounced=True; confirmed via fib touch + volume climax",
+        "detail": "low=350.06 on fib (50=354.44/618=346.48); buyers_tail=False; bounced=True; confirmed via volume climax at floor",
         "value": 2.64,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -1248,6 +1259,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1301,7 +1313,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=225.55 on fib (50=236.89/618=227.90); buyers_tail=False; bounced=False; confirmed via fib touch + volume climax",
+        "detail": "low=225.55 on fib (50=236.89/618=227.90); buyers_tail=False; bounced=False; confirmed via volume climax at floor",
         "value": 1.54,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -1361,6 +1373,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1474,6 +1487,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1587,6 +1601,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1700,6 +1715,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1813,6 +1829,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 6,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1866,7 +1883,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=443.00 on none (low 443.00; fib50 429.57/618 409.83; best support 374.00/4x); buyers_tail=False; bounced=False; confirmed via no buyer confirmation",
+        "detail": "low=443.00 on none (low 443.00; fib50 429.57/618 409.83; best support 374.00/4x); buyers_tail=False; bounced=False; confirmed via volume climax at floor",
         "value": 1.66,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -1926,6 +1943,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2039,6 +2057,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 6,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2092,7 +2111,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "GO",
-        "detail": "low=55.69 on fib (50=58.40/618=55.75); buyers_tail=True; bounced=True; confirmed via fib touch + volume climax",
+        "detail": "low=55.69 on fib (50=58.40/618=55.75); buyers_tail=True; bounced=True; confirmed via volume climax at floor",
         "value": 1.55,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -2152,6 +2171,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2265,6 +2285,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 3,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2378,6 +2399,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2491,6 +2513,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 6,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2604,6 +2627,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2717,6 +2741,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2830,6 +2855,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2943,6 +2969,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 3,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3056,6 +3083,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3169,6 +3197,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3282,6 +3311,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3395,6 +3425,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 6,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3508,6 +3539,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 3,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3621,6 +3653,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3734,6 +3767,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 6,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3847,6 +3881,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 7,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3900,7 +3935,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "GO",
-        "detail": "low=204.12 on fib (50=200.78/618=199.85); buyers_tail=True; bounced=True; confirmed via fib touch + volume climax",
+        "detail": "low=204.12 on fib (50=200.78/618=199.85); buyers_tail=True; bounced=True; confirmed via volume climax at floor",
         "value": 2.69,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -3960,6 +3995,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4073,6 +4109,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4126,7 +4163,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=181.08 on none (low 181.08; fib50 177.07/618 168.43; best support 137.03/10x); buyers_tail=True; bounced=True; confirmed via no buyer confirmation",
+        "detail": "low=181.08 on none (low 181.08; fib50 177.07/618 168.43; best support 137.03/10x); buyers_tail=True; bounced=True; confirmed via volume climax at floor",
         "value": 1.73,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -4186,6 +4223,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4299,6 +4337,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4412,6 +4451,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4525,6 +4565,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4578,7 +4619,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=64.38 on none (low 64.38; fib50 62.75/618 61.98; best support 69.09/8x); buyers_tail=False; bounced=True; confirmed via no buyer confirmation",
+        "detail": "low=64.38 on none (low 64.38; fib50 62.75/618 61.98; best support 69.09/8x); buyers_tail=False; bounced=True; confirmed via volume climax at floor",
         "value": 1.68,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -4638,6 +4679,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4751,6 +4793,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4864,6 +4907,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4977,6 +5021,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5090,6 +5135,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5203,6 +5249,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 6,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5316,6 +5363,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5429,6 +5477,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5542,6 +5591,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 6,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5655,6 +5705,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5768,6 +5819,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 6,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5881,6 +5933,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5994,6 +6047,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6107,6 +6161,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6220,6 +6275,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6333,6 +6389,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6446,6 +6503,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6559,6 +6617,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6672,6 +6731,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6785,6 +6845,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6898,6 +6959,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 6,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6951,7 +7013,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=94.23 on none (low 94.23; fib50 83.58/618 80.68; best support 73.35/5x); buyers_tail=True; bounced=True; confirmed via no buyer confirmation",
+        "detail": "low=94.23 on none (low 94.23; fib50 83.58/618 80.68; best support 73.35/5x); buyers_tail=True; bounced=True; confirmed via volume climax at floor",
         "value": 2.13,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -7011,6 +7073,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7124,6 +7187,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7237,6 +7301,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7290,7 +7355,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=349.20 on fib (50=352.83/618=352.83); buyers_tail=False; bounced=False; confirmed via fib touch + volume climax",
+        "detail": "low=349.20 on fib (50=352.83/618=352.83); buyers_tail=False; bounced=False; confirmed via volume climax at floor",
         "value": 1.56,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -7350,6 +7415,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 3,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7403,7 +7469,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=85.00 on fib (50=85.33/618=85.33); buyers_tail=False; bounced=False; confirmed via fib touch + volume climax",
+        "detail": "low=85.00 on fib (50=85.33/618=85.33); buyers_tail=False; bounced=False; confirmed via volume climax at floor",
         "value": 1.88,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -7463,6 +7529,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7576,6 +7643,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7689,6 +7757,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7802,6 +7871,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7915,6 +7985,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8028,6 +8099,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 3,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8141,6 +8213,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8254,6 +8327,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8307,7 +8381,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=95.69 on fib (50=94.01/618=92.01); buyers_tail=False; bounced=True; confirmed via fib touch + volume climax",
+        "detail": "low=95.69 on fib (50=94.01/618=92.01); buyers_tail=False; bounced=True; confirmed via volume climax at floor",
         "value": 1.74,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -8367,6 +8441,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8480,6 +8555,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 3,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8593,6 +8669,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 7,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8706,6 +8783,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8819,6 +8897,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8932,6 +9011,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9045,6 +9125,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 6,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9158,6 +9239,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9271,6 +9353,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 3,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9384,6 +9467,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9497,6 +9581,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9610,6 +9695,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 3,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9723,6 +9809,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 2,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9836,6 +9923,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9949,6 +10037,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10062,6 +10151,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 7,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10175,6 +10265,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 3,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10288,6 +10379,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10401,6 +10493,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10514,6 +10607,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 6,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10627,6 +10721,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 6,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10740,6 +10835,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 4,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10793,7 +10889,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=26.96 on fib (50=26.70/618=26.58); buyers_tail=False; bounced=False; confirmed via fib touch + volume climax",
+        "detail": "low=26.96 on fib (50=26.70/618=26.58); buyers_tail=False; bounced=False; confirmed via volume climax at floor",
         "value": 1.76,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -10853,6 +10949,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10966,6 +11063,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -11079,6 +11177,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -11192,6 +11291,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -11245,7 +11345,7 @@
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=81.13 on none (low 81.13; fib50 78.57/618 77.30; best support 77.35/9x); buyers_tail=False; bounced=True; confirmed via no buyer confirmation",
+        "detail": "low=81.13 on none (low 81.13; fib50 78.57/618 77.30; best support 77.35/9x); buyers_tail=False; bounced=True; confirmed via volume climax at floor",
         "value": 2.24,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
@@ -11305,6 +11405,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
     "gates": [
       {
         "stage": "1·Moat",
