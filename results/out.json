@@ -5,7 +5,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -119,7 +119,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -165,8 +165,8 @@
         "stage": "2·Cash",
         "name": "PEG ratio",
         "status": "GO",
-        "detail": "PEG 1.33",
-        "value": 1.33,
+        "detail": "PEG 1.31",
+        "value": 1.31,
         "criterion": "PEG < 1.8"
       },
       {
@@ -233,7 +233,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -347,7 +347,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -461,7 +461,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -575,7 +575,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -689,7 +689,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 6,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -803,7 +803,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 8,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -917,7 +917,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 3,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1031,7 +1031,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1145,7 +1145,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1259,7 +1259,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1373,7 +1373,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1487,7 +1487,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1533,8 +1533,8 @@
         "stage": "2·Cash",
         "name": "PEG ratio",
         "status": "NO_GO",
-        "detail": "PEG 3.12",
-        "value": 3.12,
+        "detail": "PEG 3.02",
+        "value": 3.02,
         "criterion": "PEG < 1.8"
       },
       {
@@ -1601,7 +1601,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1715,7 +1715,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1829,7 +1829,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 6,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -1943,7 +1943,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2057,7 +2057,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 6,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2103,8 +2103,8 @@
         "stage": "2·Cash",
         "name": "PEG ratio",
         "status": "NO_GO",
-        "detail": "PEG 2.26",
-        "value": 2.26,
+        "detail": "PEG 2.29",
+        "value": 2.29,
         "criterion": "PEG < 1.8"
       },
       {
@@ -2171,7 +2171,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2285,7 +2285,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 3,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2399,7 +2399,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2513,7 +2513,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 6,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2627,7 +2627,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2741,7 +2741,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2855,7 +2855,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -2969,7 +2969,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 3,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3015,8 +3015,8 @@
         "stage": "2·Cash",
         "name": "PEG ratio",
         "status": "NO_GO",
-        "detail": "PEG 5.48",
-        "value": 5.48,
+        "detail": "PEG 5.52",
+        "value": 5.52,
         "criterion": "PEG < 1.8"
       },
       {
@@ -3083,7 +3083,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3197,7 +3197,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3311,7 +3311,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3425,7 +3425,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 6,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3539,7 +3539,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 3,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3585,8 +3585,8 @@
         "stage": "2·Cash",
         "name": "PEG ratio",
         "status": "NO_GO",
-        "detail": "PEG 3.97",
-        "value": 3.97,
+        "detail": "PEG 3.94",
+        "value": 3.94,
         "criterion": "PEG < 1.8"
       },
       {
@@ -3653,7 +3653,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3699,8 +3699,8 @@
         "stage": "2·Cash",
         "name": "PEG ratio",
         "status": "GO",
-        "detail": "PEG 1.39",
-        "value": 1.39,
+        "detail": "PEG 1.38",
+        "value": 1.38,
         "criterion": "PEG < 1.8"
       },
       {
@@ -3767,7 +3767,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 6,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3881,7 +3881,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 7,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -3995,7 +3995,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4109,7 +4109,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4223,7 +4223,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4337,7 +4337,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4451,7 +4451,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4565,7 +4565,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4679,7 +4679,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4793,7 +4793,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -4907,7 +4907,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5021,7 +5021,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5135,7 +5135,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5249,7 +5249,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 6,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5363,7 +5363,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5477,7 +5477,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5591,7 +5591,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 6,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5705,7 +5705,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5751,8 +5751,8 @@
         "stage": "2·Cash",
         "name": "PEG ratio",
         "status": "GO",
-        "detail": "PEG 1.05",
-        "value": 1.05,
+        "detail": "PEG 1.09",
+        "value": 1.09,
         "criterion": "PEG < 1.8"
       },
       {
@@ -5819,7 +5819,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 6,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -5933,7 +5933,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6047,7 +6047,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6161,7 +6161,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6275,7 +6275,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6389,7 +6389,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6503,7 +6503,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6617,7 +6617,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6731,7 +6731,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6845,7 +6845,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -6891,8 +6891,8 @@
         "stage": "2·Cash",
         "name": "PEG ratio",
         "status": "GO",
-        "detail": "PEG 0.81",
-        "value": 0.81,
+        "detail": "PEG 0.78",
+        "value": 0.78,
         "criterion": "PEG < 1.8"
       },
       {
@@ -6959,7 +6959,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 6,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7073,7 +7073,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7187,7 +7187,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7301,7 +7301,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7415,7 +7415,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 3,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7529,7 +7529,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7643,7 +7643,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7752,12 +7752,126 @@
     ]
   },
   {
+    "ticker": "NOW",
+    "price": 89.52,
+    "verdict": "NO_GO",
+    "blocked_at": "Sector trend (IGV)",
+    "go_count": 5,
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
+    "gates": [
+      {
+        "stage": "1·Moat",
+        "name": "Disruption Test",
+        "status": "NEEDS_LLM",
+        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
+        "value": null,
+        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Macro backdrop",
+        "status": "NEEDS_LLM",
+        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
+        "value": null,
+        "criterion": "No imminent macro shock; market regime supportive"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Sector trend (IGV)",
+        "status": "NO_GO",
+        "detail": "IGV 84.76 vs 200SMA 97.51",
+        "value": -12.75,
+        "criterion": "Sector ETF above 200-day SMA"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "RPO / Backlog",
+        "status": "NEEDS_LLM",
+        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
+        "value": null,
+        "criterion": "RPO growing vs year-ago quarter"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "Free Cash Flow",
+        "status": "GO",
+        "detail": "FCF latest 4.53B vs prior 3.38B",
+        "value": 4533000000.0,
+        "criterion": "FCF positive and growing YoY (supports buybacks)"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "PEG ratio",
+        "status": "GO",
+        "detail": "PEG 0.87",
+        "value": 0.87,
+        "criterion": "PEG < 1.8"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Concrete floor (RSI-div OR fib+volume)",
+        "status": "NO_GO",
+        "detail": "low=89.39 on none (low 89.39; fib50 109.43/618 103.19; best support 178.45/3x); buyers_tail=False; bounced=False; confirmed via no buyer confirmation",
+        "value": 0.73,
+        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Bullish RSI divergence",
+        "status": "SKIP",
+        "detail": "price LL=False, RSI HL=False (RSI 40.3->37.4)",
+        "value": null,
+        "criterion": "Price lower-low while RSI higher-low (optional path A)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Volume climax",
+        "status": "SKIP",
+        "detail": "bounce-day vol 23.7M vs 21d avg 32.2M (0.73x)",
+        "value": 0.73,
+        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
+      },
+      {
+        "stage": "4·RS",
+        "name": "Strength on a red day",
+        "status": "GO",
+        "detail": "on 2026-06-23 QQQ -3.29% / stock 3.15%",
+        "value": 3.15,
+        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Next earnings",
+        "status": "GO",
+        "detail": "earnings in 26 days (2026-07-22)",
+        "value": 26,
+        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Product/launch catalyst",
+        "status": "NEEDS_LLM",
+        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
+        "value": null,
+        "criterion": "At least one scheduled catalyst in 15-45 days"
+      },
+      {
+        "stage": "6·Exit",
+        "name": "Hard stop price",
+        "status": "GO",
+        "detail": "floor 89.39 -> HARD STOP 88.05 (daily close below = auto-sell)",
+        "value": 88.05,
+        "criterion": "Stop = floor - 1.5%, typed in advance"
+      }
+    ]
+  },
+  {
     "ticker": "NVDA",
     "price": 195.74,
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7871,7 +7985,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -7917,8 +8031,8 @@
         "stage": "2·Cash",
         "name": "PEG ratio",
         "status": "GO",
-        "detail": "PEG 0.75",
-        "value": 0.75,
+        "detail": "PEG 0.76",
+        "value": 0.76,
         "criterion": "PEG < 1.8"
       },
       {
@@ -7985,7 +8099,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8099,7 +8213,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 3,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8213,7 +8327,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8259,8 +8373,8 @@
         "stage": "2·Cash",
         "name": "PEG ratio",
         "status": "NO_GO",
-        "detail": "PEG 4.66",
-        "value": 4.66,
+        "detail": "PEG 4.78",
+        "value": 4.78,
         "criterion": "PEG < 1.8"
       },
       {
@@ -8327,7 +8441,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8441,7 +8555,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8555,7 +8669,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 3,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8669,7 +8783,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 7,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8783,7 +8897,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8829,8 +8943,8 @@
         "stage": "2·Cash",
         "name": "PEG ratio",
         "status": "GO",
-        "detail": "PEG 1.63",
-        "value": 1.63,
+        "detail": "PEG 1.54",
+        "value": 1.54,
         "criterion": "PEG < 1.8"
       },
       {
@@ -8897,7 +9011,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -8943,8 +9057,8 @@
         "stage": "2·Cash",
         "name": "PEG ratio",
         "status": "GO",
-        "detail": "PEG 0.77",
-        "value": 0.77,
+        "detail": "PEG 0.76",
+        "value": 0.76,
         "criterion": "PEG < 1.8"
       },
       {
@@ -9011,7 +9125,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9125,7 +9239,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 6,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9239,7 +9353,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9353,7 +9467,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 3,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9467,7 +9581,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9581,7 +9695,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9695,7 +9809,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 3,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9809,7 +9923,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 2,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -9923,7 +10037,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10037,7 +10151,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10151,7 +10265,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 7,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10265,7 +10379,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLY)",
     "go_count": 3,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10379,7 +10493,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10493,7 +10607,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10607,7 +10721,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 6,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10721,7 +10835,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 6,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10835,7 +10949,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (XLC)",
     "go_count": 4,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10949,7 +11063,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -10995,8 +11109,8 @@
         "stage": "2·Cash",
         "name": "PEG ratio",
         "status": "GO",
-        "detail": "PEG 0.46",
-        "value": 0.46,
+        "detail": "PEG 0.45",
+        "value": 0.45,
         "criterion": "PEG < 1.8"
       },
       {
@@ -11063,7 +11177,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -11177,7 +11291,7 @@
     "verdict": "NO_GO",
     "blocked_at": "PEG ratio",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -11291,7 +11405,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
@@ -11405,7 +11519,7 @@
     "verdict": "NO_GO",
     "blocked_at": "Sector trend (IGV)",
     "go_count": 5,
-    "universe_source": "live: Wikipedia MediaWiki API (101 tickers)",
+    "universe_source": "live: Wikipedia MediaWiki API (101 tickers) + sentinel backfill (NOW)",
     "gates": [
       {
         "stage": "1·Moat",
