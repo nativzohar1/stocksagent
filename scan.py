@@ -75,6 +75,15 @@ except Exception:  # pragma: no cover
 UNIVERSE_UA = ("StocksagentBot/1.0 "
                "(+https://github.com/nativzohar1/stocksagent; nativ.z@motorad.com)")
 
+# Records where the scanned universe actually came from (which live engine, or
+# the hardcoded fallback). Written into out.json and printed as a UNIVERSE line.
+UNIVERSE_SOURCE = "unknown"
+_ENGINE_LABELS = {
+    "_engine_mediawiki": "live: Wikipedia MediaWiki API",
+    "_engine_wikipedia_page": "live: Wikipedia page (HTML)",
+    "_engine_slickcharts": "live: SlickCharts",
+}
+
 # Fallback list — runs only if every live engine fails. Maintained by hand!
 # Updated: added NOW (ServiceNow) and PLTR (Palantir).
 NDX_FALLBACK = [
@@ -152,10 +161,13 @@ def get_nasdaq100(session=None) -> list:
     """Fetch live Nasdaq-100 constituents via a 3-engine fallback chain,
     sanity-check the count (90-110), and drop to the hardcoded list only as a
     last resort."""
+    global UNIVERSE_SOURCE
     for engine in (_engine_mediawiki, _engine_wikipedia_page, _engine_slickcharts):
         try:
             syms = engine(session)
             if 90 <= len(syms) <= 110:            # sanity gate — the real hero
+                UNIVERSE_SOURCE = (f"{_ENGINE_LABELS[engine.__name__]} "
+                                   f"({len(syms)} tickers)")
                 print(f"[universe] {engine.__name__}: {len(syms)} tickers",
                       file=sys.stderr)
                 return syms
@@ -163,6 +175,8 @@ def get_nasdaq100(session=None) -> list:
                   f"(outside 90-110) — skipping.", file=sys.stderr)
         except Exception as e:
             print(f"[universe] {engine.__name__} failed: {e}", file=sys.stderr)
+    UNIVERSE_SOURCE = (f"FALLBACK: NDX_FALLBACK hardcoded list "
+                       f"({len(set(NDX_FALLBACK))} tickers) — live fetch failed")
     print(f"[universe] all live engines failed; using fallback "
           f"({len(NDX_FALLBACK)}).", file=sys.stderr)
     return sorted(set(NDX_FALLBACK))
@@ -481,7 +495,7 @@ def stage3_technical_floor(rep, hist):
     # --- OR logic ---------------------------------------------------------- #
     floor_location = near_fib or on_support
     path_a = rsi_div
-    path_b = near_fib and vol_climax
+    path_b = vol_climax  # FIX: volume climax alone confirms (no longer requires near_fib)
     confirmed = floor_location and buyers_tail and bounced and (path_a or path_b)
 
     if near_fib:
@@ -493,11 +507,11 @@ def stage3_technical_floor(rep, hist):
                  + (f"best support {sup_level:.2f}/{touches}x)" if sup_level else "no support)"))
 
     if path_a and path_b:
-        via = "RSI divergence + fib/volume climax"
+        via = "RSI divergence + volume climax at floor"
     elif path_a:
         via = "RSI divergence"
     elif path_b:
-        via = "fib touch + volume climax"
+        via = "volume climax at floor"
     else:
         via = "no buyer confirmation"
 
@@ -671,6 +685,7 @@ def parse_args(argv=None):
 
 
 def resolve_universe(args, session) -> list:
+    global UNIVERSE_SOURCE
     tickers = list(args.tickers)
     if args.file:
         with open(args.file, "r", encoding="utf-8") as fh:
@@ -685,6 +700,8 @@ def resolve_universe(args, session) -> list:
         else:
             print(f"[error] unknown universe '{args.universe}'.", file=sys.stderr)
             return []
+    if UNIVERSE_SOURCE == "unknown" and tickers:
+        UNIVERSE_SOURCE = f"explicit tickers (CLI/--file, {len(tickers)} given)"
     seen, out = set(), []
     for t in tickers:
         u = t.upper()
@@ -744,6 +761,7 @@ def main(argv=None):
         payload = [{
             "ticker": r.ticker, "price": r.price, "verdict": r.verdict,
             "blocked_at": r.blocked_at, "go_count": r.go_count,
+            "universe_source": UNIVERSE_SOURCE,
             "gates": [asdict(g) for g in r.gates],
         } for r in reports]
         with open(args.json, "w", encoding="utf-8") as fh:
@@ -751,6 +769,8 @@ def main(argv=None):
         print(f"\n[json] wrote {args.json}")
 
     # Compact machine-readable summary for the Dust agent.
+    print("\nUNIVERSE " + json.dumps(
+        {"source": UNIVERSE_SOURCE, "scanned": len(tickers)}, ensure_ascii=False))
     print("\nSURVIVORS " + json.dumps(
         [{"ticker": r.ticker, "verdict": r.verdict, "go_count": r.go_count,
           "price": r.price} for r in survivors], ensure_ascii=False))
