@@ -791,6 +791,119 @@
     ]
   },
   {
+    "ticker": "ALNY",
+    "price": 293.17,
+    "verdict": "NO_GO",
+    "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
+    "go_count": 8,
+    "gates": [
+      {
+        "stage": "1·Moat",
+        "name": "Disruption Test",
+        "status": "NEEDS_LLM",
+        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
+        "value": null,
+        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Macro backdrop",
+        "status": "NEEDS_LLM",
+        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
+        "value": null,
+        "criterion": "No imminent macro shock; market regime supportive"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Sector trend (XLV)",
+        "status": "GO",
+        "detail": "XLV 155.63 vs 200SMA 148.36",
+        "value": 7.27,
+        "criterion": "Sector ETF above 200-day SMA"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "RPO / Backlog",
+        "status": "NEEDS_LLM",
+        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
+        "value": null,
+        "criterion": "RPO growing vs year-ago quarter"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "Free Cash Flow",
+        "status": "GO",
+        "detail": "FCF latest 0.47B vs prior -0.04B",
+        "value": 465383000.0,
+        "criterion": "FCF positive and growing YoY (supports buybacks)"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "PEG ratio",
+        "status": "GO",
+        "detail": "PEG 0.50",
+        "value": 0.5,
+        "criterion": "PEG < 1.8"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Concrete floor (RSI-div OR fib+volume)",
+        "status": "NO_GO",
+        "detail": "low=290.07 on fib (50=286.07/618=284.19); buyers_tail=False; bounced=True; confirmed via RSI divergence + fib/volume climax",
+        "value": 1.76,
+        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Bullish RSI divergence",
+        "status": "GO",
+        "detail": "price LL=True, RSI HL=True (RSI 34.3->38.7)",
+        "value": null,
+        "criterion": "Price lower-low while RSI higher-low (optional path A)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Volume climax",
+        "status": "GO",
+        "detail": "bounce-day vol 2.2M vs 21d avg 1.3M (1.76x)",
+        "value": 1.76,
+        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
+      },
+      {
+        "stage": "4·RS",
+        "name": "Strength on a red day",
+        "status": "GO",
+        "detail": "on 2026-06-23 QQQ -3.29% / stock 0.62%",
+        "value": 0.62,
+        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Next earnings",
+        "status": "GO",
+        "detail": "earnings in 34 days (2026-07-30)",
+        "value": 34,
+        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Product/launch catalyst",
+        "status": "NEEDS_LLM",
+        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
+        "value": null,
+        "criterion": "At least one scheduled catalyst in 15-45 days"
+      },
+      {
+        "stage": "6·Exit",
+        "name": "Hard stop price",
+        "status": "GO",
+        "detail": "floor 273.11 -> HARD STOP 269.01 (daily close below = auto-sell)",
+        "value": 269.01,
+        "criterion": "Stop = floor - 1.5%, typed in advance"
+      }
+    ]
+  },
+  {
     "ticker": "AMAT",
     "price": 668.0,
     "verdict": "NO_GO",
@@ -1239,23 +1352,6 @@
         "detail": "floor 225.55 -> HARD STOP 222.17 (daily close below = auto-sell)",
         "value": 222.17,
         "criterion": "Stop = floor - 1.5%, typed in advance"
-      }
-    ]
-  },
-  {
-    "ticker": "ANSS",
-    "price": null,
-    "verdict": "NO_GO",
-    "blocked_at": "Price data",
-    "go_count": 0,
-    "gates": [
-      {
-        "stage": "0",
-        "name": "Price data",
-        "status": "NO_GO",
-        "detail": "insufficient history",
-        "value": null,
-        "criterion": ""
       }
     ]
   },
@@ -1712,124 +1808,11 @@
     ]
   },
   {
-    "ticker": "AZN",
-    "price": 185.68,
-    "verdict": "NO_GO",
-    "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
-    "go_count": 7,
-    "gates": [
-      {
-        "stage": "1·Moat",
-        "name": "Disruption Test",
-        "status": "NEEDS_LLM",
-        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
-        "value": null,
-        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
-      },
-      {
-        "stage": "1·Macro",
-        "name": "Macro backdrop",
-        "status": "NEEDS_LLM",
-        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
-        "value": null,
-        "criterion": "No imminent macro shock; market regime supportive"
-      },
-      {
-        "stage": "1·Macro",
-        "name": "Sector trend (XLV)",
-        "status": "GO",
-        "detail": "XLV 155.63 vs 200SMA 148.36",
-        "value": 7.27,
-        "criterion": "Sector ETF above 200-day SMA"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "RPO / Backlog",
-        "status": "NEEDS_LLM",
-        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
-        "value": null,
-        "criterion": "RPO growing vs year-ago quarter"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "Free Cash Flow",
-        "status": "GO",
-        "detail": "FCF latest 8.67B vs prior 7.28B",
-        "value": 8670000000.0,
-        "criterion": "FCF positive and growing YoY (supports buybacks)"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "PEG ratio",
-        "status": "GO",
-        "detail": "PEG 1.42",
-        "value": 1.42,
-        "criterion": "PEG < 1.8"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Concrete floor (RSI-div OR fib+volume)",
-        "status": "NO_GO",
-        "detail": "low=184.55 on none (low 184.55; fib50 180.30/618 179.04; best support 179.34/8x); buyers_tail=True; bounced=True; confirmed via RSI divergence",
-        "value": 0.84,
-        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Bullish RSI divergence",
-        "status": "GO",
-        "detail": "price LL=True, RSI HL=True (RSI 31.5->38.9)",
-        "value": null,
-        "criterion": "Price lower-low while RSI higher-low (optional path A)"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Volume climax",
-        "status": "SKIP",
-        "detail": "bounce-day vol 1.7M vs 21d avg 2.0M (0.84x)",
-        "value": 0.84,
-        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
-      },
-      {
-        "stage": "4·RS",
-        "name": "Strength on a red day",
-        "status": "GO",
-        "detail": "on 2026-06-23 QQQ -3.29% / stock 2.60%",
-        "value": 2.6,
-        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
-      },
-      {
-        "stage": "5·Catalyst",
-        "name": "Next earnings",
-        "status": "GO",
-        "detail": "earnings in 31 days (2026-07-27)",
-        "value": 31,
-        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
-      },
-      {
-        "stage": "5·Catalyst",
-        "name": "Product/launch catalyst",
-        "status": "NEEDS_LLM",
-        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
-        "value": null,
-        "criterion": "At least one scheduled catalyst in 15-45 days"
-      },
-      {
-        "stage": "6·Exit",
-        "name": "Hard stop price",
-        "status": "GO",
-        "detail": "floor 173.66 -> HARD STOP 171.06 (daily close below = auto-sell)",
-        "value": 171.06,
-        "criterion": "Stop = floor - 1.5%, typed in advance"
-      }
-    ]
-  },
-  {
-    "ticker": "BIIB",
-    "price": 201.96,
+    "ticker": "AXON",
+    "price": 444.73,
     "verdict": "NO_GO",
     "blocked_at": "Free Cash Flow",
-    "go_count": 4,
+    "go_count": 6,
     "gates": [
       {
         "stage": "1·Moat",
@@ -1849,10 +1832,10 @@
       },
       {
         "stage": "1·Macro",
-        "name": "Sector trend (XLV)",
+        "name": "Sector trend (XLI)",
         "status": "GO",
-        "detail": "XLV 155.63 vs 200SMA 148.36",
-        "value": 7.27,
+        "detail": "XLI 184.12 vs 200SMA 162.83",
+        "value": 21.29,
         "criterion": "Sector ETF above 200-day SMA"
       },
       {
@@ -1867,31 +1850,31 @@
         "stage": "2·Cash",
         "name": "Free Cash Flow",
         "status": "NO_GO",
-        "detail": "FCF latest 1.97B vs prior 2.52B",
-        "value": 1969200000.0,
+        "detail": "FCF latest 0.08B vs prior 0.33B",
+        "value": 75081000.0,
         "criterion": "FCF positive and growing YoY (supports buybacks)"
       },
       {
         "stage": "2·Cash",
         "name": "PEG ratio",
-        "status": "NO_GO",
-        "detail": "PEG 4.25",
-        "value": 4.25,
+        "status": "GO",
+        "detail": "PEG 1.64",
+        "value": 1.64,
         "criterion": "PEG < 1.8"
       },
       {
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=200.20 on none (low 200.20; fib50 184.47/618 179.74; best support 169.24/5x); buyers_tail=False; bounced=True; confirmed via no buyer confirmation",
-        "value": 1.59,
+        "detail": "low=443.00 on none (low 443.00; fib50 429.57/618 409.83; best support 374.00/4x); buyers_tail=False; bounced=False; confirmed via no buyer confirmation",
+        "value": 1.66,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
       {
         "stage": "3·Floor",
         "name": "Bullish RSI divergence",
         "status": "SKIP",
-        "detail": "price LL=False, RSI HL=False (RSI 53.1->46.8)",
+        "detail": "price LL=False, RSI HL=True (RSI 40.7->41.8)",
         "value": null,
         "criterion": "Price lower-low while RSI higher-low (optional path A)"
       },
@@ -1899,24 +1882,24 @@
         "stage": "3·Floor",
         "name": "Volume climax",
         "status": "GO",
-        "detail": "bounce-day vol 1.7M vs 21d avg 1.1M (1.59x)",
-        "value": 1.59,
+        "detail": "bounce-day vol 1.9M vs 21d avg 1.2M (1.66x)",
+        "value": 1.66,
         "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
       },
       {
         "stage": "4·RS",
         "name": "Strength on a red day",
-        "status": "NO_GO",
-        "detail": "on 2026-06-23 QQQ -3.29% / stock -1.26%",
-        "value": -1.26,
+        "status": "GO",
+        "detail": "on 2026-06-23 QQQ -3.29% / stock 5.61%",
+        "value": 5.61,
         "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
       },
       {
         "stage": "5·Catalyst",
         "name": "Next earnings",
         "status": "GO",
-        "detail": "earnings in 33 days (2026-07-29)",
-        "value": 33,
+        "detail": "earnings in 38 days (2026-08-03)",
+        "value": 38,
         "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
       },
       {
@@ -1931,8 +1914,8 @@
         "stage": "6·Exit",
         "name": "Hard stop price",
         "status": "GO",
-        "detail": "floor 193.20 -> HARD STOP 190.30 (daily close below = auto-sell)",
-        "value": 190.3,
+        "detail": "floor 402.00 -> HARD STOP 395.97 (daily close below = auto-sell)",
+        "value": 395.97,
         "criterion": "Stop = floor - 1.5%, typed in advance"
       }
     ]
@@ -2385,119 +2368,6 @@
         "status": "GO",
         "detail": "floor 363.73 -> HARD STOP 358.27 (daily close below = auto-sell)",
         "value": 358.27,
-        "criterion": "Stop = floor - 1.5%, typed in advance"
-      }
-    ]
-  },
-  {
-    "ticker": "CDW",
-    "price": 128.02,
-    "verdict": "NO_GO",
-    "blocked_at": "Free Cash Flow",
-    "go_count": 5,
-    "gates": [
-      {
-        "stage": "1·Moat",
-        "name": "Disruption Test",
-        "status": "NEEDS_LLM",
-        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
-        "value": null,
-        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
-      },
-      {
-        "stage": "1·Macro",
-        "name": "Macro backdrop",
-        "status": "NEEDS_LLM",
-        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
-        "value": null,
-        "criterion": "No imminent macro shock; market regime supportive"
-      },
-      {
-        "stage": "1·Macro",
-        "name": "Sector trend (XLK)",
-        "status": "GO",
-        "detail": "XLK 184.57 vs 200SMA 150.02",
-        "value": 34.55,
-        "criterion": "Sector ETF above 200-day SMA"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "RPO / Backlog",
-        "status": "NEEDS_LLM",
-        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
-        "value": null,
-        "criterion": "RPO growing vs year-ago quarter"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "Free Cash Flow",
-        "status": "NO_GO",
-        "detail": "FCF latest 1.09B vs prior 1.15B",
-        "value": 1088100000.0,
-        "criterion": "FCF positive and growing YoY (supports buybacks)"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "PEG ratio",
-        "status": "GO",
-        "detail": "PEG 1.33",
-        "value": 1.33,
-        "criterion": "PEG < 1.8"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Concrete floor (RSI-div OR fib+volume)",
-        "status": "NO_GO",
-        "detail": "low=127.64 on none (low 127.64; fib50 120.14/618 115.22; best support 124.00/4x); buyers_tail=False; bounced=False; confirmed via no buyer confirmation",
-        "value": 0.78,
-        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Bullish RSI divergence",
-        "status": "SKIP",
-        "detail": "price LL=False, RSI HL=True (RSI 23.4->51.8)",
-        "value": null,
-        "criterion": "Price lower-low while RSI higher-low (optional path A)"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Volume climax",
-        "status": "SKIP",
-        "detail": "bounce-day vol 1.8M vs 21d avg 2.3M (0.78x)",
-        "value": 0.78,
-        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
-      },
-      {
-        "stage": "4·RS",
-        "name": "Strength on a red day",
-        "status": "GO",
-        "detail": "on 2026-06-23 QQQ -3.29% / stock 5.25%",
-        "value": 5.25,
-        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
-      },
-      {
-        "stage": "5·Catalyst",
-        "name": "Next earnings",
-        "status": "GO",
-        "detail": "earnings in 40 days (2026-08-05)",
-        "value": 40,
-        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
-      },
-      {
-        "stage": "5·Catalyst",
-        "name": "Product/launch catalyst",
-        "status": "NEEDS_LLM",
-        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
-        "value": null,
-        "criterion": "At least one scheduled catalyst in 15-45 days"
-      },
-      {
-        "stage": "6·Exit",
-        "name": "Hard stop price",
-        "status": "GO",
-        "detail": "floor 123.09 -> HARD STOP 121.24 (daily close below = auto-sell)",
-        "value": 121.24,
         "criterion": "Stop = floor - 1.5%, typed in advance"
       }
     ]
@@ -3289,119 +3159,6 @@
         "status": "GO",
         "detail": "floor 116.50 -> HARD STOP 114.75 (daily close below = auto-sell)",
         "value": 114.75,
-        "criterion": "Stop = floor - 1.5%, typed in advance"
-      }
-    ]
-  },
-  {
-    "ticker": "CSGP",
-    "price": 28.64,
-    "verdict": "NO_GO",
-    "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
-    "go_count": 7,
-    "gates": [
-      {
-        "stage": "1·Moat",
-        "name": "Disruption Test",
-        "status": "NEEDS_LLM",
-        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
-        "value": null,
-        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
-      },
-      {
-        "stage": "1·Macro",
-        "name": "Macro backdrop",
-        "status": "NEEDS_LLM",
-        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
-        "value": null,
-        "criterion": "No imminent macro shock; market regime supportive"
-      },
-      {
-        "stage": "1·Macro",
-        "name": "Sector trend (XLRE)",
-        "status": "GO",
-        "detail": "XLRE 44.59 vs 200SMA 41.55",
-        "value": 3.04,
-        "criterion": "Sector ETF above 200-day SMA"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "RPO / Backlog",
-        "status": "NEEDS_LLM",
-        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
-        "value": null,
-        "criterion": "RPO growing vs year-ago quarter"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "Free Cash Flow",
-        "status": "GO",
-        "detail": "FCF latest 0.04B vs prior -0.24B",
-        "value": 41000000.0,
-        "criterion": "FCF positive and growing YoY (supports buybacks)"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "PEG ratio",
-        "status": "GO",
-        "detail": "PEG 0.11",
-        "value": 0.11,
-        "criterion": "PEG < 1.8"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Concrete floor (RSI-div OR fib+volume)",
-        "status": "NO_GO",
-        "detail": "low=28.54 on fib (50=28.64/618=28.64); buyers_tail=False; bounced=False; confirmed via RSI divergence",
-        "value": 0.85,
-        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Bullish RSI divergence",
-        "status": "GO",
-        "detail": "price LL=True, RSI HL=True (RSI 28.0->29.1)",
-        "value": null,
-        "criterion": "Price lower-low while RSI higher-low (optional path A)"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Volume climax",
-        "status": "SKIP",
-        "detail": "bounce-day vol 6.4M vs 21d avg 7.6M (0.85x)",
-        "value": 0.85,
-        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
-      },
-      {
-        "stage": "4·RS",
-        "name": "Strength on a red day",
-        "status": "GO",
-        "detail": "on 2026-06-23 QQQ -3.29% / stock 3.56%",
-        "value": 3.56,
-        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
-      },
-      {
-        "stage": "5·Catalyst",
-        "name": "Next earnings",
-        "status": "GO",
-        "detail": "earnings in 25 days (2026-07-21)",
-        "value": 25,
-        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
-      },
-      {
-        "stage": "5·Catalyst",
-        "name": "Product/launch catalyst",
-        "status": "NEEDS_LLM",
-        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
-        "value": null,
-        "criterion": "At least one scheduled catalyst in 15-45 days"
-      },
-      {
-        "stage": "6·Exit",
-        "name": "Hard stop price",
-        "status": "GO",
-        "detail": "floor 28.54 -> HARD STOP 28.11 (daily close below = auto-sell)",
-        "value": 28.11,
         "criterion": "Stop = floor - 1.5%, typed in advance"
       }
     ]
@@ -4537,6 +4294,119 @@
     ]
   },
   {
+    "ticker": "FER",
+    "price": 70.2,
+    "verdict": "NO_GO",
+    "blocked_at": "PEG ratio",
+    "go_count": 4,
+    "gates": [
+      {
+        "stage": "1·Moat",
+        "name": "Disruption Test",
+        "status": "NEEDS_LLM",
+        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
+        "value": null,
+        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Macro backdrop",
+        "status": "NEEDS_LLM",
+        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
+        "value": null,
+        "criterion": "No imminent macro shock; market regime supportive"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Sector trend (XLI)",
+        "status": "GO",
+        "detail": "XLI 184.12 vs 200SMA 162.83",
+        "value": 21.29,
+        "criterion": "Sector ETF above 200-day SMA"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "RPO / Backlog",
+        "status": "NEEDS_LLM",
+        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
+        "value": null,
+        "criterion": "RPO growing vs year-ago quarter"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "Free Cash Flow",
+        "status": "GO",
+        "detail": "FCF latest 1.74B vs prior 1.07B",
+        "value": 1739000000.0,
+        "criterion": "FCF positive and growing YoY (supports buybacks)"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "PEG ratio",
+        "status": "NO_GO",
+        "detail": "PEG 5.44",
+        "value": 5.44,
+        "criterion": "PEG < 1.8"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Concrete floor (RSI-div OR fib+volume)",
+        "status": "NO_GO",
+        "detail": "low=69.82 on none (low 69.82; fib50 66.96/618 65.70; best support 64.67/7x); buyers_tail=False; bounced=False; confirmed via no buyer confirmation",
+        "value": 1.35,
+        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Bullish RSI divergence",
+        "status": "SKIP",
+        "detail": "price LL=True, RSI HL=False (RSI 36.5->35.9)",
+        "value": null,
+        "criterion": "Price lower-low while RSI higher-low (optional path A)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Volume climax",
+        "status": "SKIP",
+        "detail": "bounce-day vol 2.4M vs 21d avg 1.8M (1.35x)",
+        "value": 1.35,
+        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
+      },
+      {
+        "stage": "4·RS",
+        "name": "Strength on a red day",
+        "status": "NO_GO",
+        "detail": "on 2026-06-23 QQQ -3.29% / stock -1.06%",
+        "value": -1.06,
+        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Next earnings",
+        "status": "GO",
+        "detail": "earnings in 32 days (2026-07-28)",
+        "value": 32,
+        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Product/launch catalyst",
+        "status": "NEEDS_LLM",
+        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
+        "value": null,
+        "criterion": "At least one scheduled catalyst in 15-45 days"
+      },
+      {
+        "stage": "6·Exit",
+        "name": "Hard stop price",
+        "status": "GO",
+        "detail": "floor 65.01 -> HARD STOP 64.03 (daily close below = auto-sell)",
+        "value": 64.03,
+        "criterion": "Stop = floor - 1.5%, typed in advance"
+      }
+    ]
+  },
+  {
     "ticker": "FTNT",
     "price": 149.93,
     "verdict": "NO_GO",
@@ -4758,119 +4628,6 @@
         "status": "GO",
         "detail": "floor 59.97 -> HARD STOP 59.07 (daily close below = auto-sell)",
         "value": 59.07,
-        "criterion": "Stop = floor - 1.5%, typed in advance"
-      }
-    ]
-  },
-  {
-    "ticker": "GFS",
-    "price": 86.12,
-    "verdict": "NO_GO",
-    "blocked_at": "Free Cash Flow",
-    "go_count": 4,
-    "gates": [
-      {
-        "stage": "1·Moat",
-        "name": "Disruption Test",
-        "status": "NEEDS_LLM",
-        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
-        "value": null,
-        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
-      },
-      {
-        "stage": "1·Macro",
-        "name": "Macro backdrop",
-        "status": "NEEDS_LLM",
-        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
-        "value": null,
-        "criterion": "No imminent macro shock; market regime supportive"
-      },
-      {
-        "stage": "1·Macro",
-        "name": "Sector trend (SOXX)",
-        "status": "GO",
-        "detail": "SOXX 625.20 vs 200SMA 367.23",
-        "value": 257.97,
-        "criterion": "Sector ETF above 200-day SMA"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "RPO / Backlog",
-        "status": "NEEDS_LLM",
-        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
-        "value": null,
-        "criterion": "RPO growing vs year-ago quarter"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "Free Cash Flow",
-        "status": "NO_GO",
-        "detail": "FCF latest 1.01B vs prior 1.10B",
-        "value": 1009000000.0,
-        "criterion": "FCF positive and growing YoY (supports buybacks)"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "PEG ratio",
-        "status": "GO",
-        "detail": "PEG 1.70",
-        "value": 1.7,
-        "criterion": "PEG < 1.8"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Concrete floor (RSI-div OR fib+volume)",
-        "status": "NO_GO",
-        "detail": "low=82.75 on none (low 82.75; fib50 63.41/618 57.15; best support 32.36/8x); buyers_tail=True; bounced=False; confirmed via no buyer confirmation",
-        "value": 0.65,
-        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Bullish RSI divergence",
-        "status": "SKIP",
-        "detail": "price LL=False, RSI HL=False (RSI 76.0->49.9)",
-        "value": null,
-        "criterion": "Price lower-low while RSI higher-low (optional path A)"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Volume climax",
-        "status": "SKIP",
-        "detail": "bounce-day vol 3.2M vs 21d avg 5.0M (0.65x)",
-        "value": 0.65,
-        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
-      },
-      {
-        "stage": "4·RS",
-        "name": "Strength on a red day",
-        "status": "NO_GO",
-        "detail": "on 2026-06-23 QQQ -3.29% / stock -7.00%",
-        "value": -7.0,
-        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
-      },
-      {
-        "stage": "5·Catalyst",
-        "name": "Next earnings",
-        "status": "GO",
-        "detail": "earnings in 39 days (2026-08-04)",
-        "value": 39,
-        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
-      },
-      {
-        "stage": "5·Catalyst",
-        "name": "Product/launch catalyst",
-        "status": "NEEDS_LLM",
-        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
-        "value": null,
-        "criterion": "At least one scheduled catalyst in 15-45 days"
-      },
-      {
-        "stage": "6·Exit",
-        "name": "Hard stop price",
-        "status": "GO",
-        "detail": "floor 76.19 -> HARD STOP 75.05 (daily close below = auto-sell)",
-        "value": 75.05,
         "criterion": "Stop = floor - 1.5%, typed in advance"
       }
     ]
@@ -5436,6 +5193,119 @@
         "status": "GO",
         "detail": "floor 538.44 -> HARD STOP 530.36 (daily close below = auto-sell)",
         "value": 530.36,
+        "criterion": "Stop = floor - 1.5%, typed in advance"
+      }
+    ]
+  },
+  {
+    "ticker": "INSM",
+    "price": 104.47,
+    "verdict": "NO_GO",
+    "blocked_at": "Free Cash Flow",
+    "go_count": 6,
+    "gates": [
+      {
+        "stage": "1·Moat",
+        "name": "Disruption Test",
+        "status": "NEEDS_LLM",
+        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
+        "value": null,
+        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Macro backdrop",
+        "status": "NEEDS_LLM",
+        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
+        "value": null,
+        "criterion": "No imminent macro shock; market regime supportive"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Sector trend (XLV)",
+        "status": "GO",
+        "detail": "XLV 155.63 vs 200SMA 148.36",
+        "value": 7.27,
+        "criterion": "Sector ETF above 200-day SMA"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "RPO / Backlog",
+        "status": "NEEDS_LLM",
+        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
+        "value": null,
+        "criterion": "RPO growing vs year-ago quarter"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "Free Cash Flow",
+        "status": "NO_GO",
+        "detail": "FCF latest -0.97B vs prior -0.71B",
+        "value": -967575000.0,
+        "criterion": "FCF positive and growing YoY (supports buybacks)"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "PEG ratio",
+        "status": "GO",
+        "detail": "PEG 1.09",
+        "value": 1.09,
+        "criterion": "PEG < 1.8"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Concrete floor (RSI-div OR fib+volume)",
+        "status": "NO_GO",
+        "detail": "low=101.67 on none (low 101.67; fib50 98.17/618 96.69; best support 105.00/3x); buyers_tail=False; bounced=True; confirmed via RSI divergence",
+        "value": 1.04,
+        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Bullish RSI divergence",
+        "status": "GO",
+        "detail": "price LL=True, RSI HL=True (RSI 21.3->30.3)",
+        "value": null,
+        "criterion": "Price lower-low while RSI higher-low (optional path A)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Volume climax",
+        "status": "SKIP",
+        "detail": "bounce-day vol 5.1M vs 21d avg 4.9M (1.04x)",
+        "value": 1.04,
+        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
+      },
+      {
+        "stage": "4·RS",
+        "name": "Strength on a red day",
+        "status": "GO",
+        "detail": "on 2026-06-23 QQQ -3.29% / stock 3.59%",
+        "value": 3.59,
+        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Next earnings",
+        "status": "GO",
+        "detail": "earnings in 41 days (2026-08-06)",
+        "value": 41,
+        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Product/launch catalyst",
+        "status": "NEEDS_LLM",
+        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
+        "value": null,
+        "criterion": "At least one scheduled catalyst in 15-45 days"
+      },
+      {
+        "stage": "6·Exit",
+        "name": "Hard stop price",
+        "status": "GO",
+        "detail": "floor 91.37 -> HARD STOP 90.00 (daily close below = auto-sell)",
+        "value": 90.0,
         "criterion": "Stop = floor - 1.5%, typed in advance"
       }
     ]
@@ -6232,6 +6102,119 @@
     ]
   },
   {
+    "ticker": "LITE",
+    "price": 861.97,
+    "verdict": "NO_GO",
+    "blocked_at": "Free Cash Flow",
+    "go_count": 4,
+    "gates": [
+      {
+        "stage": "1·Moat",
+        "name": "Disruption Test",
+        "status": "NEEDS_LLM",
+        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
+        "value": null,
+        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Macro backdrop",
+        "status": "NEEDS_LLM",
+        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
+        "value": null,
+        "criterion": "No imminent macro shock; market regime supportive"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Sector trend (XLK)",
+        "status": "GO",
+        "detail": "XLK 184.57 vs 200SMA 150.02",
+        "value": 34.55,
+        "criterion": "Sector ETF above 200-day SMA"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "RPO / Backlog",
+        "status": "NEEDS_LLM",
+        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
+        "value": null,
+        "criterion": "RPO growing vs year-ago quarter"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "Free Cash Flow",
+        "status": "NO_GO",
+        "detail": "FCF latest -0.10B vs prior -0.11B",
+        "value": -104700000.0,
+        "criterion": "FCF positive and growing YoY (supports buybacks)"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "PEG ratio",
+        "status": "GO",
+        "detail": "PEG 0.63",
+        "value": 0.63,
+        "criterion": "PEG < 1.8"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Concrete floor (RSI-div OR fib+volume)",
+        "status": "NO_GO",
+        "detail": "low=810.24 on none (low 810.24; fib50 688.67/618 602.67; best support 88.93/4x); buyers_tail=True; bounced=False; confirmed via no buyer confirmation",
+        "value": 0.74,
+        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Bullish RSI divergence",
+        "status": "SKIP",
+        "detail": "price LL=True, RSI HL=False (RSI 54.5->43.5)",
+        "value": null,
+        "criterion": "Price lower-low while RSI higher-low (optional path A)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Volume climax",
+        "status": "SKIP",
+        "detail": "bounce-day vol 4.5M vs 21d avg 6.0M (0.74x)",
+        "value": 0.74,
+        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
+      },
+      {
+        "stage": "4·RS",
+        "name": "Strength on a red day",
+        "status": "NO_GO",
+        "detail": "on 2026-06-23 QQQ -3.29% / stock -7.38%",
+        "value": -7.38,
+        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Next earnings",
+        "status": "GO",
+        "detail": "earnings in 47 days (2026-08-12) — outside ideal 15-45d window (still a catalyst)",
+        "value": 47,
+        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Product/launch catalyst",
+        "status": "NEEDS_LLM",
+        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
+        "value": null,
+        "criterion": "At least one scheduled catalyst in 15-45 days"
+      },
+      {
+        "stage": "6·Exit",
+        "name": "Hard stop price",
+        "status": "GO",
+        "detail": "floor 803.24 -> HARD STOP 791.19 (daily close below = auto-sell)",
+        "value": 791.19,
+        "criterion": "Stop = floor - 1.5%, typed in advance"
+      }
+    ]
+  },
+  {
     "ticker": "LRCX",
     "price": 401.82,
     "verdict": "NO_GO",
@@ -6340,119 +6323,6 @@
         "status": "GO",
         "detail": "floor 336.20 -> HARD STOP 331.16 (daily close below = auto-sell)",
         "value": 331.16,
-        "criterion": "Stop = floor - 1.5%, typed in advance"
-      }
-    ]
-  },
-  {
-    "ticker": "LULU",
-    "price": 112.06,
-    "verdict": "NO_GO",
-    "blocked_at": "Sector trend (XLY)",
-    "go_count": 4,
-    "gates": [
-      {
-        "stage": "1·Moat",
-        "name": "Disruption Test",
-        "status": "NEEDS_LLM",
-        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
-        "value": null,
-        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
-      },
-      {
-        "stage": "1·Macro",
-        "name": "Macro backdrop",
-        "status": "NEEDS_LLM",
-        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
-        "value": null,
-        "criterion": "No imminent macro shock; market regime supportive"
-      },
-      {
-        "stage": "1·Macro",
-        "name": "Sector trend (XLY)",
-        "status": "NO_GO",
-        "detail": "XLY 113.35 vs 200SMA 117.11",
-        "value": -3.76,
-        "criterion": "Sector ETF above 200-day SMA"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "RPO / Backlog",
-        "status": "NEEDS_LLM",
-        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
-        "value": null,
-        "criterion": "RPO growing vs year-ago quarter"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "Free Cash Flow",
-        "status": "NO_GO",
-        "detail": "FCF latest 0.92B vs prior 1.58B",
-        "value": 921675000.0,
-        "criterion": "FCF positive and growing YoY (supports buybacks)"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "PEG ratio",
-        "status": "GO",
-        "detail": "PEG 0.86",
-        "value": 0.86,
-        "criterion": "PEG < 1.8"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Concrete floor (RSI-div OR fib+volume)",
-        "status": "NO_GO",
-        "detail": "low=110.56 on fib (50=109.26/618=108.36); buyers_tail=False; bounced=False; confirmed via RSI divergence",
-        "value": 1.17,
-        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Bullish RSI divergence",
-        "status": "GO",
-        "detail": "price LL=True, RSI HL=True (RSI 24.2->27.1)",
-        "value": null,
-        "criterion": "Price lower-low while RSI higher-low (optional path A)"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Volume climax",
-        "status": "SKIP",
-        "detail": "bounce-day vol 5.6M vs 21d avg 4.8M (1.17x)",
-        "value": 1.17,
-        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
-      },
-      {
-        "stage": "4·RS",
-        "name": "Strength on a red day",
-        "status": "GO",
-        "detail": "on 2026-06-23 QQQ -3.29% / stock 3.31%",
-        "value": 3.31,
-        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
-      },
-      {
-        "stage": "5·Catalyst",
-        "name": "Next earnings",
-        "status": "SKIP",
-        "detail": "earnings in 69 days (2026-09-03) — no earnings catalyst in window; rely on product/launch catalyst",
-        "value": 69,
-        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
-      },
-      {
-        "stage": "5·Catalyst",
-        "name": "Product/launch catalyst",
-        "status": "NEEDS_LLM",
-        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
-        "value": null,
-        "criterion": "At least one scheduled catalyst in 15-45 days"
-      },
-      {
-        "stage": "6·Exit",
-        "name": "Hard stop price",
-        "status": "GO",
-        "detail": "floor 104.44 -> HARD STOP 102.87 (daily close below = auto-sell)",
-        "value": 102.87,
         "criterion": "Stop = floor - 1.5%, typed in advance"
       }
     ]
@@ -7136,6 +7006,119 @@
     ]
   },
   {
+    "ticker": "MPWR",
+    "price": 1438.3,
+    "verdict": "NO_GO",
+    "blocked_at": "PEG ratio",
+    "go_count": 4,
+    "gates": [
+      {
+        "stage": "1·Moat",
+        "name": "Disruption Test",
+        "status": "NEEDS_LLM",
+        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
+        "value": null,
+        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Macro backdrop",
+        "status": "NEEDS_LLM",
+        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
+        "value": null,
+        "criterion": "No imminent macro shock; market regime supportive"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Sector trend (SOXX)",
+        "status": "GO",
+        "detail": "SOXX 625.20 vs 200SMA 367.23",
+        "value": 257.97,
+        "criterion": "Sector ETF above 200-day SMA"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "RPO / Backlog",
+        "status": "NEEDS_LLM",
+        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
+        "value": null,
+        "criterion": "RPO growing vs year-ago quarter"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "Free Cash Flow",
+        "status": "GO",
+        "detail": "FCF latest 0.66B vs prior 0.62B",
+        "value": 663261000.0,
+        "criterion": "FCF positive and growing YoY (supports buybacks)"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "PEG ratio",
+        "status": "NO_GO",
+        "detail": "PEG 1.89",
+        "value": 1.89,
+        "criterion": "PEG < 1.8"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Concrete floor (RSI-div OR fib+volume)",
+        "status": "NO_GO",
+        "detail": "low=1373.82 on none (low 1373.82; fib50 1313.10/618 1224.18; best support 901.39/4x); buyers_tail=False; bounced=False; confirmed via no buyer confirmation",
+        "value": 1.06,
+        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Bullish RSI divergence",
+        "status": "SKIP",
+        "detail": "price LL=True, RSI HL=False (RSI 46.8->43.3)",
+        "value": null,
+        "criterion": "Price lower-low while RSI higher-low (optional path A)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Volume climax",
+        "status": "SKIP",
+        "detail": "bounce-day vol 1.0M vs 21d avg 0.9M (1.06x)",
+        "value": 1.06,
+        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
+      },
+      {
+        "stage": "4·RS",
+        "name": "Strength on a red day",
+        "status": "NO_GO",
+        "detail": "on 2026-06-23 QQQ -3.29% / stock -7.42%",
+        "value": -7.42,
+        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Next earnings",
+        "status": "GO",
+        "detail": "earnings in 34 days (2026-07-30)",
+        "value": 34,
+        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Product/launch catalyst",
+        "status": "NEEDS_LLM",
+        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
+        "value": null,
+        "criterion": "At least one scheduled catalyst in 15-45 days"
+      },
+      {
+        "stage": "6·Exit",
+        "name": "Hard stop price",
+        "status": "GO",
+        "detail": "floor 1373.82 -> HARD STOP 1353.21 (daily close below = auto-sell)",
+        "value": 1353.21,
+        "criterion": "Stop = floor - 1.5%, typed in advance"
+      }
+    ]
+  },
+  {
     "ticker": "MRVL",
     "price": 281.26,
     "verdict": "NO_GO",
@@ -7357,6 +7340,119 @@
         "status": "GO",
         "detail": "floor 349.20 -> HARD STOP 343.96 (daily close below = auto-sell)",
         "value": 343.96,
+        "criterion": "Stop = floor - 1.5%, typed in advance"
+      }
+    ]
+  },
+  {
+    "ticker": "MSTR",
+    "price": 85.33,
+    "verdict": "NO_GO",
+    "blocked_at": "Sector trend (IGV)",
+    "go_count": 3,
+    "gates": [
+      {
+        "stage": "1·Moat",
+        "name": "Disruption Test",
+        "status": "NEEDS_LLM",
+        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
+        "value": null,
+        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Macro backdrop",
+        "status": "NEEDS_LLM",
+        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
+        "value": null,
+        "criterion": "No imminent macro shock; market regime supportive"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Sector trend (IGV)",
+        "status": "NO_GO",
+        "detail": "IGV 84.76 vs 200SMA 97.51",
+        "value": -12.75,
+        "criterion": "Sector ETF above 200-day SMA"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "RPO / Backlog",
+        "status": "NEEDS_LLM",
+        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
+        "value": null,
+        "criterion": "RPO growing vs year-ago quarter"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "Free Cash Flow",
+        "status": "NO_GO",
+        "detail": "FCF latest -22.58B vs prior -22.14B",
+        "value": -22579536000.0,
+        "criterion": "FCF positive and growing YoY (supports buybacks)"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "PEG ratio",
+        "status": "NO_GO",
+        "detail": "PEG 2.85",
+        "value": 2.85,
+        "criterion": "PEG < 1.8"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Concrete floor (RSI-div OR fib+volume)",
+        "status": "NO_GO",
+        "detail": "low=85.00 on fib (50=85.33/618=85.33); buyers_tail=False; bounced=False; confirmed via fib touch + volume climax",
+        "value": 1.88,
+        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Bullish RSI divergence",
+        "status": "SKIP",
+        "detail": "price LL=True, RSI HL=False (RSI 41.3->24.4)",
+        "value": null,
+        "criterion": "Price lower-low while RSI higher-low (optional path A)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Volume climax",
+        "status": "GO",
+        "detail": "bounce-day vol 45.1M vs 21d avg 23.9M (1.88x)",
+        "value": 1.88,
+        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
+      },
+      {
+        "stage": "4·RS",
+        "name": "Strength on a red day",
+        "status": "NO_GO",
+        "detail": "on 2026-06-23 QQQ -3.29% / stock -5.13%",
+        "value": -5.13,
+        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Next earnings",
+        "status": "GO",
+        "detail": "earnings in 34 days (2026-07-30)",
+        "value": 34,
+        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Product/launch catalyst",
+        "status": "NEEDS_LLM",
+        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
+        "value": null,
+        "criterion": "At least one scheduled catalyst in 15-45 days"
+      },
+      {
+        "stage": "6·Exit",
+        "name": "Hard stop price",
+        "status": "GO",
+        "detail": "floor 85.00 -> HARD STOP 83.72 (daily close below = auto-sell)",
+        "value": 83.72,
         "criterion": "Stop = floor - 1.5%, typed in advance"
       }
     ]
@@ -7922,119 +8018,6 @@
         "status": "GO",
         "detail": "floor 216.10 -> HARD STOP 212.86 (daily close below = auto-sell)",
         "value": 212.86,
-        "criterion": "Stop = floor - 1.5%, typed in advance"
-      }
-    ]
-  },
-  {
-    "ticker": "ON",
-    "price": 118.74,
-    "verdict": "NO_GO",
-    "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
-    "go_count": 5,
-    "gates": [
-      {
-        "stage": "1·Moat",
-        "name": "Disruption Test",
-        "status": "NEEDS_LLM",
-        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
-        "value": null,
-        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
-      },
-      {
-        "stage": "1·Macro",
-        "name": "Macro backdrop",
-        "status": "NEEDS_LLM",
-        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
-        "value": null,
-        "criterion": "No imminent macro shock; market regime supportive"
-      },
-      {
-        "stage": "1·Macro",
-        "name": "Sector trend (SOXX)",
-        "status": "GO",
-        "detail": "SOXX 625.20 vs 200SMA 367.23",
-        "value": 257.97,
-        "criterion": "Sector ETF above 200-day SMA"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "RPO / Backlog",
-        "status": "NEEDS_LLM",
-        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
-        "value": null,
-        "criterion": "RPO growing vs year-ago quarter"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "Free Cash Flow",
-        "status": "GO",
-        "detail": "FCF latest 1.42B vs prior 1.21B",
-        "value": 1418600000.0,
-        "criterion": "FCF positive and growing YoY (supports buybacks)"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "PEG ratio",
-        "status": "GO",
-        "detail": "PEG 0.39",
-        "value": 0.39,
-        "criterion": "PEG < 1.8"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Concrete floor (RSI-div OR fib+volume)",
-        "status": "NO_GO",
-        "detail": "low=112.16 on none (low 112.16; fib50 94.79/618 85.56; best support 47.20/7x); buyers_tail=True; bounced=False; confirmed via no buyer confirmation",
-        "value": 1.01,
-        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Bullish RSI divergence",
-        "status": "SKIP",
-        "detail": "price LL=False, RSI HL=False (RSI 79.2->47.4)",
-        "value": null,
-        "criterion": "Price lower-low while RSI higher-low (optional path A)"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Volume climax",
-        "status": "SKIP",
-        "detail": "bounce-day vol 12.1M vs 21d avg 12.0M (1.01x)",
-        "value": 1.01,
-        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
-      },
-      {
-        "stage": "4·RS",
-        "name": "Strength on a red day",
-        "status": "NO_GO",
-        "detail": "on 2026-06-23 QQQ -3.29% / stock -11.01%",
-        "value": -11.01,
-        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
-      },
-      {
-        "stage": "5·Catalyst",
-        "name": "Next earnings",
-        "status": "GO",
-        "detail": "earnings in 38 days (2026-08-03)",
-        "value": 38,
-        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
-      },
-      {
-        "stage": "5·Catalyst",
-        "name": "Product/launch catalyst",
-        "status": "NEEDS_LLM",
-        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
-        "value": null,
-        "criterion": "At least one scheduled catalyst in 15-45 days"
-      },
-      {
-        "stage": "6·Exit",
-        "name": "Hard stop price",
-        "status": "GO",
-        "detail": "floor 110.76 -> HARD STOP 109.10 (daily close below = auto-sell)",
-        "value": 109.1,
         "criterion": "Stop = floor - 1.5%, typed in advance"
       }
     ]
@@ -8718,6 +8701,119 @@
     ]
   },
   {
+    "ticker": "PLTR",
+    "price": 107.27,
+    "verdict": "NO_GO",
+    "blocked_at": "Sector trend (IGV)",
+    "go_count": 4,
+    "gates": [
+      {
+        "stage": "1·Moat",
+        "name": "Disruption Test",
+        "status": "NEEDS_LLM",
+        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
+        "value": null,
+        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Macro backdrop",
+        "status": "NEEDS_LLM",
+        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
+        "value": null,
+        "criterion": "No imminent macro shock; market regime supportive"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Sector trend (IGV)",
+        "status": "NO_GO",
+        "detail": "IGV 84.76 vs 200SMA 97.51",
+        "value": -12.75,
+        "criterion": "Sector ETF above 200-day SMA"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "RPO / Backlog",
+        "status": "NEEDS_LLM",
+        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
+        "value": null,
+        "criterion": "RPO growing vs year-ago quarter"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "Free Cash Flow",
+        "status": "GO",
+        "detail": "FCF latest 2.10B vs prior 1.14B",
+        "value": 2100591000.0,
+        "criterion": "FCF positive and growing YoY (supports buybacks)"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "PEG ratio",
+        "status": "GO",
+        "detail": "PEG 1.63",
+        "value": 1.63,
+        "criterion": "PEG < 1.8"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Concrete floor (RSI-div OR fib+volume)",
+        "status": "NO_GO",
+        "detail": "low=106.37 on fib (50=107.27/618=107.27); buyers_tail=False; bounced=False; confirmed via no buyer confirmation",
+        "value": 1.39,
+        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Bullish RSI divergence",
+        "status": "SKIP",
+        "detail": "price LL=True, RSI HL=False (RSI 38.4->27.4)",
+        "value": null,
+        "criterion": "Price lower-low while RSI higher-low (optional path A)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Volume climax",
+        "status": "SKIP",
+        "detail": "bounce-day vol 61.6M vs 21d avg 44.2M (1.39x)",
+        "value": 1.39,
+        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
+      },
+      {
+        "stage": "4·RS",
+        "name": "Strength on a red day",
+        "status": "NO_GO",
+        "detail": "on 2026-06-23 QQQ -3.29% / stock -2.34%",
+        "value": -2.34,
+        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Next earnings",
+        "status": "GO",
+        "detail": "earnings in 38 days (2026-08-03)",
+        "value": 38,
+        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Product/launch catalyst",
+        "status": "NEEDS_LLM",
+        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
+        "value": null,
+        "criterion": "At least one scheduled catalyst in 15-45 days"
+      },
+      {
+        "stage": "6·Exit",
+        "name": "Hard stop price",
+        "status": "GO",
+        "detail": "floor 106.37 -> HARD STOP 104.77 (daily close below = auto-sell)",
+        "value": 104.77,
+        "criterion": "Stop = floor - 1.5%, typed in advance"
+      }
+    ]
+  },
+  {
     "ticker": "PYPL",
     "price": 42.38,
     "verdict": "NO_GO",
@@ -9396,6 +9492,232 @@
     ]
   },
   {
+    "ticker": "SHOP",
+    "price": 111.62,
+    "verdict": "NO_GO",
+    "blocked_at": "Sector trend (IGV)",
+    "go_count": 4,
+    "gates": [
+      {
+        "stage": "1·Moat",
+        "name": "Disruption Test",
+        "status": "NEEDS_LLM",
+        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
+        "value": null,
+        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Macro backdrop",
+        "status": "NEEDS_LLM",
+        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
+        "value": null,
+        "criterion": "No imminent macro shock; market regime supportive"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Sector trend (IGV)",
+        "status": "NO_GO",
+        "detail": "IGV 84.76 vs 200SMA 97.51",
+        "value": -12.75,
+        "criterion": "Sector ETF above 200-day SMA"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "RPO / Backlog",
+        "status": "NEEDS_LLM",
+        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
+        "value": null,
+        "criterion": "RPO growing vs year-ago quarter"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "Free Cash Flow",
+        "status": "GO",
+        "detail": "FCF latest 2.01B vs prior 1.60B",
+        "value": 2007000000.0,
+        "criterion": "FCF positive and growing YoY (supports buybacks)"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "PEG ratio",
+        "status": "NO_GO",
+        "detail": "PEG 2.10",
+        "value": 2.1,
+        "criterion": "PEG < 1.8"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Concrete floor (RSI-div OR fib+volume)",
+        "status": "NO_GO",
+        "detail": "low=111.32 on fib (50=109.76/618=106.37); buyers_tail=False; bounced=False; confirmed via no buyer confirmation",
+        "value": 0.89,
+        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Bullish RSI divergence",
+        "status": "SKIP",
+        "detail": "price LL=False, RSI HL=True (RSI 31.1->45.8)",
+        "value": null,
+        "criterion": "Price lower-low while RSI higher-low (optional path A)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Volume climax",
+        "status": "SKIP",
+        "detail": "bounce-day vol 8.2M vs 21d avg 9.3M (0.89x)",
+        "value": 0.89,
+        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
+      },
+      {
+        "stage": "4·RS",
+        "name": "Strength on a red day",
+        "status": "GO",
+        "detail": "on 2026-06-23 QQQ -3.29% / stock -0.28%",
+        "value": -0.28,
+        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Next earnings",
+        "status": "GO",
+        "detail": "earnings in 40 days (2026-08-05)",
+        "value": 40,
+        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Product/launch catalyst",
+        "status": "NEEDS_LLM",
+        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
+        "value": null,
+        "criterion": "At least one scheduled catalyst in 15-45 days"
+      },
+      {
+        "stage": "6·Exit",
+        "name": "Hard stop price",
+        "status": "GO",
+        "detail": "floor 104.11 -> HARD STOP 102.55 (daily close below = auto-sell)",
+        "value": 102.55,
+        "criterion": "Stop = floor - 1.5%, typed in advance"
+      }
+    ]
+  },
+  {
+    "ticker": "SNDK",
+    "price": 2335.0,
+    "verdict": "NO_GO",
+    "blocked_at": "Free Cash Flow",
+    "go_count": 3,
+    "gates": [
+      {
+        "stage": "1·Moat",
+        "name": "Disruption Test",
+        "status": "NEEDS_LLM",
+        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
+        "value": null,
+        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Macro backdrop",
+        "status": "NEEDS_LLM",
+        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
+        "value": null,
+        "criterion": "No imminent macro shock; market regime supportive"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Sector trend (XLK)",
+        "status": "GO",
+        "detail": "XLK 184.57 vs 200SMA 150.02",
+        "value": 34.55,
+        "criterion": "Sector ETF above 200-day SMA"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "RPO / Backlog",
+        "status": "NEEDS_LLM",
+        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
+        "value": null,
+        "criterion": "RPO growing vs year-ago quarter"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "Free Cash Flow",
+        "status": "NO_GO",
+        "detail": "FCF latest -0.12B vs prior -0.47B",
+        "value": -120000000.0,
+        "criterion": "FCF positive and growing YoY (supports buybacks)"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "PEG ratio",
+        "status": "SKIP",
+        "detail": "PEG unavailable",
+        "value": null,
+        "criterion": ""
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Concrete floor (RSI-div OR fib+volume)",
+        "status": "NO_GO",
+        "detail": "low=2092.08 on none (low 2092.08; fib50 1304.54/618 1061.35; best support 44.17/5x); buyers_tail=True; bounced=True; confirmed via no buyer confirmation",
+        "value": 1.25,
+        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Bullish RSI divergence",
+        "status": "SKIP",
+        "detail": "price LL=False, RSI HL=False (RSI 67.8->54.9)",
+        "value": null,
+        "criterion": "Price lower-low while RSI higher-low (optional path A)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Volume climax",
+        "status": "SKIP",
+        "detail": "bounce-day vol 13.8M vs 21d avg 11.0M (1.25x)",
+        "value": 1.25,
+        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
+      },
+      {
+        "stage": "4·RS",
+        "name": "Strength on a red day",
+        "status": "NO_GO",
+        "detail": "on 2026-06-23 QQQ -3.29% / stock -13.64%",
+        "value": -13.64,
+        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Next earnings",
+        "status": "GO",
+        "detail": "earnings in 59 days (2026-08-24) — outside ideal 15-45d window (still a catalyst)",
+        "value": 59,
+        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Product/launch catalyst",
+        "status": "NEEDS_LLM",
+        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
+        "value": null,
+        "criterion": "At least one scheduled catalyst in 15-45 days"
+      },
+      {
+        "stage": "6·Exit",
+        "name": "Hard stop price",
+        "status": "GO",
+        "detail": "floor 1665.00 -> HARD STOP 1640.03 (daily close below = auto-sell)",
+        "value": 1640.03,
+        "criterion": "Stop = floor - 1.5%, typed in advance"
+      }
+    ]
+  },
+  {
     "ticker": "SNPS",
     "price": 455.02,
     "verdict": "NO_GO",
@@ -9509,10 +9831,10 @@
     ]
   },
   {
-    "ticker": "TEAM",
-    "price": 74.68,
+    "ticker": "STX",
+    "price": 1025.36,
     "verdict": "NO_GO",
-    "blocked_at": "Sector trend (IGV)",
+    "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
     "go_count": 5,
     "gates": [
       {
@@ -9533,10 +9855,10 @@
       },
       {
         "stage": "1·Macro",
-        "name": "Sector trend (IGV)",
-        "status": "NO_GO",
-        "detail": "IGV 84.76 vs 200SMA 97.51",
-        "value": -12.75,
+        "name": "Sector trend (XLK)",
+        "status": "GO",
+        "detail": "XLK 184.57 vs 200SMA 150.02",
+        "value": 34.55,
         "criterion": "Sector ETF above 200-day SMA"
       },
       {
@@ -9551,31 +9873,31 @@
         "stage": "2·Cash",
         "name": "Free Cash Flow",
         "status": "GO",
-        "detail": "FCF latest 1.42B vs prior 1.42B",
-        "value": 1415543000.0,
+        "detail": "FCF latest 0.82B vs prior 0.66B",
+        "value": 818000000.0,
         "criterion": "FCF positive and growing YoY (supports buybacks)"
       },
       {
         "stage": "2·Cash",
         "name": "PEG ratio",
         "status": "GO",
-        "detail": "PEG 0.62",
-        "value": 0.62,
+        "detail": "PEG 0.71",
+        "value": 0.71,
         "criterion": "PEG < 1.8"
       },
       {
         "stage": "3·Floor",
         "name": "Concrete floor (RSI-div OR fib+volume)",
         "status": "NO_GO",
-        "detail": "low=74.41 on none (low 74.41; fib50 86.55/618 79.61; best support 157.26/4x); buyers_tail=False; bounced=False; confirmed via no buyer confirmation",
-        "value": 1.1,
+        "detail": "low=1001.33 on none (low 1001.33; fib50 689.26/618 593.73; best support 152.05/6x); buyers_tail=False; bounced=False; confirmed via no buyer confirmation",
+        "value": 0.66,
         "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
       },
       {
         "stage": "3·Floor",
         "name": "Bullish RSI divergence",
         "status": "SKIP",
-        "detail": "price LL=False, RSI HL=False (RSI 48.1->35.1)",
+        "detail": "price LL=False, RSI HL=False (RSI 77.8->51.4)",
         "value": null,
         "criterion": "Price lower-low while RSI higher-low (optional path A)"
       },
@@ -9583,24 +9905,24 @@
         "stage": "3·Floor",
         "name": "Volume climax",
         "status": "SKIP",
-        "detail": "bounce-day vol 6.2M vs 21d avg 5.7M (1.10x)",
-        "value": 1.1,
+        "detail": "bounce-day vol 2.8M vs 21d avg 4.2M (0.66x)",
+        "value": 0.66,
         "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
       },
       {
         "stage": "4·RS",
         "name": "Strength on a red day",
-        "status": "GO",
-        "detail": "on 2026-06-23 QQQ -3.29% / stock 1.74%",
-        "value": 1.74,
+        "status": "NO_GO",
+        "detail": "on 2026-06-23 QQQ -3.29% / stock -5.07%",
+        "value": -5.07,
         "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
       },
       {
         "stage": "5·Catalyst",
         "name": "Next earnings",
         "status": "GO",
-        "detail": "earnings in 41 days (2026-08-06)",
-        "value": 41,
+        "detail": "earnings in 32 days (2026-07-28)",
+        "value": 32,
         "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
       },
       {
@@ -9615,8 +9937,8 @@
         "stage": "6·Exit",
         "name": "Hard stop price",
         "status": "GO",
-        "detail": "floor 74.41 -> HARD STOP 73.29 (daily close below = auto-sell)",
-        "value": 73.29,
+        "detail": "floor 821.48 -> HARD STOP 809.16 (daily close below = auto-sell)",
+        "value": 809.16,
         "criterion": "Stop = floor - 1.5%, typed in advance"
       }
     ]
@@ -9735,6 +10057,119 @@
     ]
   },
   {
+    "ticker": "TRI",
+    "price": 81.01,
+    "verdict": "NO_GO",
+    "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
+    "go_count": 7,
+    "gates": [
+      {
+        "stage": "1·Moat",
+        "name": "Disruption Test",
+        "status": "NEEDS_LLM",
+        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
+        "value": null,
+        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Macro backdrop",
+        "status": "NEEDS_LLM",
+        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
+        "value": null,
+        "criterion": "No imminent macro shock; market regime supportive"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Sector trend (XLI)",
+        "status": "GO",
+        "detail": "XLI 184.12 vs 200SMA 162.83",
+        "value": 21.29,
+        "criterion": "Sector ETF above 200-day SMA"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "RPO / Backlog",
+        "status": "NEEDS_LLM",
+        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
+        "value": null,
+        "criterion": "RPO growing vs year-ago quarter"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "Free Cash Flow",
+        "status": "GO",
+        "detail": "FCF latest 2.02B vs prior 1.85B",
+        "value": 2017000000.0,
+        "criterion": "FCF positive and growing YoY (supports buybacks)"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "PEG ratio",
+        "status": "GO",
+        "detail": "PEG 1.29",
+        "value": 1.29,
+        "criterion": "PEG < 1.8"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Concrete floor (RSI-div OR fib+volume)",
+        "status": "NO_GO",
+        "detail": "low=79.54 on fib (50=78.78/618=78.25); buyers_tail=False; bounced=True; confirmed via RSI divergence",
+        "value": 1.07,
+        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Bullish RSI divergence",
+        "status": "GO",
+        "detail": "price LL=True, RSI HL=True (RSI 30.1->36.2)",
+        "value": null,
+        "criterion": "Price lower-low while RSI higher-low (optional path A)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Volume climax",
+        "status": "SKIP",
+        "detail": "bounce-day vol 2.1M vs 21d avg 2.0M (1.07x)",
+        "value": 1.07,
+        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
+      },
+      {
+        "stage": "4·RS",
+        "name": "Strength on a red day",
+        "status": "GO",
+        "detail": "on 2026-06-23 QQQ -3.29% / stock 5.43%",
+        "value": 5.43,
+        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Next earnings",
+        "status": "GO",
+        "detail": "earnings in 40 days (2026-08-05)",
+        "value": 40,
+        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Product/launch catalyst",
+        "status": "NEEDS_LLM",
+        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
+        "value": null,
+        "criterion": "At least one scheduled catalyst in 15-45 days"
+      },
+      {
+        "stage": "6·Exit",
+        "name": "Hard stop price",
+        "status": "GO",
+        "detail": "floor 76.28 -> HARD STOP 75.14 (daily close below = auto-sell)",
+        "value": 75.14,
+        "criterion": "Stop = floor - 1.5%, typed in advance"
+      }
+    ]
+  },
+  {
     "ticker": "TSLA",
     "price": 375.12,
     "verdict": "NO_GO",
@@ -9843,119 +10278,6 @@
         "status": "GO",
         "detail": "floor 371.22 -> HARD STOP 365.65 (daily close below = auto-sell)",
         "value": 365.65,
-        "criterion": "Stop = floor - 1.5%, typed in advance"
-      }
-    ]
-  },
-  {
-    "ticker": "TTD",
-    "price": 17.33,
-    "verdict": "NO_GO",
-    "blocked_at": "Sector trend (XLC)",
-    "go_count": 4,
-    "gates": [
-      {
-        "stage": "1·Moat",
-        "name": "Disruption Test",
-        "status": "NEEDS_LLM",
-        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
-        "value": null,
-        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
-      },
-      {
-        "stage": "1·Macro",
-        "name": "Macro backdrop",
-        "status": "NEEDS_LLM",
-        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
-        "value": null,
-        "criterion": "No imminent macro shock; market regime supportive"
-      },
-      {
-        "stage": "1·Macro",
-        "name": "Sector trend (XLC)",
-        "status": "NO_GO",
-        "detail": "XLC 105.58 vs 200SMA 114.59",
-        "value": -9.01,
-        "criterion": "Sector ETF above 200-day SMA"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "RPO / Backlog",
-        "status": "NEEDS_LLM",
-        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
-        "value": null,
-        "criterion": "RPO growing vs year-ago quarter"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "Free Cash Flow",
-        "status": "GO",
-        "detail": "FCF latest 0.78B vs prior 0.63B",
-        "value": 782958000.0,
-        "criterion": "FCF positive and growing YoY (supports buybacks)"
-      },
-      {
-        "stage": "2·Cash",
-        "name": "PEG ratio",
-        "status": "GO",
-        "detail": "PEG 0.84",
-        "value": 0.84,
-        "criterion": "PEG < 1.8"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Concrete floor (RSI-div OR fib+volume)",
-        "status": "NO_GO",
-        "detail": "low=16.98 on none (low 16.98; fib50 17.33/618 17.33; best support 21.03/3x); buyers_tail=False; bounced=False; confirmed via no buyer confirmation",
-        "value": 0.65,
-        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Bullish RSI divergence",
-        "status": "SKIP",
-        "detail": "price LL=True, RSI HL=False (RSI 35.9->32.3)",
-        "value": null,
-        "criterion": "Price lower-low while RSI higher-low (optional path A)"
-      },
-      {
-        "stage": "3·Floor",
-        "name": "Volume climax",
-        "status": "SKIP",
-        "detail": "bounce-day vol 15.0M vs 21d avg 23.2M (0.65x)",
-        "value": 0.65,
-        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
-      },
-      {
-        "stage": "4·RS",
-        "name": "Strength on a red day",
-        "status": "NO_GO",
-        "detail": "on 2026-06-23 QQQ -3.29% / stock -0.50%",
-        "value": -0.5,
-        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
-      },
-      {
-        "stage": "5·Catalyst",
-        "name": "Next earnings",
-        "status": "GO",
-        "detail": "earnings in 41 days (2026-08-06)",
-        "value": 41,
-        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
-      },
-      {
-        "stage": "5·Catalyst",
-        "name": "Product/launch catalyst",
-        "status": "NEEDS_LLM",
-        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
-        "value": null,
-        "criterion": "At least one scheduled catalyst in 15-45 days"
-      },
-      {
-        "stage": "6·Exit",
-        "name": "Hard stop price",
-        "status": "GO",
-        "detail": "floor 16.98 -> HARD STOP 16.73 (daily close below = auto-sell)",
-        "value": 16.73,
         "criterion": "Stop = floor - 1.5%, typed in advance"
       }
     ]
@@ -10634,6 +10956,232 @@
         "status": "GO",
         "detail": "floor 111.50 -> HARD STOP 109.83 (daily close below = auto-sell)",
         "value": 109.83,
+        "criterion": "Stop = floor - 1.5%, typed in advance"
+      }
+    ]
+  },
+  {
+    "ticker": "WDC",
+    "price": 675.39,
+    "verdict": "NO_GO",
+    "blocked_at": "Concrete floor (RSI-div OR fib+volume)",
+    "go_count": 5,
+    "gates": [
+      {
+        "stage": "1·Moat",
+        "name": "Disruption Test",
+        "status": "NEEDS_LLM",
+        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
+        "value": null,
+        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Macro backdrop",
+        "status": "NEEDS_LLM",
+        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
+        "value": null,
+        "criterion": "No imminent macro shock; market regime supportive"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Sector trend (XLK)",
+        "status": "GO",
+        "detail": "XLK 184.57 vs 200SMA 150.02",
+        "value": 34.55,
+        "criterion": "Sector ETF above 200-day SMA"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "RPO / Backlog",
+        "status": "NEEDS_LLM",
+        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
+        "value": null,
+        "criterion": "RPO growing vs year-ago quarter"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "Free Cash Flow",
+        "status": "GO",
+        "detail": "FCF latest 1.28B vs prior -0.78B",
+        "value": 1279000000.0,
+        "criterion": "FCF positive and growing YoY (supports buybacks)"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "PEG ratio",
+        "status": "GO",
+        "detail": "PEG 0.60",
+        "value": 0.6,
+        "criterion": "PEG < 1.8"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Concrete floor (RSI-div OR fib+volume)",
+        "status": "NO_GO",
+        "detail": "low=658.50 on none (low 658.50; fib50 466.95/618 401.05; best support 73.44/4x); buyers_tail=False; bounced=False; confirmed via no buyer confirmation",
+        "value": 0.69,
+        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Bullish RSI divergence",
+        "status": "SKIP",
+        "detail": "price LL=False, RSI HL=False (RSI 74.0->48.8)",
+        "value": null,
+        "criterion": "Price lower-low while RSI higher-low (optional path A)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Volume climax",
+        "status": "SKIP",
+        "detail": "bounce-day vol 6.3M vs 21d avg 9.2M (0.69x)",
+        "value": 0.69,
+        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
+      },
+      {
+        "stage": "4·RS",
+        "name": "Strength on a red day",
+        "status": "NO_GO",
+        "detail": "on 2026-06-23 QQQ -3.29% / stock -8.45%",
+        "value": -8.45,
+        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Next earnings",
+        "status": "GO",
+        "detail": "earnings in 33 days (2026-07-29)",
+        "value": 33,
+        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Product/launch catalyst",
+        "status": "NEEDS_LLM",
+        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
+        "value": null,
+        "criterion": "At least one scheduled catalyst in 15-45 days"
+      },
+      {
+        "stage": "6·Exit",
+        "name": "Hard stop price",
+        "status": "GO",
+        "detail": "floor 489.00 -> HARD STOP 481.67 (daily close below = auto-sell)",
+        "value": 481.67,
+        "criterion": "Stop = floor - 1.5%, typed in advance"
+      }
+    ]
+  },
+  {
+    "ticker": "WMT",
+    "price": 115.78,
+    "verdict": "NO_GO",
+    "blocked_at": "PEG ratio",
+    "go_count": 5,
+    "gates": [
+      {
+        "stage": "1·Moat",
+        "name": "Disruption Test",
+        "status": "NEEDS_LLM",
+        "detail": "Flagship under direct replacement threat in 5y? Pass only if the company is the infrastructure/enabler or has an expensive data moat. STRONG, direct threat (core product cloneable / displaced by AI) = HARD REJECT. MODERATE threat the company is actively adapting to (e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', do NOT auto-reject.",
+        "value": null,
+        "criterion": "Enabler or expensive-to-replace data moat; soft-flag moderate risk"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Macro backdrop",
+        "status": "NEEDS_LLM",
+        "detail": "Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag if a macro event could sink the name regardless of its own setup.",
+        "value": null,
+        "criterion": "No imminent macro shock; market regime supportive"
+      },
+      {
+        "stage": "1·Macro",
+        "name": "Sector trend (XLP)",
+        "status": "GO",
+        "detail": "XLP 83.94 vs 200SMA 80.53",
+        "value": 3.41,
+        "criterion": "Sector ETF above 200-day SMA"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "RPO / Backlog",
+        "status": "NEEDS_LLM",
+        "detail": "Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
+        "value": null,
+        "criterion": "RPO growing vs year-ago quarter"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "Free Cash Flow",
+        "status": "GO",
+        "detail": "FCF latest 14.92B vs prior 12.66B",
+        "value": 14923000000.0,
+        "criterion": "FCF positive and growing YoY (supports buybacks)"
+      },
+      {
+        "stage": "2·Cash",
+        "name": "PEG ratio",
+        "status": "NO_GO",
+        "detail": "PEG 4.41",
+        "value": 4.41,
+        "criterion": "PEG < 1.8"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Concrete floor (RSI-div OR fib+volume)",
+        "status": "NO_GO",
+        "detail": "low=115.38 on none (low 115.38; fib50 123.45/618 120.92; best support 100.28/8x); buyers_tail=False; bounced=False; confirmed via no buyer confirmation",
+        "value": 0.83,
+        "criterion": "At a real floor + bounce candle + (bullish RSI divergence OR exact 0.5/0.618 fib touch with >=1.5x volume climax)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Bullish RSI divergence",
+        "status": "SKIP",
+        "detail": "price LL=True, RSI HL=False (RSI 31.7->25.7)",
+        "value": null,
+        "criterion": "Price lower-low while RSI higher-low (optional path A)"
+      },
+      {
+        "stage": "3·Floor",
+        "name": "Volume climax",
+        "status": "SKIP",
+        "detail": "bounce-day vol 20.4M vs 21d avg 24.7M (0.83x)",
+        "value": 0.83,
+        "criterion": "Reversal-day volume >= 1.5x monthly avg (optional path B)"
+      },
+      {
+        "stage": "4·RS",
+        "name": "Strength on a red day",
+        "status": "GO",
+        "detail": "on 2026-06-23 QQQ -3.29% / stock 1.91%",
+        "value": 1.91,
+        "criterion": "Stock >= -0.3% (or green) on QQQ's strongest down day"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Next earnings",
+        "status": "GO",
+        "detail": "earnings in 55 days (2026-08-20) — outside ideal 15-45d window (still a catalyst)",
+        "value": 55,
+        "criterion": "Hard catalyst (earnings) inside ~15-45 days; outside = SKIP, agent confirms a product catalyst"
+      },
+      {
+        "stage": "5·Catalyst",
+        "name": "Product/launch catalyst",
+        "status": "NEEDS_LLM",
+        "detail": "Web-search next 15-45 days for product/chip/version launch or event. If earnings already GO, this is optional.",
+        "value": null,
+        "criterion": "At least one scheduled catalyst in 15-45 days"
+      },
+      {
+        "stage": "6·Exit",
+        "name": "Hard stop price",
+        "status": "GO",
+        "detail": "floor 115.38 -> HARD STOP 113.65 (daily close below = auto-sell)",
+        "value": 113.65,
         "criterion": "Stop = floor - 1.5%, typed in advance"
       }
     ]
