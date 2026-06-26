@@ -87,17 +87,28 @@ _ENGINE_LABELS = {
 # Fallback list — runs only if every live engine fails. Maintained by hand!
 # Updated: added NOW (ServiceNow) and PLTR (Palantir).
 NDX_FALLBACK = [
-    "AAPL", "ABNB", "ADBE", "ADI", "ADP", "ADSK", "AEP", "AMAT", "AMD", "AMGN",
-    "AMZN", "ANSS", "APP", "ARM", "ASML", "AVGO", "AZN", "BIIB", "BKNG", "BKR",
-    "CCEP", "CDNS", "CDW", "CEG", "CHTR", "CMCSA", "COST", "CPRT", "CRWD", "CSCO",
-    "CSGP", "CSX", "CTAS", "CTSH", "DASH", "DDOG", "DXCM", "EA", "EXC", "FANG",
-    "FAST", "FTNT", "GEHC", "GFS", "GILD", "GOOG", "GOOGL", "HON", "IDXX", "INTC",
-    "INTU", "ISRG", "KDP", "KHC", "KLAC", "LIN", "LRCX", "LULU", "MAR", "MCHP",
-    "MDLZ", "MELI", "META", "MNST", "MRVL", "MSFT", "MU", "NFLX", "NOW", "NVDA",
-    "NXPI", "ODFL", "ON", "ORLY", "PANW", "PAYX", "PCAR", "PDD", "PEP", "PLTR",
-    "PYPL", "QCOM", "REGN", "ROP", "ROST", "SBUX", "SNPS", "TEAM", "TMUS", "TSLA",
-    "TTD", "TTWO", "TXN", "VRSK", "VRTX", "WBD", "WDAY", "XEL", "ZS",
+    "AAPL", "ABNB", "ADBE", "ADI", "ADP", "ADSK", "AEP", "ALNY", "AMAT", "AMD",
+    "AMGN", "AMZN", "APP", "ARM", "ASML", "AVGO", "AXON", "BKNG", "BKR", "CCEP",
+    "CDNS", "CEG", "CHTR", "CMCSA", "COST", "CPRT", "CRWD", "CSCO", "CSX", "CTAS",
+    "CTSH", "DASH", "DDOG", "DXCM", "EA", "EXC", "FANG", "FAST", "FER", "FTNT",
+    "GEHC", "GILD", "GOOG", "GOOGL", "HON", "IDXX", "INSM", "INTC", "INTU", "ISRG",
+    "KDP", "KHC", "KLAC", "LIN", "LITE", "LRCX", "MAR", "MCHP", "MDLZ", "MELI",
+    "META", "MNST", "MPWR", "MRVL", "MSFT", "MSTR", "MU", "NFLX", "NOW", "NVDA",
+    "NXPI", "ODFL", "ORLY", "PANW", "PAYX", "PCAR", "PDD", "PEP", "PLTR", "PYPL",
+    "QCOM", "REGN", "ROP", "ROST", "SBUX", "SHOP", "SNDK", "SNPS", "STX", "TMUS",
+    "TRI", "TSLA", "TTWO", "TXN", "VRSK", "VRTX", "WBD", "WDAY", "WDC", "WMT",
+    "XEL", "ZS",
 ]
+
+# High-conviction CURRENT Nasdaq-100 members that must never be missing.
+# If a live source silently omits one (e.g. Wikipedia dropping NOW), we
+# backfill ONLY these — all confirmed constituents, so this never
+# resurrects a name that was actually removed from the index.
+NDX_SENTINELS = {
+    "AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "GOOG", "META", "AVGO",
+    "TSLA", "COST", "NFLX", "NOW", "PLTR", "AMD", "PEP", "ADBE", "CSCO",
+    "TMUS", "INTU", "QCOM", "AMGN", "TXN", "MU", "AMAT", "ISRG", "PANW",
+}
 
 
 def _fetch_text(url, session=None, params=None) -> str:
@@ -166,11 +177,17 @@ def get_nasdaq100(session=None) -> list:
         try:
             syms = engine(session)
             if 90 <= len(syms) <= 110:            # sanity gate — the real hero
-                UNIVERSE_SOURCE = (f"{_ENGINE_LABELS[engine.__name__]} "
-                                   f"({len(syms)} tickers)")
-                print(f"[universe] {engine.__name__}: {len(syms)} tickers",
+                live = set(syms)
+                missing = sorted(NDX_SENTINELS - live)   # known members the source dropped
+                merged = sorted(live | set(missing))
+                label = f"{_ENGINE_LABELS[engine.__name__]} ({len(syms)} tickers)"
+                if missing:
+                    label += f" + sentinel backfill ({', '.join(missing)})"
+                UNIVERSE_SOURCE = label
+                print(f"[universe] {engine.__name__}: {len(syms)} tickers"
+                      + (f"; backfilled {missing}" if missing else ""),
                       file=sys.stderr)
-                return syms
+                return merged
             print(f"[universe] {engine.__name__} returned {len(syms)} "
                   f"(outside 90-110) — skipping.", file=sys.stderr)
         except Exception as e:
