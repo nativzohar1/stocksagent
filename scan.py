@@ -40,6 +40,7 @@ Dependencies: yfinance>=0.2.59, curl_cffi>=0.7.0, pandas>=2.0, numpy,
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import sys
 from dataclasses import dataclass, field, asdict
@@ -70,7 +71,12 @@ except Exception:  # pragma: no cover
 # Nasdaq-100 universe                                                         #
 # --------------------------------------------------------------------------- #
 
-# Fallback list used only if the live Wikipedia fetch fails.
+# UA תקין הוא חובה: ויקימדיה מחזירה 403 ל-UA ריק/גנרי (זה היה הבאג, לא חסימת IP).
+UNIVERSE_UA = ("StocksagentBot/1.0 "
+               "(+https://github.com/nativzohar1/stocksagent; nativ.z@motorad.com)")
+
+# Fallback list — runs only if every live engine fails. Maintained by hand!
+# Updated: added NOW (ServiceNow) and PLTR (Palantir).
 NDX_FALLBACK = [
     "AAPL", "ABNB", "ADBE", "ADI", "ADP", "ADSK", "AEP", "AMAT", "AMD", "AMGN",
     "AMZN", "ANSS", "APP", "ARM", "ASML", "AVGO", "AZN", "BIIB", "BKNG", "BKR",
@@ -78,36 +84,88 @@ NDX_FALLBACK = [
     "CSGP", "CSX", "CTAS", "CTSH", "DASH", "DDOG", "DXCM", "EA", "EXC", "FANG",
     "FAST", "FTNT", "GEHC", "GFS", "GILD", "GOOG", "GOOGL", "HON", "IDXX", "INTC",
     "INTU", "ISRG", "KDP", "KHC", "KLAC", "LIN", "LRCX", "LULU", "MAR", "MCHP",
-    "MDLZ", "MELI", "META", "MNST", "MRVL", "MSFT", "MU", "NFLX", "NVDA", "NXPI",
-    "ODFL", "ON", "ORLY", "PANW", "PAYX", "PCAR", "PDD", "PEP", "PYPL", "QCOM",
-    "REGN", "ROP", "ROST", "SBUX", "SNPS", "TEAM", "TMUS", "TSLA", "TTD", "TTWO",
-    "TXN", "VRSK", "VRTX", "WBD", "WDAY", "XEL", "ZS",
+    "MDLZ", "MELI", "META", "MNST", "MRVL", "MSFT", "MU", "NFLX", "NOW", "NVDA",
+    "NXPI", "ODFL", "ON", "ORLY", "PANW", "PAYX", "PCAR", "PDD", "PEP", "PLTR",
+    "PYPL", "QCOM", "REGN", "ROP", "ROST", "SBUX", "SNPS", "TEAM", "TMUS", "TSLA",
+    "TTD", "TTWO", "TXN", "VRSK", "VRTX", "WBD", "WDAY", "XEL", "ZS",
 ]
 
 
-def get_nasdaq100(session=None) -> list:
-    """Fetch the live Nasdaq-100 constituents from Wikipedia; fall back to a
-    hardcoded list on any failure."""
-    try:
-        tables = pd.read_html("https://en.wikipedia.org/wiki/Nasdaq-100")
-        for t in tables:
-            cols = [str(c).lower() for c in t.columns]
-            tcol = next((t.columns[i] for i, c in enumerate(cols)
-                         if "ticker" in c or "symbol" in c), None)
-            if tcol is not None:
-                syms = []
-                for s in t[tcol].tolist():
-                    s = str(s).strip().upper().replace(".", "-")
-                    if s and s.replace("-", "").isalpha() and 1 <= len(s) <= 6:
-                        syms.append(s)
-                syms = sorted(set(syms))
-                if len(syms) >= 90:
-                    return syms
-    except Exception as e:
-        print(f"[warn] live Nasdaq-100 fetch failed ({e}); using fallback list.",
-              file=sys.stderr)
-    return sorted(set(NDX_FALLBACK))
+def _fetch_text(url, session=None, params=None) -> str:
+    """GET with a real browser User-Agent. Uses the curl_cffi session when
+    available, otherwise falls back to urllib (still with a valid UA)."""
+    headers = {"User-Agent": UNIVERSE_UA}
+    if session is not None:                       # curl_cffi (impersonate=chrome)
+        r = session.get(url, headers=headers, params=params, timeout=20)
+        r.raise_for_status()
+        return r.text
+    import urllib.request                          # fallback without curl_cffi
+    from urllib.parse import urlencode
+    full = url + ("?" + urlencode(params) if params else "")
+    req = urllib.request.Request(full, headers=headers)
+    with urllib.request.urlopen(req, timeout=20) as resp:
+        return resp.read().decode("utf-8", "replace")
 
+
+def _tickers_from_html(html: str) -> list:
+    """Find a Ticker/Symbol column in any table and extract valid symbols."""
+    for tbl in pd.read_html(io.StringIO(html)):
+        cols = [str(c).lower() for c in tbl.columns]
+        tcol = next((tbl.columns[i] for i, c in enumerate(cols)
+                     if "ticker" in c or "symbol" in c), None)
+        if tcol is None:
+            continue
+        syms = []
+        for s in tbl[tcol].tolist():
+            s = str(s).strip().upper().replace(".", "-")
+            if s and s.replace("-", "").isalpha() and 1 <= len(s) <= 6:
+                syms.append(s)
+        if len(syms) >= 50:
+            return sorted(set(syms))
+    raise ValueError("no usable ticker column found")
+
+
+def _engine_mediawiki(session=None) -> list:
+    """Engine 1: official Action API (built for bots) -> JSON, rarely blocked."""
+    text = _fetch_text(
+        "https://en.wikipedia.org/w/api.php", session,
+        params={"action": "parse", "page": "Nasdaq-100",
+                "prop": "text", "format": "json", "formatversion": "2"},
+    )
+    html = json.loads(text)["parse"]["text"]
+    return _tickers_from_html(html)
+
+
+def _engine_wikipedia_page(session=None) -> list:
+    """Engine 2: the regular Wikipedia page, but with a valid UA (fixes 403)."""
+    return _tickers_from_html(
+        _fetch_text("https://en.wikipedia.org/wiki/Nasdaq-100", session))
+
+
+def _engine_slickcharts(session=None) -> list:
+    """Engine 3: SlickCharts -> cleanest table; needs the Chrome session."""
+    return _tickers_from_html(
+        _fetch_text("https://www.slickcharts.com/nasdaq100", session))
+
+
+def get_nasdaq100(session=None) -> list:
+    """Fetch live Nasdaq-100 constituents via a 3-engine fallback chain,
+    sanity-check the count (90-110), and drop to the hardcoded list only as a
+    last resort."""
+    for engine in (_engine_mediawiki, _engine_wikipedia_page, _engine_slickcharts):
+        try:
+            syms = engine(session)
+            if 90 <= len(syms) <= 110:            # sanity gate — the real hero
+                print(f"[universe] {engine.__name__}: {len(syms)} tickers",
+                      file=sys.stderr)
+                return syms
+            print(f"[universe] {engine.__name__} returned {len(syms)} "
+                  f"(outside 90-110) — skipping.", file=sys.stderr)
+        except Exception as e:
+            print(f"[universe] {engine.__name__} failed: {e}", file=sys.stderr)
+    print(f"[universe] all live engines failed; using fallback "
+          f"({len(NDX_FALLBACK)}).", file=sys.stderr)
+    return sorted(set(NDX_FALLBACK))
 
 # --------------------------------------------------------------------------- #
 # Result containers                                                           #
