@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.2 (Open Volatility Radar)
+scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.3 (Mega-Cap Monster Radar)
 Runs on GitHub Actions (has internet). Writes results/out.json.
 
-UNIVERSE: S&P 500 (live Wikipedia constituents table). SECTOR-AGNOSTIC.
-The ONLY gate keeping slow names out is Volatility >= 40%.
+UNIVERSE: S&P 100 (OEX) — the ~101 largest, most established US companies, EXCHANGE-AGNOSTIC
+(includes NYSE names like ORCL/CRM and Nasdaq names like NOW/PLTR). SECTOR-AGNOSTIC.
+Plus a SENTINELS force-include list for elite high-vol growth monsters not yet in the OEX
+(VST, CEG, PLTR, CRWD, DDOG). The ONLY screen keeping slow blue-chips (banks/staples)
+out is Volatility >= 40%.
 
 Python OWNS (hard quant):
   CORE (AND, NO_GO):  Regime>200SMA | Volatility>=40% | Concrete floor+EMA21 | RS on red day | Hard stop
@@ -38,37 +41,37 @@ SUPPORT_TOL      = 0.025
 VOL_CLIMAX_MULT  = 2.0
 EMA_FAST         = 21
 
-# Regime ETF proxies (v2.2 alignment)
+# Regime ETF proxies
 ETF_TECH   = "XLK"     # Technology sector
 ETF_SEMIS  = "SOXX"    # Semiconductors
-ETF_BROAD  = "SPY"     # everything else (incl. Utilities like VST, Consumer, Energy, etc.)
+ETF_BROAD  = "SPY"     # everything else
 
-# Market benchmark for Relative Strength (worst-red-day test) — broad market now
+# Market benchmark for Relative Strength (worst-red-day test)
 RS_BENCHMARK = "SPY"
 
-# Optional mega-caps to force-include if the live source drops them (rarely needed for SP500)
-SENTINELS = []
+# Elite high-vol growth monsters force-included even if not (yet) in the S&P 100.
+# Added to the live universe; reported in universe_source as "sentinel backfill (...)".
+SENTINELS = ["VST", "CEG", "PLTR", "CRWD", "DDOG"]
 
-# Emergency PARTIAL fallback (used ONLY if live fetch fails). NOT the full S&P 500 —
-# a liquid high-beta subset so the scanner still produces something. Source string flags it.
-SP500_PARTIAL_FALLBACK = [
+# Emergency PARTIAL fallback (used ONLY if live fetch fails). Mega-cap subset.
+SP100_PARTIAL_FALLBACK = [
     "AAPL","MSFT","NVDA","AMZN","GOOGL","GOOG","META","AVGO","TSLA","ORCL",
-    "AMD","CRM","ADBE","NFLX","NOW","INTC","QCOM","TXN","MU","AMAT",
-    "LRCX","KLAC","PLTR","SMCI","ARM","PANW","CRWD","SNPS","CDNS","MRVL",
-    "ON","NXPI","FTNT","DDOG","ANET","MSTR","APP","UBER","SHOP","ABNB",
-    "BKNG","MELI","COIN","CEG","VST","NRG","ENPH","FSLR","DASH","RBLX"
+    "AMD","CRM","ADBE","NFLX","NOW","ACN","INTC","QCOM","TXN","AMAT",
+    "PLTR","CSCO","IBM","INTU","PYPL","UBER","LIN","PEP","COST","JPM",
+    "V","MA","HD","LLY","ABBV","MRK","UNH","XOM","CVX","CAT","BA","GE",
+    "VST","CEG","CRWD","DDOG"
 ]
 
 # ----------------------------------------------------------------------------------
-# UNIVERSE  (live S&P 500 constituents TABLE via pandas.read_html)
+# UNIVERSE  (live S&P 100 / OEX constituents TABLE via pandas.read_html)
 # ----------------------------------------------------------------------------------
 def fetch_universe():
-    """Returns (tickers:list, source:str). Live S&P 500 Wikipedia constituents table."""
+    """Returns (tickers:list, source:str). Live S&P 100 (OEX) constituents table + sentinels."""
     try:
         import io
-        url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+        url = "https://en.wikipedia.org/wiki/S%26P_100"
         r = requests.get(url, timeout=20,
-                         headers={"User-Agent": "Mozilla/5.0 (stocksagent/2.2)"})
+                         headers={"User-Agent": "Mozilla/5.0 (stocksagent/2.3)"})
         r.raise_for_status()
         tables = pd.read_html(io.StringIO(r.text))
 
@@ -90,23 +93,23 @@ def fetch_universe():
                 if 1 <= len(s) <= 6 and s.replace(".", "").replace("-", "").isalpha():
                     syms.append(s.replace(".", "-"))
             syms = list(dict.fromkeys(syms))
-            if 490 <= len(syms) <= 510:        # plausibility window for the S&P 500 table
+            if 95 <= len(syms) <= 110:          # plausibility window for the S&P 100 table (101)
                 tickers = syms
                 break
 
         if not tickers:
-            raise ValueError("no S&P 500 constituents table with 490-510 tickers found")
+            raise ValueError("no S&P 100 constituents table with 95-110 tickers found")
 
-        src = f"live: Wikipedia S&P 500 constituents table ({len(tickers)} tickers)"
+        src = f"live: Wikipedia S&P 100 (OEX) constituents table ({len(tickers)} tickers)"
         added = [s for s in SENTINELS if s not in tickers]
         if added:
             tickers += added
             src += f" + sentinel backfill ({','.join(added)})"
         return sorted(set(tickers)), src
     except Exception as e:
-        return list(dict.fromkeys(SP500_PARTIAL_FALLBACK)), \
-               (f"FALLBACK: SP500_PARTIAL_FALLBACK ({len(set(SP500_PARTIAL_FALLBACK))} tickers, "
-                f"PARTIAL — not full S&P 500) — live fetch failed ({e})")
+        return list(dict.fromkeys(SP100_PARTIAL_FALLBACK)), \
+               (f"FALLBACK: SP100_PARTIAL_FALLBACK ({len(set(SP100_PARTIAL_FALLBACK))} tickers, "
+                f"PARTIAL — not full S&P 100) — live fetch failed ({e})")
 
 # ----------------------------------------------------------------------------------
 # TECHNICAL HELPERS
@@ -129,7 +132,7 @@ def gate(stage, name, status, detail, value=None, criterion=""):
 # CORE GATES (AND, NO_GO)
 # ----------------------------------------------------------------------------------
 def classify_regime_etf(info):
-    """v2.2: Technology->XLK | Semiconductors->SOXX | everything else->SPY."""
+    """Technology->XLK | Semiconductors->SOXX | everything else->SPY."""
     sector = (info.get("sector") or "").lower()
     industry = (info.get("industry") or "").lower()
     if "semiconductor" in industry or "semiconductor" in sector:
@@ -341,7 +344,7 @@ def ai_gates():
              "AI: search FRESH Form 4 insider BUYS only (NOT 13F)", None,
              "recent insider buying = confirming signal"),
         gate(1, "Disruption test", "NEEDS_LLM",
-             "AI: direct threat=STRONG SELL | adapting w/ AI=BUY⚠️ | infra/data moat=clean",
+             "AI: direct threat=STRONG SELL | adapting w/ AI=BUY\u26a0\ufe0f | infra/data moat=clean",
              None, "no direct 5y replacement threat"),
         gate(2, "Devil's advocate", "NEEDS_LLM",
              "AI MUST write 2 concrete, evidenced bear reasons. NO OUTPUT without it.",
@@ -353,7 +356,7 @@ def ai_gates():
     ]
 
 # ----------------------------------------------------------------------------------
-# PER-TICKER PIPELINE  (v2.2: SECTOR-AGNOSTIC — no Sector focus gate)
+# PER-TICKER PIPELINE  (SECTOR-AGNOSTIC — no Sector focus gate)
 # ----------------------------------------------------------------------------------
 def scan_ticker(symbol, etf_cache, bench_close, universe_source):
     item = {"ticker": symbol, "price": None, "verdict": "NO_GO",
@@ -430,7 +433,7 @@ def main():
     for i, sym in enumerate(tickers, 1):
         print(f"[{i}/{len(tickers)}] {sym}")
         results.append(scan_ticker(sym, etf_cache, bench_close, universe_source))
-        time.sleep(0.25)   # ~500 names -> keep total runtime in check
+        time.sleep(0.3)
 
     results.sort(key=lambda x: (x["verdict"] != "GO_PENDING_THESIS", -x["go_count"]))
     survivors = [r["ticker"] for r in results if r["verdict"] == "GO_PENDING_THESIS"]
