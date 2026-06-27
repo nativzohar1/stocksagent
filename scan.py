@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.0
+scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.0 (FINAL, QA-fixed)
 Runs on GitHub Actions (has internet). Writes results/out.json.
 Spec: FROZEN PRD v2.0.
 
 Python OWNS (hard quant):
   CORE (AND, NO_GO):  Regime>200SMA | Volatility>=40% | Concrete floor+EMA21 breakout | RS on red day | Hard stop
-  SCORE (SKIP-able):  PEG<1.8 | FCF positive+growing | Catalyst (earnings 15-45d)
+  SCORE (rank only):  PEG<1.8 | FCF positive+growing | Catalyst (earnings 15-45d)
+                      -> SKIP = data MISSING (AI heals) ; NO_GO = data PRESENT but bad (no rank point, never rejects)
 AI OWNS (NEEDS_LLM):  Rule-of-40/RPO decoupling | Insider Form4 | Disruption | Devil's Advocate | Data-Healing
 """
 
@@ -22,8 +23,8 @@ import yfinance as yf
 # ----------------------------------------------------------------------------------
 # CONFIG
 # ----------------------------------------------------------------------------------
-OUT_PATH        = Path("results/out.json")
-HISTORY_PERIOD  = "1y"          # daily bars for technicals
+OUT_PATH         = Path("results/out.json")
+HISTORY_PERIOD   = "1y"          # daily bars for technicals
 EXCLUDED_SECTORS = {"Consumer Defensive", "Utilities"}   # XLP / XLU
 PEG_MAX          = 1.8
 VOL_MIN          = 0.40          # 40% annual range
@@ -67,11 +68,6 @@ def fetch_universe():
     else hardcoded fallback."""
     try:
         url = "https://en.wikipedia.org/w/api.php"
-        params = {
-            "action": "parse", "page": "Nasdaq-100",
-            "prop": "wikitext", "section": "0", "format": "json"
-        }
-        # full page parse (sections vary) — pull wikitext and regex the tickers table
         params = {"action": "parse", "page": "Nasdaq-100", "prop": "wikitext", "format": "json"}
         r = requests.get(url, params=params, timeout=20,
                          headers={"User-Agent": "stocksagent/2.0"})
@@ -79,12 +75,8 @@ def fetch_universe():
         wt = r.json()["parse"]["wikitext"]["*"]
 
         import re
-        # tickers appear as e.g. {{nasdaq|AAPL}} or in a |TICKER| cell; grab uppercase symbols
         cand = set(re.findall(r"\b([A-Z]{1,5})\b", wt))
-        # intersect with plausibility: must look like tickers present in fallback OR 1-5 caps
         tickers = sorted({t for t in cand if 1 <= len(t) <= 5})
-        # sanity: a real NDX parse should yield ~90-110 names; if junk, raise
-        # keep only those that also resolve later; first do a crude noise filter
         noise = {"THE","AND","INC","CORP","ETF","USD","NYSE","SEC","CEO","API","USA","ID","UTC","ISO"}
         tickers = [t for t in tickers if t not in noise]
         if not (80 <= len(tickers) <= 130):
@@ -139,8 +131,7 @@ def gate_regime(etf_symbol, etf_cache):
     h = etf_cache[etf_symbol]
     if h is None or len(h) < 200:
         return gate(1, "Sector trend (Regime)", "SKIP",
-                    f"{etf_symbol} history unavailable", None,
-                    "ETF > 200SMA")
+                    f"{etf_symbol} history unavailable", None, "ETF > 200SMA")
     sma200 = h.rolling(200).mean().iloc[-1]
     last = h.iloc[-1]
     ok = last > sma200
@@ -161,7 +152,6 @@ def detect_floor(df):
     """Returns (is_on_floor:bool, reason:str). Fib 0.5/0.618 OR horizontal support (2+ touches)."""
     close = df["Close"]; low = df["Low"]
     recent = close.iloc[-1]
-    # --- Fib of the dominant swing (last ~6m) ---
     win = df.iloc[-126:] if len(df) >= 126 else df
     swing_hi = win["High"].max(); swing_lo = win["Low"].min()
     rng = swing_hi - swing_lo
@@ -171,7 +161,6 @@ def detect_floor(df):
             level = swing_hi - r * rng
             if abs(recent - level) / recent <= FIB_TOL:
                 fib_hits.append(f"Fib {label}@{level:.2f}")
-    # --- Horizontal support: cluster of swing lows near current price (2+ touches) ---
     lows = low.iloc[-126:] if len(low) >= 126 else low
     troughs = lows[(lows.shift(1) > lows) & (lows.shift(-1) > lows)].dropna()
     touches = [t for t in troughs if abs(t - recent) / recent <= SUPPORT_TOL]
@@ -210,7 +199,6 @@ def gate_concrete_floor(df):
     confirm = rsi_div or vclimax
     ema21 = ema(close, EMA_FAST)
     broke_out = close.iloc[-1] > ema21.iloc[-1]
-    # bounce: current close above the recent 10d low
     bounce = close.iloc[-1] > df["Low"].iloc[-10:].min()
     ok = on_floor and bounce and confirm and broke_out
     conf_txt = []
@@ -237,7 +225,6 @@ def gate_relative_strength(df, qqq_close):
     qret = qqq_close.pct_change()
     worst_day = qret.iloc[-30:].idxmin()
     if worst_day not in df.index:
-        # align to nearest available date
         common = df["Close"].reindex(qqq_close.index).dropna()
         sret = common.pct_change()
         if worst_day not in sret.index:
@@ -259,15 +246,16 @@ def gate_hard_stop(df):
                 f"10d low {low10:.2f} x {STOP_MULT}", stop, "10d-low * 0.985")
 
 # ----------------------------------------------------------------------------------
-# SCORE GATES (SKIP-able)
+# SCORE GATES (rank only) — SKIP = data MISSING (AI heals) ; NO_GO = present but bad
 # ----------------------------------------------------------------------------------
 def gate_peg(info):
     peg = info.get("trailingPegRatio") or info.get("pegRatio")
     if peg is None or (isinstance(peg, float) and math.isnan(peg)) or peg == 0:
         return gate(2, "PEG", "SKIP", "PEG unavailable (yfinance null) -> AI heals", None, "PEG < 1.8")
     ok = peg < PEG_MAX
-    return gate(2, "PEG", "GO" if ok else "SKIP",
-                f"PEG {peg:.2f}", round(float(peg), 2), "PEG < 1.8")
+    return gate(2, "PEG", "GO" if ok else "NO_GO",
+                f"PEG {peg:.2f} ({'<' if ok else '>='} {PEG_MAX})",
+                round(float(peg), 2), "PEG < 1.8")
 
 def gate_fcf(tk):
     try:
@@ -289,8 +277,9 @@ def gate_fcf(tk):
             return gate(2, "FCF", "SKIP", "insufficient FCF history -> AI heals", None, "FCF positive & growing YoY")
         latest, prior = float(vals[0]), float(vals[1])
         ok = latest > 0 and latest > prior
-        return gate(2, "FCF", "GO" if ok else "SKIP",
-                    f"FCF {latest/1e9:.2f}B vs prior {prior/1e9:.2f}B",
+        return gate(2, "FCF", "GO" if ok else "NO_GO",
+                    f"FCF {latest/1e9:.2f}B vs prior {prior/1e9:.2f}B"
+                    f" ({'positive & growing' if ok else 'negative or shrinking'})",
                     round(latest, 0), "FCF positive & growing YoY")
     except Exception as e:
         return gate(2, "FCF", "SKIP", f"FCF error ({e}) -> AI heals", None, "FCF positive & growing YoY")
@@ -308,14 +297,17 @@ def gate_catalyst(tk):
         if ed is None:
             return gate(2, "Next earnings (Catalyst)", "SKIP", "earnings date unknown", None,
                         "earnings in 15-45 days")
-        if isinstance(ed, (dt.datetime, dt.date)):
-            ed_date = ed if isinstance(ed, dt.date) and not isinstance(ed, dt.datetime) else ed.date() if isinstance(ed, dt.datetime) else ed
+        if isinstance(ed, dt.datetime):
+            ed_date = ed.date()
+        elif isinstance(ed, dt.date):
+            ed_date = ed
         else:
             ed_date = pd.to_datetime(ed).date()
         days = (ed_date - dt.date.today()).days
         ok = CATALYST_MIN_D <= days <= CATALYST_MAX_D
-        return gate(2, "Next earnings (Catalyst)", "GO" if ok else "SKIP",
-                    f"earnings {ed_date} (in {days}d)", days, "earnings in 15-45 days")
+        return gate(2, "Next earnings (Catalyst)", "GO" if ok else "NO_GO",
+                    f"earnings {ed_date} (in {days}d, window {CATALYST_MIN_D}-{CATALYST_MAX_D})",
+                    days, "earnings in 15-45 days")
     except Exception as e:
         return gate(2, "Next earnings (Catalyst)", "SKIP", f"calendar error ({e})", None,
                     "earnings in 15-45 days")
@@ -384,7 +376,7 @@ def scan_ticker(symbol, etf_cache, qqq_close, universe_source):
         g_rs     = gate_relative_strength(df, qqq_close)
         g_stop   = gate_hard_stop(df)
 
-        # ----- SCORE (SKIP-able) -----
+        # ----- SCORE (rank only) -----
         g_peg = gate_peg(info)
         g_fcf = gate_fcf(tk)
         g_cat = gate_catalyst(tk)
@@ -393,14 +385,13 @@ def scan_ticker(symbol, etf_cache, qqq_close, universe_source):
         gates += ai_gates()
         item["gates"] = gates
 
-        # ----- Verdict: any CORE NO_GO => rejected -----
-        core = [g_regime, g_vol, g_floor, g_rs]   # g_stop is always GO (informational number)
+        # ----- Verdict: any CORE NO_GO => rejected. SCORE NO_GO never rejects -----
+        core = [g_regime, g_vol, g_floor, g_rs]   # g_stop always GO; SCORE gates intentionally excluded
         blocker = next((g for g in core if g["status"] == "NO_GO"), None)
         if blocker:
             item["verdict"] = "NO_GO"
             item["blocked_at"] = blocker["name"]
         else:
-            # passed all hard core gates -> survivor, AI resolves final routing
             item["verdict"] = "GO_PENDING_THESIS"
             item["blocked_at"] = None
 
@@ -428,9 +419,8 @@ def main():
     for i, sym in enumerate(tickers, 1):
         print(f"[{i}/{len(tickers)}] {sym}")
         results.append(scan_ticker(sym, etf_cache, qqq_close, universe_source))
-        time.sleep(0.4)   # be gentle with Yahoo
+        time.sleep(0.4)
 
-    # rank survivors first by go_count
     results.sort(key=lambda x: (x["verdict"] != "GO_PENDING_THESIS", -x["go_count"]))
     survivors = [r["ticker"] for r in results if r["verdict"] == "GO_PENDING_THESIS"]
     print(f"SURVIVORS {survivors}")
