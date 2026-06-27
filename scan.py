@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.4 (Mega-Cap Monster Radar)
+scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.5 (Mega-Cap Monster Radar)
 Runs on GitHub Actions (has internet). Writes results/out.json.
 
 UNIVERSE: S&P 100 (OEX) — the ~101 largest, most established US companies, EXCHANGE-AGNOSTIC
 (includes NYSE names like ORCL/CRM and Nasdaq names like NOW/PLTR). SECTOR-AGNOSTIC.
-Plus a SENTINELS force-include list for elite high-vol growth monsters not yet in the OEX
-(VST, CEG, PLTR, CRWD, DDOG). The ONLY screen keeping slow blue-chips (banks/staples)
-out is Volatility >= 40%.
+Plus a SENTINELS force-include list (VST, CEG, PLTR, CRWD, DDOG). The ONLY screen keeping
+slow blue-chips (banks/staples) out is Volatility >= 40%.
 
 Python OWNS (hard quant):
   CORE (AND, NO_GO):  Volatility>=40% | Concrete floor+EMA21 | RS on red day | Hard stop
@@ -16,9 +15,11 @@ Python OWNS (hard quant):
                       -> SKIP = data MISSING (AI heals) ; NO_GO = data PRESENT but bad (no rank point, never rejects)
 AI OWNS (NEEDS_LLM):  Rule-of-40/RPO decoupling | Insider Form4 | Disruption | Devil's Advocate | Data-Healing
 
-v2.4 CHANGE: Regime is NO LONGER a rejecting CORE gate. A monster that decoupled from a
-bleeding sector and landed on a concrete floor (broke EMA21) must NOT be thrown away just
-because XLK/SPY is under its 200SMA. Regime now only affects go_count (rank), like PEG/FCF.
+v2.4: Regime is rank-only (never rejects) — catch monsters that decoupled from a weak sector.
+v2.5: CURE 'LATENCY BLINDNESS'. yfinance daily history often lags the latest completed bar
+      (esp. right after close / over a weekend), so a fresh EMA21 breakout is missed. We now
+      patch the last bar's Close/High/Low with the live yfinance fast_info.last_price BEFORE
+      any price gate runs, so floor/EMA21-breakout/RS/stop all see the current price.
 """
 
 import json, time, math, datetime as dt
@@ -44,6 +45,7 @@ FIB_TOL          = 0.03
 SUPPORT_TOL      = 0.025
 VOL_CLIMAX_MULT  = 2.0
 EMA_FAST         = 21
+LIVE_OVERRIDE_TOL = 0.001        # only override if live price differs >0.1% from last close
 
 # Regime ETF proxies
 ETF_TECH   = "XLK"     # Technology sector
@@ -54,7 +56,6 @@ ETF_BROAD  = "SPY"     # everything else
 RS_BENCHMARK = "SPY"
 
 # Elite high-vol growth monsters force-included even if not (yet) in the S&P 100.
-# Added to the live universe; reported in universe_source as "sentinel backfill (...)".
 SENTINELS = ["VST", "CEG", "PLTR", "CRWD", "DDOG"]
 
 # Emergency PARTIAL fallback (used ONLY if live fetch fails). Mega-cap subset.
@@ -75,7 +76,7 @@ def fetch_universe():
         import io
         url = "https://en.wikipedia.org/wiki/S%26P_100"
         r = requests.get(url, timeout=20,
-                         headers={"User-Agent": "Mozilla/5.0 (stocksagent/2.4)"})
+                         headers={"User-Agent": "Mozilla/5.0 (stocksagent/2.5)"})
         r.raise_for_status()
         tables = pd.read_html(io.StringIO(r.text))
 
@@ -93,9 +94,8 @@ def fetch_universe():
             raw = [str(s).strip().upper() for s in t[tcol].dropna().tolist()]
             syms = []
             for s in raw:
-                # keep clean tickers; normalize Wikipedia dots to yfinance dashes (BRK.B -> BRK-B)
                 if 1 <= len(s) <= 6 and s.replace(".", "").replace("-", "").isalpha():
-                    syms.append(s.replace(".", "-"))
+                    syms.append(s.replace(".", "-"))   # BRK.B -> BRK-B for yfinance
             syms = list(dict.fromkeys(syms))
             if 95 <= len(syms) <= 110:          # plausibility window for the S&P 100 table (101)
                 tickers = syms
@@ -132,8 +132,44 @@ def gate(stage, name, status, detail, value=None, criterion=""):
     return {"stage": stage, "name": name, "status": status,
             "detail": detail, "value": value, "criterion": criterion}
 
+def get_live_price(tk):
+    """Best-effort current/last price from yfinance fast_info (quote endpoint),
+    which is fresher than the daily-history bar. Returns float or None."""
+    try:
+        fi = getattr(tk, "fast_info", None)
+        if fi is None:
+            return None
+        for key in ("last_price", "lastPrice"):
+            try:
+                v = fi[key] if isinstance(fi, dict) else getattr(fi, key, None)
+            except Exception:
+                v = None
+            if v is not None and np.isfinite(float(v)) and float(v) > 0:
+                return float(v)
+    except Exception:
+        return None
+    return None
+
+def apply_live_last_price(df, tk):
+    """CURE LATENCY BLINDNESS: patch the last bar's Close (stretch High/Low) with the
+    live fast_info price so every price-dependent gate (floor/EMA21-breakout/RS/stop)
+    sees today's move, not a lagged daily bar. Returns (df, status, note)."""
+    live = get_live_price(tk)
+    if live is None:
+        return df, "SKIP", "fast_info live price unavailable -> using last daily close"
+    last_close = float(df["Close"].iloc[-1])
+    if last_close <= 0:
+        return df, "SKIP", "invalid last close -> no override"
+    if abs(live - last_close) / last_close <= LIVE_OVERRIDE_TOL:
+        return df, "GO", f"live {live:.2f} == last close {last_close:.2f} (fresh, no override)"
+    i = df.index[-1]
+    df.at[i, "Close"] = live
+    df.at[i, "High"]  = max(float(df["High"].iloc[-1]), live)
+    df.at[i, "Low"]   = min(float(df["Low"].iloc[-1]),  live)
+    return df, "GO", f"LIVE OVERRIDE: lagged daily close {last_close:.2f} -> live {live:.2f} (fast_info)"
+
 # ----------------------------------------------------------------------------------
-# REGIME GATE (now rank-only, informational — does NOT reject)
+# REGIME GATE (rank-only, informational — does NOT reject)
 # ----------------------------------------------------------------------------------
 def classify_regime_etf(info):
     """Technology->XLK | Semiconductors->SOXX | everything else->SPY."""
@@ -378,10 +414,14 @@ def scan_ticker(symbol, etf_cache, bench_close, universe_source):
             item["gates"].append(gate(0, "Data availability", "NO_GO",
                                        f"only {len(df)} bars", len(df), ">=200 daily bars"))
             return item
+
+        # ----- v2.5: CURE LATENCY BLINDNESS — patch last bar with live fast_info price -----
+        df, live_status, live_note = apply_live_last_price(df, tk)
+
         info = {}
         try: info = tk.info or {}
         except Exception: info = {}
-        item["price"] = round(float(df["Close"].iloc[-1]), 2)
+        item["price"] = round(float(df["Close"].iloc[-1]), 2)   # now reflects the live override
 
         gates = []
 
@@ -400,18 +440,18 @@ def scan_ticker(symbol, etf_cache, bench_close, universe_source):
         g_fcf = gate_fcf(tk)
         g_cat = gate_catalyst(tk)
 
-        # informational: record the sector so the AI knows what it's looking at
+        # informational: sector + live-price freshness (NOT filters)
         sector = info.get("sector") or "unknown"
         gates.append(gate(1, "Sector (info only)", "GO",
                           f"{sector} -> regime ETF {etf}", sector, "informational, not a filter"))
+        gates.append(gate(0, "Live price (fast_info)", live_status, live_note,
+                          item["price"], "patch lagged daily bar with live price"))
 
         gates += [g_regime, g_vol, g_floor] + g_subs + [g_rs, g_peg, g_fcf, g_cat, g_stop]
         gates += ai_gates()
         item["gates"] = gates
 
         # ----- Verdict: any CORE NO_GO => rejected. Regime/PEG/FCF NO_GO never reject -----
-        # v2.4: g_regime REMOVED from core. A decoupled monster on a concrete floor that broke
-        # EMA21 stays GO_PENDING_THESIS even when its sector ETF is below the 200SMA.
         core = [g_vol, g_floor, g_rs]   # g_stop always GO; Regime & SCORE gates excluded
         blocker = next((g for g in core if g["status"] == "NO_GO"), None)
         if blocker:
