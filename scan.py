@@ -1,800 +1,443 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-scan.py — "Iron Checklist" stock screener (6-stage Go/No-Go).
+scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.0
+Runs on GitHub Actions (has internet). Writes results/out.json.
+Spec: FROZEN PRD v2.0.
 
-Default behavior: with NO arguments it scans the entire **Nasdaq-100**.
-This is what GitHub Actions / the Dust agent should call:
-
-    python scan.py                       # scans the whole Nasdaq-100
-    python scan.py --json out.json       # + writes full JSON
-    python scan.py NVDA AVGO             # scan only specific tickers
-    python scan.py --file tickers.txt    # tickers from a file
-    python scan.py --fast                # stop a ticker at first No-Go
-    python scan.py --limit 20            # only first N of the universe (debug)
-    python scan.py --top 3               # print only the 3 best survivors
-
-Quantitative gates are computed from yfinance. Qualitative gates (disruption
-thesis, macro backdrop, RPO/backlog from filings, product-launch catalysts) are
-returned as status "NEEDS_LLM" for the Dust agent to resolve via the web.
-
-------------------------------------------------------------------------------
-CHANGELOG (softened "best-practices" build)
-------------------------------------------------------------------------------
-* Stage 3 — fixed the AND bottleneck. RSI-divergence and Volume-climax are no
-  longer independent rejecting gates. The "Concrete floor" is now ONE gate using
-  OR logic: a real floor (fib 0.5/0.618 OR 2x horizontal support) + a bounce
-  candle, confirmed by EITHER (A) bullish RSI divergence, OR (B) an exact fib
-  touch with a volume climax >= 1.5x. RSI-div and Volume are reported as
-  informational sub-signals (GO/SKIP) that never auto-reject.
-* Stage 1 — added a "Macro backdrop" NEEDS_LLM gate so the agent checks
-  Fed/CPI/jobs and the broad-market regime before approving an entry.
-* Stage 1 — Disruption Test guidance now distinguishes a STRONG/direct threat
-  (hard reject) from a MODERATE threat the company is adapting to (soft flag
-  "GO (thesis risk)", do not auto-reject).
-* Stage 5 — "Next earnings" outside the window is SKIP (non-rejecting) instead
-  of NO_GO; the product/launch catalyst web check governs the catalyst decision.
-
-Dependencies: yfinance>=0.2.59, curl_cffi>=0.7.0, pandas>=2.0, numpy,
-              lxml, html5lib, beautifulsoup4, requests
+Python OWNS (hard quant):
+  CORE (AND, NO_GO):  Regime>200SMA | Volatility>=40% | Concrete floor+EMA21 breakout | RS on red day | Hard stop
+  SCORE (SKIP-able):  PEG<1.8 | FCF positive+growing | Catalyst (earnings 15-45d)
+AI OWNS (NEEDS_LLM):  Rule-of-40/RPO decoupling | Insider Form4 | Disruption | Devil's Advocate | Data-Healing
 """
 
-from __future__ import annotations
-
-import argparse
-import io
-import json
-import sys
-from dataclasses import dataclass, field, asdict
-from datetime import datetime, timezone
-from typing import Optional
+import json, time, math, datetime as dt
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import requests
+import yfinance as yf
 
-try:
-    import yfinance as yf
-except Exception as exc:  # pragma: no cover
-    print(f"[FATAL] yfinance import failed: {exc}", file=sys.stderr)
-    raise
+# ----------------------------------------------------------------------------------
+# CONFIG
+# ----------------------------------------------------------------------------------
+OUT_PATH        = Path("results/out.json")
+HISTORY_PERIOD  = "1y"          # daily bars for technicals
+EXCLUDED_SECTORS = {"Consumer Defensive", "Utilities"}   # XLP / XLU
+PEG_MAX          = 1.8
+VOL_MIN          = 0.40          # 40% annual range
+CATALYST_MIN_D   = 15
+CATALYST_MAX_D   = 45
+STOP_MULT        = 0.985         # 10-day low * 0.985
+RS_TOLERANCE     = -0.003        # fell < 0.3% (or green) on QQQ's worst red day
+FIB_TOL          = 0.03          # within 3% of a fib level
+SUPPORT_TOL      = 0.025         # horizontal support clustering tolerance
+VOL_CLIMAX_MULT  = 2.0           # >= 2x avg volume
+EMA_FAST         = 21
 
-# curl_cffi gives yfinance a browser-impersonating session -> far fewer 429s.
-try:
-    from curl_cffi import requests as cffi_requests
+# Regime ETF proxies
+ETF_SOFTWARE = "IGV"
+ETF_SEMIS    = "SOXX"
+ETF_DEFAULT  = "QQQ"
 
-    def make_session():
-        return cffi_requests.Session(impersonate="chrome")
-except Exception:  # pragma: no cover
-    def make_session():
-        return None
+# Known mega-caps the live Wikipedia article silently drops -> sentinel backfill
+SENTINELS = ["NOW"]
 
-
-# --------------------------------------------------------------------------- #
-# Nasdaq-100 universe                                                         #
-# --------------------------------------------------------------------------- #
-
-# UA תקין הוא חובה: ויקימדיה מחזירה 403 ל-UA ריק/גנרי (זה היה הבאג, לא חסימת IP).
-UNIVERSE_UA = ("StocksagentBot/1.0 "
-               "(+https://github.com/nativzohar1/stocksagent; nativ.z@motorad.com)")
-
-# Records where the scanned universe actually came from (which live engine, or
-# the hardcoded fallback). Written into out.json and printed as a UNIVERSE line.
-UNIVERSE_SOURCE = "unknown"
-_ENGINE_LABELS = {
-    "_engine_mediawiki": "live: Wikipedia MediaWiki API",
-    "_engine_wikipedia_page": "live: Wikipedia page (HTML)",
-    "_engine_slickcharts": "live: SlickCharts",
-}
-
-# Fallback list — runs only if every live engine fails. Maintained by hand!
-# Updated: added NOW (ServiceNow) and PLTR (Palantir).
+# Hardcoded NDX-100 fallback (used ONLY if live fetch fails) — keep reasonably current
 NDX_FALLBACK = [
-    "AAPL", "ABNB", "ADBE", "ADI", "ADP", "ADSK", "AEP", "ALNY", "AMAT", "AMD",
-    "AMGN", "AMZN", "APP", "ARM", "ASML", "AVGO", "AXON", "BKNG", "BKR", "CCEP",
-    "CDNS", "CEG", "CHTR", "CMCSA", "COST", "CPRT", "CRWD", "CSCO", "CSX", "CTAS",
-    "CTSH", "DASH", "DDOG", "DXCM", "EA", "EXC", "FANG", "FAST", "FER", "FTNT",
-    "GEHC", "GILD", "GOOG", "GOOGL", "HON", "IDXX", "INSM", "INTC", "INTU", "ISRG",
-    "KDP", "KHC", "KLAC", "LIN", "LITE", "LRCX", "MAR", "MCHP", "MDLZ", "MELI",
-    "META", "MNST", "MPWR", "MRVL", "MSFT", "MSTR", "MU", "NFLX", "NOW", "NVDA",
-    "NXPI", "ODFL", "ORLY", "PANW", "PAYX", "PCAR", "PDD", "PEP", "PLTR", "PYPL",
-    "QCOM", "REGN", "ROP", "ROST", "SBUX", "SHOP", "SNDK", "SNPS", "STX", "TMUS",
-    "TRI", "TSLA", "TTWO", "TXN", "VRSK", "VRTX", "WBD", "WDAY", "WDC", "WMT",
-    "XEL", "ZS",
+    "AAPL","MSFT","NVDA","AMZN","GOOGL","GOOG","META","AVGO","TSLA","COST",
+    "NFLX","AMD","PEP","ADBE","LIN","CSCO","TMUS","INTU","TXN","QCOM",
+    "AMGN","ISRG","CMCSA","AMAT","HON","BKNG","VRTX","PANW","ADP","GILD",
+    "SBUX","ADI","MU","REGN","LRCX","MDLZ","KLAC","SNPS","CDNS","PYPL",
+    "MELI","CRWD","MAR","CTAS","ORLY","ASML","ABNB","CEG","WDAY","NXPI",
+    "ROP","MNST","CSX","FTNT","ADSK","PCAR","AEP","DASH","CHTR","PAYX",
+    "TTD","ODFL","KDP","ROST","FANG","EA","CPRT","BKR","FAST","VRSK",
+    "GEHC","CTSH","EXC","XEL","KHC","IDXX","CCEP","TEAM","MCHP","ON",
+    "DXCM","ANSS","CSGP","ZS","DDOG","BIIB","ARM","WBD","ILMN","GFS",
+    "MRVL","TTWO","WBA","MDB","SMCI","LULU","PDD","DLTR","SIRI","ENPH",
+    "NOW","HON"
 ]
 
-# High-conviction CURRENT Nasdaq-100 members that must never be missing.
-# If a live source silently omits one (e.g. Wikipedia dropping NOW), we
-# backfill ONLY these — all confirmed constituents, so this never
-# resurrects a name that was actually removed from the index.
-NDX_SENTINELS = {
-    "AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "GOOG", "META", "AVGO",
-    "TSLA", "COST", "NFLX", "NOW", "PLTR", "AMD", "PEP", "ADBE", "CSCO",
-    "TMUS", "INTU", "QCOM", "AMGN", "TXN", "MU", "AMAT", "ISRG", "PANW",
-}
-
-
-def _fetch_text(url, session=None, params=None) -> str:
-    """GET with a real browser User-Agent. Uses the curl_cffi session when
-    available, otherwise falls back to urllib (still with a valid UA)."""
-    headers = {"User-Agent": UNIVERSE_UA}
-    if session is not None:                       # curl_cffi (impersonate=chrome)
-        r = session.get(url, headers=headers, params=params, timeout=20)
+# ----------------------------------------------------------------------------------
+# UNIVERSE
+# ----------------------------------------------------------------------------------
+def fetch_universe():
+    """Returns (tickers:list, source:str). Live Wikipedia MediaWiki API + sentinel backfill,
+    else hardcoded fallback."""
+    try:
+        url = "https://en.wikipedia.org/w/api.php"
+        params = {
+            "action": "parse", "page": "Nasdaq-100",
+            "prop": "wikitext", "section": "0", "format": "json"
+        }
+        # full page parse (sections vary) — pull wikitext and regex the tickers table
+        params = {"action": "parse", "page": "Nasdaq-100", "prop": "wikitext", "format": "json"}
+        r = requests.get(url, params=params, timeout=20,
+                         headers={"User-Agent": "stocksagent/2.0"})
         r.raise_for_status()
-        return r.text
-    import urllib.request                          # fallback without curl_cffi
-    from urllib.parse import urlencode
-    full = url + ("?" + urlencode(params) if params else "")
-    req = urllib.request.Request(full, headers=headers)
-    with urllib.request.urlopen(req, timeout=20) as resp:
-        return resp.read().decode("utf-8", "replace")
+        wt = r.json()["parse"]["wikitext"]["*"]
 
+        import re
+        # tickers appear as e.g. {{nasdaq|AAPL}} or in a |TICKER| cell; grab uppercase symbols
+        cand = set(re.findall(r"\b([A-Z]{1,5})\b", wt))
+        # intersect with plausibility: must look like tickers present in fallback OR 1-5 caps
+        tickers = sorted({t for t in cand if 1 <= len(t) <= 5})
+        # sanity: a real NDX parse should yield ~90-110 names; if junk, raise
+        # keep only those that also resolve later; first do a crude noise filter
+        noise = {"THE","AND","INC","CORP","ETF","USD","NYSE","SEC","CEO","API","USA","ID","UTC","ISO"}
+        tickers = [t for t in tickers if t not in noise]
+        if not (80 <= len(tickers) <= 130):
+            raise ValueError(f"implausible parse count={len(tickers)}")
 
-def _tickers_from_html(html: str) -> list:
-    """Find a Ticker/Symbol column in any table and extract valid symbols."""
-    for tbl in pd.read_html(io.StringIO(html)):
-        cols = [str(c).lower() for c in tbl.columns]
-        tcol = next((tbl.columns[i] for i, c in enumerate(cols)
-                     if "ticker" in c or "symbol" in c), None)
-        if tcol is None:
-            continue
-        syms = []
-        for s in tbl[tcol].tolist():
-            s = str(s).strip().upper().replace(".", "-")
-            if s and s.replace("-", "").isalpha() and 1 <= len(s) <= 6:
-                syms.append(s)
-        if len(syms) >= 50:
-            return sorted(set(syms))
-    raise ValueError("no usable ticker column found")
+        src = f"live: Wikipedia MediaWiki API ({len(tickers)} tickers)"
+        added = [s for s in SENTINELS if s not in tickers]
+        if added:
+            tickers += added
+            src += f" + sentinel backfill ({','.join(added)})"
+        return sorted(set(tickers)), src
+    except Exception as e:
+        return list(dict.fromkeys(NDX_FALLBACK)), \
+               f"FALLBACK: NDX_FALLBACK hardcoded list ({len(set(NDX_FALLBACK))} tickers) — live fetch failed ({e})"
 
-
-def _engine_mediawiki(session=None) -> list:
-    """Engine 1: official Action API (built for bots) -> JSON, rarely blocked."""
-    text = _fetch_text(
-        "https://en.wikipedia.org/w/api.php", session,
-        params={"action": "parse", "page": "Nasdaq-100",
-                "prop": "text", "format": "json", "formatversion": "2"},
-    )
-    html = json.loads(text)["parse"]["text"]
-    return _tickers_from_html(html)
-
-
-def _engine_wikipedia_page(session=None) -> list:
-    """Engine 2: the regular Wikipedia page, but with a valid UA (fixes 403)."""
-    return _tickers_from_html(
-        _fetch_text("https://en.wikipedia.org/wiki/Nasdaq-100", session))
-
-
-def _engine_slickcharts(session=None) -> list:
-    """Engine 3: SlickCharts -> cleanest table; needs the Chrome session."""
-    return _tickers_from_html(
-        _fetch_text("https://www.slickcharts.com/nasdaq100", session))
-
-
-def get_nasdaq100(session=None) -> list:
-    """Fetch live Nasdaq-100 constituents via a 3-engine fallback chain,
-    sanity-check the count (90-110), and drop to the hardcoded list only as a
-    last resort."""
-    global UNIVERSE_SOURCE
-    for engine in (_engine_mediawiki, _engine_wikipedia_page, _engine_slickcharts):
-        try:
-            syms = engine(session)
-            if 90 <= len(syms) <= 110:            # sanity gate — the real hero
-                live = set(syms)
-                missing = sorted(NDX_SENTINELS - live)   # known members the source dropped
-                merged = sorted(live | set(missing))
-                label = f"{_ENGINE_LABELS[engine.__name__]} ({len(syms)} tickers)"
-                if missing:
-                    label += f" + sentinel backfill ({', '.join(missing)})"
-                UNIVERSE_SOURCE = label
-                print(f"[universe] {engine.__name__}: {len(syms)} tickers"
-                      + (f"; backfilled {missing}" if missing else ""),
-                      file=sys.stderr)
-                return merged
-            print(f"[universe] {engine.__name__} returned {len(syms)} "
-                  f"(outside 90-110) — skipping.", file=sys.stderr)
-        except Exception as e:
-            print(f"[universe] {engine.__name__} failed: {e}", file=sys.stderr)
-    UNIVERSE_SOURCE = (f"FALLBACK: NDX_FALLBACK hardcoded list "
-                       f"({len(set(NDX_FALLBACK))} tickers) — live fetch failed")
-    print(f"[universe] all live engines failed; using fallback "
-          f"({len(NDX_FALLBACK)}).", file=sys.stderr)
-    return sorted(set(NDX_FALLBACK))
-
-# --------------------------------------------------------------------------- #
-# Result containers                                                           #
-# --------------------------------------------------------------------------- #
-
-GO = "GO"
-NO_GO = "NO_GO"
-NEEDS_LLM = "NEEDS_LLM"   # qualitative — resolved by the Dust agent via the web
-SKIP = "SKIP"             # not computable / informational — does not auto-reject
-
-
-@dataclass
-class Gate:
-    stage: str
-    name: str
-    status: str
-    detail: str = ""
-    value: Optional[float] = None
-    criterion: str = ""
-
-    def line(self) -> str:
-        icon = {GO: "✅", NO_GO: "⛔", NEEDS_LLM: "🌐", SKIP: "⚪"}.get(self.status, "?")
-        return f"  {icon} [{self.status:<9}] {self.stage} · {self.name}: {self.detail}"
-
-
-@dataclass
-class TickerReport:
-    ticker: str
-    price: Optional[float] = None
-    gates: list = field(default_factory=list)
-    verdict: str = ""
-    blocked_at: str = ""
-    go_count: int = 0
-
-    def add(self, g: Gate):
-        self.gates.append(g)
-
-    def finalize(self):
-        self.go_count = sum(1 for g in self.gates if g.status == GO)
-        if any(g.status == NO_GO for g in self.gates):
-            self.verdict = NO_GO
-            self.blocked_at = next(g.name for g in self.gates if g.status == NO_GO)
-        elif any(g.status == NEEDS_LLM for g in self.gates):
-            self.verdict = "GO_PENDING_THESIS"  # quant clean, web checks remain
-        elif all(g.status in (GO, SKIP) for g in self.gates):
-            self.verdict = GO
-        else:
-            self.verdict = "REVIEW"
-
-
-# --------------------------------------------------------------------------- #
-# Sector -> sector ETF mapping (Stage 1 macro gate)                           #
-# --------------------------------------------------------------------------- #
-
-SECTOR_ETF = {
-    "Technology": "XLK",
-    "Communication Services": "XLC",
-    "Healthcare": "XLV",
-    "Financial Services": "XLF",
-    "Consumer Cyclical": "XLY",
-    "Consumer Defensive": "XLP",
-    "Industrials": "XLI",
-    "Energy": "XLE",
-    "Utilities": "XLU",
-    "Real Estate": "XLRE",
-    "Basic Materials": "XLB",
-}
-INDUSTRY_ETF = {"semiconductor": "SOXX", "software": "IGV"}
-
-
-# --------------------------------------------------------------------------- #
-# Indicators                                                                  #
-# --------------------------------------------------------------------------- #
-
-def rsi(series: pd.Series, period: int = 14) -> pd.Series:
+# ----------------------------------------------------------------------------------
+# TECHNICAL HELPERS
+# ----------------------------------------------------------------------------------
+def rsi(series, period=14):
     delta = series.diff()
-    gain = delta.clip(lower=0.0)
-    loss = -delta.clip(upper=0.0)
-    avg_gain = gain.ewm(alpha=1 / period, min_periods=period).mean()
-    avg_loss = loss.ewm(alpha=1 / period, min_periods=period).mean()
-    rs = avg_gain / avg_loss.replace(0, np.nan)
+    up = delta.clip(lower=0).ewm(alpha=1/period, adjust=False).mean()
+    down = (-delta.clip(upper=0)).ewm(alpha=1/period, adjust=False).mean()
+    rs = up / down.replace(0, np.nan)
     return 100 - (100 / (1 + rs))
 
+def ema(series, span):
+    return series.ewm(span=span, adjust=False).mean()
 
-def sma(series: pd.Series, period: int) -> pd.Series:
-    return series.rolling(period).mean()
+def gate(stage, name, status, detail, value=None, criterion=""):
+    return {"stage": stage, "name": name, "status": status,
+            "detail": detail, "value": value, "criterion": criterion}
 
+# ----------------------------------------------------------------------------------
+# CORE GATES (AND, NO_GO)
+# ----------------------------------------------------------------------------------
+def classify_regime_etf(info):
+    sector = (info.get("sector") or "").lower()
+    industry = (info.get("industry") or "").lower()
+    if "semiconductor" in industry or "semiconductor" in sector:
+        return ETF_SEMIS
+    if "software" in industry or "technology" in sector or "communication" in sector:
+        return ETF_SOFTWARE
+    return ETF_DEFAULT
 
-def last_swing(close: pd.Series, lookback: int = 120):
-    window = close.tail(lookback)
-    low_idx = window.idxmin()
-    after = window.loc[low_idx:]
-    high_idx = after.idxmax()
-    return float(window.loc[low_idx]), float(window.loc[high_idx]), low_idx, high_idx
+def gate_regime(etf_symbol, etf_cache):
+    if etf_symbol not in etf_cache:
+        try:
+            h = yf.Ticker(etf_symbol).history(period="2y")["Close"].dropna()
+            etf_cache[etf_symbol] = h
+        except Exception:
+            etf_cache[etf_symbol] = pd.Series(dtype=float)
+    h = etf_cache[etf_symbol]
+    if h is None or len(h) < 200:
+        return gate(1, "Sector trend (Regime)", "SKIP",
+                    f"{etf_symbol} history unavailable", None,
+                    "ETF > 200SMA")
+    sma200 = h.rolling(200).mean().iloc[-1]
+    last = h.iloc[-1]
+    ok = last > sma200
+    return gate(1, "Sector trend (Regime)", "GO" if ok else "NO_GO",
+                f"{etf_symbol} {last:.2f} {'>' if ok else '<'} 200SMA {sma200:.2f}",
+                round(float(last), 2), "ETF > 200SMA")
 
+def gate_volatility(df):
+    hi = df["High"].max(); lo = df["Low"].min()
+    if lo <= 0 or math.isnan(lo):
+        return gate(1, "Volatility (Upside DNA)", "SKIP", "no valid 52w low", None, "(H-L)/L >= 40%")
+    rng = (hi - lo) / lo
+    ok = rng >= VOL_MIN
+    return gate(1, "Volatility (Upside DNA)", "GO" if ok else "NO_GO",
+                f"52w range {rng*100:.1f}%", round(float(rng), 4), "(52wH-52wL)/52wL >= 40%")
 
-def pivot_lows(low: pd.Series, k: int = 3) -> list:
-    """Return prices of local-minimum bars: a bar whose Low is the lowest in a
-    +/- k window around it."""
-    vals = low.values
-    out = []
-    for i in range(k, len(vals) - k):
-        win = vals[i - k:i + k + 1]
-        if vals[i] == win.min():
-            out.append(float(vals[i]))
-    return out
+def detect_floor(df):
+    """Returns (is_on_floor:bool, reason:str). Fib 0.5/0.618 OR horizontal support (2+ touches)."""
+    close = df["Close"]; low = df["Low"]
+    recent = close.iloc[-1]
+    # --- Fib of the dominant swing (last ~6m) ---
+    win = df.iloc[-126:] if len(df) >= 126 else df
+    swing_hi = win["High"].max(); swing_lo = win["Low"].min()
+    rng = swing_hi - swing_lo
+    fib_hits = []
+    if rng > 0:
+        for r, label in [(0.5, "0.5"), (0.618, "0.618")]:
+            level = swing_hi - r * rng
+            if abs(recent - level) / recent <= FIB_TOL:
+                fib_hits.append(f"Fib {label}@{level:.2f}")
+    # --- Horizontal support: cluster of swing lows near current price (2+ touches) ---
+    lows = low.iloc[-126:] if len(low) >= 126 else low
+    troughs = lows[(lows.shift(1) > lows) & (lows.shift(-1) > lows)].dropna()
+    touches = [t for t in troughs if abs(t - recent) / recent <= SUPPORT_TOL]
+    horiz = len(touches) >= 2
+    reasons = []
+    if fib_hits: reasons.append(" / ".join(fib_hits))
+    if horiz:    reasons.append(f"horizontal support ({len(touches)} touches)")
+    return (bool(reasons), "; ".join(reasons) if reasons else "no floor near price")
 
+def detect_rsi_divergence(df):
+    r = rsi(df["Close"])
+    low = df["Low"]
+    seg = df.iloc[-60:]
+    if len(seg) < 20: return False
+    lows = seg["Low"]
+    troughs_idx = lows[(lows.shift(1) > lows) & (lows.shift(-1) > lows)].dropna().index
+    if len(troughs_idx) < 2: return False
+    t1, t2 = troughs_idx[-2], troughs_idx[-1]
+    price_ll = low.loc[t2] < low.loc[t1]
+    rsi_hl = r.loc[t2] > r.loc[t1]
+    return bool(price_ll and rsi_hl)
 
-def horizontal_support(low: pd.Series, current_low: float, current_price: float,
-                       k: int = 3, tol_pct: float = 0.015, min_touches: int = 2):
-    """Detect a horizontal support level the price has bounced off >= min_touches
-    times, and check whether the current bar's low sits on it.
-    Returns (is_on_support, level, touches)."""
-    lows = pivot_lows(low, k=k)
-    if not lows:
-        return False, None, 0
-    tol = tol_pct * current_price
-    best_level, best_touches = None, 0
-    for lvl in lows:
-        touches = sum(1 for p in lows if abs(p - lvl) <= tol)
-        if touches > best_touches:
-            best_level, best_touches = lvl, touches
-    if best_level is None or best_touches < min_touches:
-        return False, best_level, best_touches
-    on_support = abs(current_low - best_level) <= tol
-    return on_support, best_level, best_touches
+def detect_volume_climax(df):
+    vol = df["Volume"]
+    if len(vol) < 50: return (False, None)
+    avg = vol.iloc[-50:].mean()
+    recent_max = vol.iloc[-5:].max()
+    mult = recent_max / avg if avg > 0 else 0
+    return (mult >= VOL_CLIMAX_MULT, round(float(mult), 2))
 
+def gate_concrete_floor(df):
+    close = df["Close"]
+    on_floor, floor_reason = detect_floor(df)
+    rsi_div = detect_rsi_divergence(df)
+    vclimax, vmult = detect_volume_climax(df)
+    confirm = rsi_div or vclimax
+    ema21 = ema(close, EMA_FAST)
+    broke_out = close.iloc[-1] > ema21.iloc[-1]
+    # bounce: current close above the recent 10d low
+    bounce = close.iloc[-1] > df["Low"].iloc[-10:].min()
+    ok = on_floor and bounce and confirm and broke_out
+    conf_txt = []
+    if rsi_div: conf_txt.append("RSI-Div")
+    if vclimax: conf_txt.append(f"Vol climax {vmult}x")
+    detail = (f"floor[{floor_reason}] | bounce={bounce} | "
+              f"confirm[{','.join(conf_txt) or 'none'}] | "
+              f"close {close.iloc[-1]:.2f} {'>' if broke_out else '<'} EMA21 {ema21.iloc[-1]:.2f}")
+    main = gate(3, "Concrete floor + EMA21 breakout", "GO" if ok else "NO_GO",
+                detail, None,
+                "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21")
+    sub = [
+        gate(3, "Bullish RSI divergence", "GO" if rsi_div else "SKIP",
+             "informational sub-signal", bool(rsi_div), "price LL & RSI HL"),
+        gate(3, "Volume climax", "GO" if vclimax else "SKIP",
+             "informational sub-signal", vmult, ">= 2x avg volume"),
+    ]
+    return main, sub
 
-# --------------------------------------------------------------------------- #
-# Stage evaluators                                                            #
-# --------------------------------------------------------------------------- #
+def gate_relative_strength(df, qqq_close):
+    if qqq_close is None or len(qqq_close) < 30:
+        return gate(4, "Relative Strength", "SKIP", "QQQ history unavailable", None,
+                    "on QQQ worst red day: stock fell <0.3% or green")
+    qret = qqq_close.pct_change()
+    worst_day = qret.iloc[-30:].idxmin()
+    if worst_day not in df.index:
+        # align to nearest available date
+        common = df["Close"].reindex(qqq_close.index).dropna()
+        sret = common.pct_change()
+        if worst_day not in sret.index:
+            return gate(4, "Relative Strength", "SKIP", "no aligned red-day bar", None,
+                        "on QQQ worst red day: stock fell <0.3% or green")
+        stock_move = sret.loc[worst_day]
+    else:
+        stock_move = df["Close"].pct_change().loc[worst_day]
+    qqq_move = qret.loc[worst_day]
+    ok = stock_move >= RS_TOLERANCE
+    return gate(4, "Relative Strength", "GO" if ok else "NO_GO",
+                f"QQQ red day {worst_day.date()} {qqq_move*100:.2f}% -> stock {stock_move*100:.2f}%",
+                round(float(stock_move), 4), "stock fell <0.3% or green on QQQ worst red day")
 
-def stage1_macro(rep, tk, info, etf_cache, session, sector_etf_override):
-    rep.add(Gate(
-        "1·Moat", "Disruption Test", NEEDS_LLM,
-        detail="Flagship under direct replacement threat in 5y? Pass only if the "
-               "company is the infrastructure/enabler or has an expensive data moat. "
-               "STRONG, direct threat (core product cloneable / displaced by AI) = "
-               "HARD REJECT. MODERATE threat the company is actively adapting to "
-               "(e.g. embedding AI into the product) = soft flag 'GO (thesis risk)', "
-               "do NOT auto-reject.",
-        criterion="Enabler or expensive-to-replace data moat; soft-flag moderate risk",
-    ))
-    rep.add(Gate(
-        "1·Macro", "Macro backdrop", NEEDS_LLM,
-        detail="Web-check the next ~45 days: Fed/FOMC decision, CPI/PCE & jobs "
-               "prints, and the broad-market regime (VIX, QQQ vs 50/200-SMA). Flag "
-               "if a macro event could sink the name regardless of its own setup.",
-        criterion="No imminent macro shock; market regime supportive",
-    ))
-    etf = sector_etf_override
-    if not etf:
-        industry = (info.get("industry") or "").lower()
-        if "semiconductor" in industry:
-            etf = INDUSTRY_ETF["semiconductor"]
-        elif "software" in industry:
-            etf = INDUSTRY_ETF["software"]
-        else:
-            etf = SECTOR_ETF.get(info.get("sector", ""), "QQQ")
-    try:
-        if etf not in etf_cache:
-            etf_cache[etf] = yf.Ticker(etf, session=session).history(period="1y")
-        etf_close = etf_cache[etf]["Close"]
-        sma200 = sma(etf_close, 200).iloc[-1]
-        last = float(etf_close.iloc[-1])
-        if np.isnan(sma200):
-            rep.add(Gate("1·Macro", f"Sector trend ({etf})", SKIP,
-                         detail="not enough history for 200-SMA"))
-        else:
-            ok = last > sma200
-            rep.add(Gate("1·Macro", f"Sector trend ({etf})", GO if ok else NO_GO,
-                         detail=f"{etf} {last:.2f} vs 200SMA {sma200:.2f}",
-                         value=round(last - sma200, 2),
-                         criterion="Sector ETF above 200-day SMA"))
-    except Exception as e:
-        rep.add(Gate("1·Macro", f"Sector trend ({etf})", SKIP, detail=f"error: {e}"))
+def gate_hard_stop(df):
+    low10 = df["Low"].iloc[-10:].min()
+    stop = round(float(low10) * STOP_MULT, 2)
+    return gate(5, "Hard stop price", "GO",
+                f"10d low {low10:.2f} x {STOP_MULT}", stop, "10d-low * 0.985")
 
+# ----------------------------------------------------------------------------------
+# SCORE GATES (SKIP-able)
+# ----------------------------------------------------------------------------------
+def gate_peg(info):
+    peg = info.get("trailingPegRatio") or info.get("pegRatio")
+    if peg is None or (isinstance(peg, float) and math.isnan(peg)) or peg == 0:
+        return gate(2, "PEG", "SKIP", "PEG unavailable (yfinance null) -> AI heals", None, "PEG < 1.8")
+    ok = peg < PEG_MAX
+    return gate(2, "PEG", "GO" if ok else "SKIP",
+                f"PEG {peg:.2f}", round(float(peg), 2), "PEG < 1.8")
 
-def stage2_fundamentals(rep, tk, info):
-    rep.add(Gate(
-        "2·Cash", "RPO / Backlog", NEEDS_LLM,
-        detail="Check latest 10-Q/10-K: is RPO growing YoY? (web search the filing).",
-        criterion="RPO growing vs year-ago quarter",
-    ))
-    # FCF positive & growing YoY
+def gate_fcf(tk):
     try:
         cf = tk.cashflow
-        fcf_series = None
-        if cf is not None and not cf.empty:
-            idx = {str(i).lower(): i for i in cf.index}
-            fcf_row = next((idx[k] for k in idx if "free cash flow" in k), None)
-            if fcf_row is not None:
-                fcf_series = cf.loc[fcf_row].dropna()
-            else:
-                ocf = next((idx[k] for k in idx
-                            if "operating cash flow" in k or "total cash from operating" in k), None)
-                capex = next((idx[k] for k in idx if "capital expenditure" in k), None)
-                if ocf is not None and capex is not None:
-                    fcf_series = (cf.loc[ocf] + cf.loc[capex]).dropna()
-        if fcf_series is not None and len(fcf_series) >= 2:
-            latest, prev = float(fcf_series.iloc[0]), float(fcf_series.iloc[1])
-            ok = latest > 0 and latest >= prev
-            rep.add(Gate("2·Cash", "Free Cash Flow", GO if ok else NO_GO,
-                         detail=f"FCF latest {latest/1e9:.2f}B vs prior {prev/1e9:.2f}B",
-                         value=round(latest, 0),
-                         criterion="FCF positive and growing YoY (supports buybacks)"))
+        if cf is None or cf.empty:
+            return gate(2, "FCF", "SKIP", "cashflow unavailable -> AI heals", None, "FCF positive & growing YoY")
+        idx = {str(i): i for i in cf.index}
+        fcf_row = None
+        for key in ["Free Cash Flow"]:
+            if key in idx:
+                fcf_row = cf.loc[idx[key]]
+                break
+        if fcf_row is None and "Operating Cash Flow" in idx and "Capital Expenditure" in idx:
+            fcf_row = cf.loc[idx["Operating Cash Flow"]] + cf.loc[idx["Capital Expenditure"]]
+        if fcf_row is None:
+            return gate(2, "FCF", "SKIP", "FCF rows missing -> AI heals", None, "FCF positive & growing YoY")
+        vals = fcf_row.dropna().values
+        if len(vals) < 2:
+            return gate(2, "FCF", "SKIP", "insufficient FCF history -> AI heals", None, "FCF positive & growing YoY")
+        latest, prior = float(vals[0]), float(vals[1])
+        ok = latest > 0 and latest > prior
+        return gate(2, "FCF", "GO" if ok else "SKIP",
+                    f"FCF {latest/1e9:.2f}B vs prior {prior/1e9:.2f}B",
+                    round(latest, 0), "FCF positive & growing YoY")
+    except Exception as e:
+        return gate(2, "FCF", "SKIP", f"FCF error ({e}) -> AI heals", None, "FCF positive & growing YoY")
+
+def gate_catalyst(tk):
+    try:
+        cal = tk.calendar
+        ed = None
+        if isinstance(cal, dict):
+            ev = cal.get("Earnings Date")
+            if isinstance(ev, (list, tuple)) and ev: ed = ev[0]
+            elif ev: ed = ev
+        elif cal is not None and hasattr(cal, "loc") and "Earnings Date" in getattr(cal, "index", []):
+            ed = cal.loc["Earnings Date"][0]
+        if ed is None:
+            return gate(2, "Next earnings (Catalyst)", "SKIP", "earnings date unknown", None,
+                        "earnings in 15-45 days")
+        if isinstance(ed, (dt.datetime, dt.date)):
+            ed_date = ed if isinstance(ed, dt.date) and not isinstance(ed, dt.datetime) else ed.date() if isinstance(ed, dt.datetime) else ed
         else:
-            fcf = info.get("freeCashflow")
-            if fcf is not None:
-                ok = fcf > 0
-                rep.add(Gate("2·Cash", "Free Cash Flow", GO if ok else NO_GO,
-                             detail=f"FCF(ttm) {fcf/1e9:.2f}B (growth unknown)",
-                             value=float(fcf), criterion="FCF positive"))
-            else:
-                rep.add(Gate("2·Cash", "Free Cash Flow", SKIP, detail="no cashflow data"))
+            ed_date = pd.to_datetime(ed).date()
+        days = (ed_date - dt.date.today()).days
+        ok = CATALYST_MIN_D <= days <= CATALYST_MAX_D
+        return gate(2, "Next earnings (Catalyst)", "GO" if ok else "SKIP",
+                    f"earnings {ed_date} (in {days}d)", days, "earnings in 15-45 days")
     except Exception as e:
-        rep.add(Gate("2·Cash", "Free Cash Flow", SKIP, detail=f"error: {e}"))
-    # PEG < 1.8
-    try:
-        peg = info.get("trailingPegRatio") or info.get("pegRatio")
-        if peg is None:
-            pe = info.get("trailingPE") or info.get("forwardPE")
-            growth = info.get("earningsGrowth") or info.get("earningsQuarterlyGrowth")
-            if pe and growth and growth > 0:
-                peg = pe / (growth * 100)
-        if peg is not None and peg > 0:
-            ok = peg < 1.8
-            rep.add(Gate("2·Cash", "PEG ratio", GO if ok else NO_GO,
-                         detail=f"PEG {peg:.2f}", value=round(float(peg), 2),
-                         criterion="PEG < 1.8"))
-        else:
-            rep.add(Gate("2·Cash", "PEG ratio", SKIP, detail="PEG unavailable"))
-    except Exception as e:
-        rep.add(Gate("2·Cash", "PEG ratio", SKIP, detail=f"error: {e}"))
+        return gate(2, "Next earnings (Catalyst)", "SKIP", f"calendar error ({e})", None,
+                    "earnings in 15-45 days")
 
-
-def stage3_technical_floor(rep, hist):
-    """Stage 3 — 'Concrete floor' with OR logic.
-
-    The strict build required BOTH an RSI divergence AND a fib bounce (two
-    separate rejecting gates), which choked strong names that crash straight to
-    the fib line and rip higher without forming a second low. This build
-    confirms the floor if the price is sitting on a real level and today's candle
-    bounced, AND at least ONE buyer-confirmation fires:
-        Path A : bullish RSI divergence (sellers slowly exhausted), OR
-        Path B : exact fib 0.5/0.618 touch + volume climax >= 1.5x avg
-                 (institutions swallowed the supply in one shot).
-    RSI-divergence and Volume-climax are reported as informational sub-signals
-    (GO/SKIP) and NEVER auto-reject on their own.
-    """
-    close, low, high, vol = hist["Close"], hist["Low"], hist["High"], hist["Volume"]
-
-    # --- Locate the floor + read today's candle ---------------------------- #
-    near_fib = on_support = buyers_tail = bounced = False
-    sup_level = None
-    touches = 0
-    fib50 = fib618 = c_low = float("nan")
-    try:
-        slow, shigh, _, _ = last_swing(close)
-        rng = shigh - slow
-        fib50 = shigh - 0.5 * rng
-        fib618 = shigh - 0.618 * rng
-        c_open = float(hist["Open"].iloc[-1])
-        c_close = float(close.iloc[-1])
-        c_low = float(low.iloc[-1])
-        c_high = float(high.iloc[-1])
-        tol = 0.02 * c_close
-
-        near_fib = min(abs(c_low - fib50), abs(c_low - fib618)) <= tol
-        on_support, sup_level, touches = horizontal_support(low, c_low, c_close)
-
-        candle_rng = c_high - c_low
-        buyers_tail = candle_rng > 0 and (c_close - c_low) / candle_rng >= 0.5
-        bounced = c_close >= c_open * 0.995
-    except Exception as e:
-        rep.add(Gate("3·Floor", "Concrete floor", SKIP, detail=f"error: {e}"))
-        return
-
-    # --- Confirmation A: bullish RSI divergence ---------------------------- #
-    rsi_div = False
-    rsi_detail = "n/a"
-    try:
-        r = rsi(close)
-        win = 40
-        pc, pr = close.tail(win), r.tail(win)
-        half = win // 2
-        l1 = pc.iloc[:half].idxmin()
-        l2 = pc.iloc[half:].idxmin()
-        price_ll = float(pc.loc[l2]) <= float(pc.loc[l1])
-        rsi_hl = float(pr.loc[l2]) > float(pr.loc[l1])
-        rsi_div = price_ll and rsi_hl
-        rsi_detail = (f"price LL={price_ll}, RSI HL={rsi_hl} "
-                      f"(RSI {float(pr.loc[l1]):.1f}->{float(pr.loc[l2]):.1f})")
-    except Exception as e:
-        rsi_detail = f"error: {e}"
-
-    # --- Confirmation B component: volume climax on the bounce day --------- #
-    vol_climax = False
-    ratio = float("nan")
-    vol_detail = "n/a"
-    try:
-        avg_vol = float(vol.tail(21).mean())
-        recent = hist.tail(10)
-        bounce_idx = recent["Low"].idxmin()
-        bounce_vol = float(vol.loc[bounce_idx])
-        ratio = bounce_vol / avg_vol if avg_vol else float("nan")
-        vol_climax = (not np.isnan(ratio)) and ratio >= 1.5
-        vol_detail = (f"bounce-day vol {bounce_vol/1e6:.1f}M vs 21d avg "
-                      f"{avg_vol/1e6:.1f}M ({ratio:.2f}x)")
-    except Exception as e:
-        vol_detail = f"error: {e}"
-
-    # --- OR logic ---------------------------------------------------------- #
-    floor_location = near_fib or on_support
-    path_a = rsi_div
-    path_b = vol_climax  # FIX: volume climax alone confirms (no longer requires near_fib)
-    confirmed = floor_location and buyers_tail and bounced and (path_a or path_b)
-
-    if near_fib:
-        where = f"fib (50={fib50:.2f}/618={fib618:.2f})"
-    elif on_support:
-        where = f"horizontal support {sup_level:.2f} ({touches} touches)"
-    else:
-        where = (f"none (low {c_low:.2f}; fib50 {fib50:.2f}/618 {fib618:.2f}; "
-                 + (f"best support {sup_level:.2f}/{touches}x)" if sup_level else "no support)"))
-
-    if path_a and path_b:
-        via = "RSI divergence + volume climax at floor"
-    elif path_a:
-        via = "RSI divergence"
-    elif path_b:
-        via = "volume climax at floor"
-    else:
-        via = "no buyer confirmation"
-
-    rep.add(Gate(
-        "3·Floor", "Concrete floor (RSI-div OR fib+volume)",
-        GO if confirmed else NO_GO,
-        detail=f"low={c_low:.2f} on {where}; buyers_tail={buyers_tail}; "
-               f"bounced={bounced}; confirmed via {via}",
-        value=round(ratio, 2) if not np.isnan(ratio) else None,
-        criterion="At a real floor + bounce candle + (bullish RSI divergence OR "
-                  "exact 0.5/0.618 fib touch with >=1.5x volume climax)"))
-
-    # Informational sub-signals — never auto-reject; shown for transparency.
-    rep.add(Gate("3·Floor", "Bullish RSI divergence",
-                 GO if rsi_div else SKIP, detail=rsi_detail,
-                 criterion="Price lower-low while RSI higher-low (optional path A)"))
-    rep.add(Gate("3·Floor", "Volume climax",
-                 GO if vol_climax else SKIP, detail=vol_detail,
-                 value=round(ratio, 2) if not np.isnan(ratio) else None,
-                 criterion="Reversal-day volume >= 1.5x monthly avg (optional path B)"))
-
-
-def stage4_relative_strength(rep, hist, qqq_hist):
-    try:
-        qret = qqq_hist["Close"].pct_change()
-        recent_q = qret.tail(10)
-        worst_day = recent_q.idxmin()
-        worst_ret = float(recent_q.loc[worst_day])
-        if worst_ret > -0.012:
-            rep.add(Gate("4·RS", "Strength on a red day", SKIP,
-                         detail=f"no QQQ day <= -1.2% in last 2 weeks (worst {worst_ret*100:.2f}%)"))
-            return
-        sret = hist["Close"].pct_change()
-        target = worst_day.date()
-        match = next((i for i in sret.tail(12).index if i.date() == target), None)
-        if match is None:
-            rep.add(Gate("4·RS", "Strength on a red day", SKIP,
-                         detail="stock has no bar on QQQ's worst day"))
-            return
-        s = float(sret.loc[match])
-        ok = s >= -0.003
-        rep.add(Gate("4·RS", "Strength on a red day", GO if ok else NO_GO,
-                     detail=f"on {target} QQQ {worst_ret*100:.2f}% / stock {s*100:.2f}%",
-                     value=round(s * 100, 2),
-                     criterion="Stock >= -0.3% (or green) on QQQ's strongest down day"))
-    except Exception as e:
-        rep.add(Gate("4·RS", "Strength on a red day", SKIP, detail=f"error: {e}"))
-
-
-def stage5_catalyst(rep, tk, info):
-    try:
-        cal = None
-        try:
-            cal = tk.get_earnings_dates(limit=8)
-        except Exception:
-            cal = None
-        next_dt = None
-        now = datetime.now(timezone.utc)
-        if cal is not None and not cal.empty:
-            if cal.index.tz is None:
-                future = [d.replace(tzinfo=timezone.utc) for d in cal.index.to_pydatetime()
-                          if d.replace(tzinfo=timezone.utc) > now]
-            else:
-                future = [d for d in cal.index.to_pydatetime() if d > now]
-            if future:
-                next_dt = min(future)
-        if next_dt is None:
-            ts = info.get("earningsTimestamp") or info.get("earningsTimestampStart")
-            if ts:
-                next_dt = datetime.fromtimestamp(ts, tz=timezone.utc)
-        if next_dt is not None:
-            if next_dt.tzinfo is None:
-                next_dt = next_dt.replace(tzinfo=timezone.utc)
-            days = (next_dt - now).days
-            inwin = 15 <= days <= 45
-            # Softened: earnings outside the 0-60d window no longer rejects the
-            # name; the product/launch catalyst web check governs the decision.
-            if 0 <= days <= 60:
-                status = GO
-                note = "" if inwin else " — outside ideal 15-45d window (still a catalyst)"
-            else:
-                status = SKIP
-                note = " — no earnings catalyst in window; rely on product/launch catalyst"
-            rep.add(Gate("5·Catalyst", "Next earnings", status,
-                         detail=f"earnings in {days} days ({next_dt.date()})" + note,
-                         value=days,
-                         criterion="Hard catalyst (earnings) inside ~15-45 days; "
-                                   "outside = SKIP, agent confirms a product catalyst"))
-        else:
-            rep.add(Gate("5·Catalyst", "Next earnings", SKIP, detail="no earnings date"))
-    except Exception as e:
-        rep.add(Gate("5·Catalyst", "Next earnings", SKIP, detail=f"error: {e}"))
-    rep.add(Gate(
-        "5·Catalyst", "Product/launch catalyst", NEEDS_LLM,
-        detail="Web-search next 15-45 days for product/chip/version launch or event. "
-               "If earnings already GO, this is optional.",
-        criterion="At least one scheduled catalyst in 15-45 days",
-    ))
-
-
-def stage6_stop(rep, hist):
-    try:
-        floor = float(hist["Low"].tail(10).min())
-        stop = round(floor * (1 - 0.015), 2)
-        rep.add(Gate("6·Exit", "Hard stop price", GO,
-                     detail=f"floor {floor:.2f} -> HARD STOP {stop:.2f} (daily close below = auto-sell)",
-                     value=stop,
-                     criterion="Stop = floor - 1.5%, typed in advance"))
-    except Exception as e:
-        rep.add(Gate("6·Exit", "Hard stop price", SKIP, detail=f"error: {e}"))
-
-
-# --------------------------------------------------------------------------- #
-# Per-ticker driver                                                           #
-# --------------------------------------------------------------------------- #
-
-def scan_ticker(symbol, session, qqq_hist, etf_cache,
-                sector_etf_override=None, fast=False) -> TickerReport:
-    rep = TickerReport(ticker=symbol.upper())
-    tk = yf.Ticker(symbol, session=session)
-    try:
-        info = tk.get_info()
-    except Exception:
-        info = {}
-    try:
-        hist = tk.history(period="1y", auto_adjust=False)
-    except Exception as e:
-        rep.add(Gate("0", "Price data", NO_GO, detail=f"no history: {e}"))
-        rep.finalize()
-        return rep
-    if hist is None or hist.empty or len(hist) < 60:
-        rep.add(Gate("0", "Price data", NO_GO, detail="insufficient history"))
-        rep.finalize()
-        return rep
-
-    rep.price = round(float(hist["Close"].iloc[-1]), 2)
-    stages = [
-        lambda: stage1_macro(rep, tk, info, etf_cache, session, sector_etf_override),
-        lambda: stage2_fundamentals(rep, tk, info),
-        lambda: stage3_technical_floor(rep, hist),
-        lambda: stage4_relative_strength(rep, hist, qqq_hist),
-        lambda: stage5_catalyst(rep, tk, info),
-        lambda: stage6_stop(rep, hist),
+# ----------------------------------------------------------------------------------
+# AI GATES (NEEDS_LLM — Python does NOT resolve these)
+# ----------------------------------------------------------------------------------
+def ai_gates():
+    return [
+        gate(2, "Rule-of-40 / RPO decoupling", "NEEDS_LLM",
+             "AI: rev growth + margin > 40%? RPO growing YoY? document price/perf decoupling (cite 10-Q/10-K)",
+             None, "Rule of 40 true AND RPO up YoY"),
+        gate(3, "Insider buying (Form 4)", "NEEDS_LLM",
+             "AI: search FRESH Form 4 insider BUYS only (NOT 13F)", None,
+             "recent insider buying = confirming signal"),
+        gate(1, "Disruption test", "NEEDS_LLM",
+             "AI: direct threat=STRONG SELL | adapting w/ AI=BUY⚠️ | infra/data moat=clean",
+             None, "no direct 5y replacement threat"),
+        gate(2, "Devil's advocate", "NEEDS_LLM",
+             "AI MUST write 2 concrete, evidenced bear reasons. NO OUTPUT without it.",
+             None, "2 concrete crash reasons required"),
+        gate(2, "Data healing (PEG/FCF)", "NEEDS_LLM",
+             "AI: if survivor has SKIP on PEG/FCF, web-fetch real value. Fwd PEG; Yahoo>SeekingAlpha>StockAnalysis; "
+             "tag '(AI-healed, source, date)'; never guess; survivors only.",
+             None, "heal SKIP PEG/FCF with cited value"),
     ]
-    for run in stages:
-        run()
-        if fast and any(g.status == NO_GO for g in rep.gates):
-            break
-    rep.finalize()
-    return rep
 
+# ----------------------------------------------------------------------------------
+# PER-TICKER PIPELINE
+# ----------------------------------------------------------------------------------
+def scan_ticker(symbol, etf_cache, qqq_close, universe_source):
+    item = {"ticker": symbol, "price": None, "verdict": "NO_GO",
+            "go_count": 0, "blocked_at": None,
+            "universe_source": universe_source, "gates": []}
+    try:
+        tk = yf.Ticker(symbol)
+        df = tk.history(period=HISTORY_PERIOD).dropna()
+        if df.empty or len(df) < 200:
+            item["blocked_at"] = "data: insufficient history"
+            item["gates"].append(gate(0, "Data availability", "NO_GO",
+                                       f"only {len(df)} bars", len(df), ">=200 daily bars"))
+            return item
+        info = {}
+        try: info = tk.info or {}
+        except Exception: info = {}
+        item["price"] = round(float(df["Close"].iloc[-1]), 2)
 
-# --------------------------------------------------------------------------- #
-# CLI                                                                         #
-# --------------------------------------------------------------------------- #
+        gates = []
 
-def parse_args(argv=None):
-    p = argparse.ArgumentParser(
-        description="Iron-Checklist 6-stage Go/No-Go screener. "
-                    "With no tickers it scans the whole Nasdaq-100.")
-    p.add_argument("tickers", nargs="*", help="Optional explicit tickers, e.g. NVDA AVGO.")
-    p.add_argument("--file", help="File with one ticker per line.")
-    p.add_argument("--universe", default="nasdaq100",
-                   help="Universe to scan when no tickers given (default: nasdaq100).")
-    p.add_argument("--sector-etf", default=None, help="Override sector ETF (e.g. SOXX, IGV).")
-    p.add_argument("--fast", action="store_true", help="Stop a ticker at the first No-Go.")
-    p.add_argument("--limit", type=int, default=0, help="Only scan first N of the universe.")
-    p.add_argument("--top", type=int, default=0, help="Print only the N best survivors.")
-    p.add_argument("--json", help="Write full results to this JSON path.")
-    return p.parse_args(argv)
+        # ----- Sector exclusion (hard) -----
+        sector = info.get("sector")
+        if sector in EXCLUDED_SECTORS:
+            gates.append(gate(1, "Sector exclusion", "NO_GO",
+                              f"{sector} (XLP/XLU excluded)", sector, "not Consumer Defensive / Utilities"))
+            item["gates"] = gates
+            item["blocked_at"] = f"Sector exclusion ({sector})"
+            return item
+        gates.append(gate(1, "Sector exclusion", "GO",
+                          f"{sector or 'unknown'}", sector, "not Consumer Defensive / Utilities"))
 
+        # ----- CORE (AND, NO_GO) -----
+        etf = classify_regime_etf(info)
+        g_regime = gate_regime(etf, etf_cache)
+        g_vol    = gate_volatility(df)
+        g_floor, g_subs = gate_concrete_floor(df)
+        g_rs     = gate_relative_strength(df, qqq_close)
+        g_stop   = gate_hard_stop(df)
 
-def resolve_universe(args, session) -> list:
-    global UNIVERSE_SOURCE
-    tickers = list(args.tickers)
-    if args.file:
-        with open(args.file, "r", encoding="utf-8") as fh:
-            tickers += [ln.strip().upper() for ln in fh
-                        if ln.strip() and not ln.startswith("#")]
-    if not tickers:
-        # No explicit tickers -> scan the default universe (Nasdaq-100).
-        if args.universe.lower() in ("nasdaq100", "ndx", "nasdaq-100"):
-            tickers = get_nasdaq100(session)
-            print(f"[info] no tickers given -> scanning Nasdaq-100 "
-                  f"({len(tickers)} names).", file=sys.stderr)
+        # ----- SCORE (SKIP-able) -----
+        g_peg = gate_peg(info)
+        g_fcf = gate_fcf(tk)
+        g_cat = gate_catalyst(tk)
+
+        gates += [g_regime, g_vol, g_floor] + g_subs + [g_rs, g_peg, g_fcf, g_cat, g_stop]
+        gates += ai_gates()
+        item["gates"] = gates
+
+        # ----- Verdict: any CORE NO_GO => rejected -----
+        core = [g_regime, g_vol, g_floor, g_rs]   # g_stop is always GO (informational number)
+        blocker = next((g for g in core if g["status"] == "NO_GO"), None)
+        if blocker:
+            item["verdict"] = "NO_GO"
+            item["blocked_at"] = blocker["name"]
         else:
-            print(f"[error] unknown universe '{args.universe}'.", file=sys.stderr)
-            return []
-    if UNIVERSE_SOURCE == "unknown" and tickers:
-        UNIVERSE_SOURCE = f"explicit tickers (CLI/--file, {len(tickers)} given)"
-    seen, out = set(), []
-    for t in tickers:
-        u = t.upper()
-        if u not in seen:
-            seen.add(u)
-            out.append(u)
-    if args.limit and args.limit > 0:
-        out = out[:args.limit]
-    return out
+            # passed all hard core gates -> survivor, AI resolves final routing
+            item["verdict"] = "GO_PENDING_THESIS"
+            item["blocked_at"] = None
 
+        item["go_count"] = sum(1 for g in gates if g["status"] == "GO")
+        return item
+    except Exception as e:
+        item["blocked_at"] = f"error: {e}"
+        item["gates"].append(gate(0, "Pipeline error", "NO_GO", str(e), None, ""))
+        return item
 
-def main(argv=None):
-    args = parse_args(argv)
-    session = make_session()
-    tickers = resolve_universe(args, session)
-    if not tickers:
-        print("No tickers resolved.", file=sys.stderr)
-        return 2
+# ----------------------------------------------------------------------------------
+# MAIN
+# ----------------------------------------------------------------------------------
+def main():
+    tickers, universe_source = fetch_universe()
+    print(f"UNIVERSE {{count: {len(tickers)}, source: {universe_source}}}")
 
     etf_cache = {}
     try:
-        qqq_hist = yf.Ticker("QQQ", session=session).history(period="6mo")
+        qqq_close = yf.Ticker("QQQ").history(period="6mo")["Close"].dropna()
     except Exception:
-        qqq_hist = pd.DataFrame()
+        qqq_close = None
 
-    reports = []
+    results = []
     for i, sym in enumerate(tickers, 1):
-        try:
-            rep = scan_ticker(sym, session, qqq_hist, etf_cache,
-                              sector_etf_override=args.sector_etf, fast=args.fast)
-        except Exception as e:
-            rep = TickerReport(ticker=sym)
-            rep.add(Gate("0", "Scan error", SKIP, detail=str(e)))
-            rep.finalize()
-        reports.append(rep)
-        print(f"[{i}/{len(tickers)}] {rep.ticker}: {rep.verdict}"
-              + (f" (blocked: {rep.blocked_at})" if rep.blocked_at else ""),
-              file=sys.stderr)
+        print(f"[{i}/{len(tickers)}] {sym}")
+        results.append(scan_ticker(sym, etf_cache, qqq_close, universe_source))
+        time.sleep(0.4)   # be gentle with Yahoo
 
-    # Survivors ranked by GO count (most gates passed first).
-    survivors = [r for r in reports if r.verdict in (GO, "GO_PENDING_THESIS")]
-    survivors.sort(key=lambda r: r.go_count, reverse=True)
+    # rank survivors first by go_count
+    results.sort(key=lambda x: (x["verdict"] != "GO_PENDING_THESIS", -x["go_count"]))
+    survivors = [r["ticker"] for r in results if r["verdict"] == "GO_PENDING_THESIS"]
+    print(f"SURVIVORS {survivors}")
 
-    to_show = survivors[:args.top] if args.top and args.top > 0 else survivors
-    for rep in to_show:
-        print(f"\n{'='*72}")
-        print(f"  {rep.ticker}   price={rep.price}   VERDICT: {rep.verdict}"
-              f"   (GO gates: {rep.go_count})")
-        print(f"{'='*72}")
-        for g in rep.gates:
-            print(g.line())
-
-    if not survivors:
-        print("\nNo stocks passed the quantitative gates.")
-
-    if args.json:
-        payload = [{
-            "ticker": r.ticker, "price": r.price, "verdict": r.verdict,
-            "blocked_at": r.blocked_at, "go_count": r.go_count,
-            "universe_source": UNIVERSE_SOURCE,
-            "gates": [asdict(g) for g in r.gates],
-        } for r in reports]
-        with open(args.json, "w", encoding="utf-8") as fh:
-            json.dump(payload, fh, indent=2, ensure_ascii=False)
-        print(f"\n[json] wrote {args.json}")
-
-    # Compact machine-readable summary for the Dust agent.
-    print("\nUNIVERSE " + json.dumps(
-        {"source": UNIVERSE_SOURCE, "scanned": len(tickers)}, ensure_ascii=False))
-    print("\nSURVIVORS " + json.dumps(
-        [{"ticker": r.ticker, "verdict": r.verdict, "go_count": r.go_count,
-          "price": r.price} for r in survivors], ensure_ascii=False))
-    print("SUMMARY " + json.dumps({r.ticker: r.verdict for r in reports},
-                                  ensure_ascii=False))
-    return 0
-
+    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    OUT_PATH.write_text(json.dumps(results, indent=2, default=str), encoding="utf-8")
+    print(f"WROTE {OUT_PATH} ({len(results)} items, {len(survivors)} survivors)")
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()
