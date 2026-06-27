@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.0 (FINAL, QA-fixed)
+scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.1 (Tech-focus + live universe fix)
 Runs on GitHub Actions (has internet). Writes results/out.json.
-Spec: FROZEN PRD v2.0.
+Spec: FROZEN PRD v2.0 + Tech-only universe focus.
 
 Python OWNS (hard quant):
-  CORE (AND, NO_GO):  Regime>200SMA | Volatility>=40% | Concrete floor+EMA21 breakout | RS on red day | Hard stop
+  CORE (AND, NO_GO):  Tech-focus | Regime>200SMA | Volatility>=40% | Concrete floor+EMA21 | RS on red day | Hard stop
   SCORE (rank only):  PEG<1.8 | FCF positive+growing | Catalyst (earnings 15-45d)
                       -> SKIP = data MISSING (AI heals) ; NO_GO = data PRESENT but bad (no rank point, never rejects)
 AI OWNS (NEEDS_LLM):  Rule-of-40/RPO decoupling | Insider Form4 | Disruption | Devil's Advocate | Data-Healing
@@ -24,17 +24,16 @@ import yfinance as yf
 # CONFIG
 # ----------------------------------------------------------------------------------
 OUT_PATH         = Path("results/out.json")
-HISTORY_PERIOD   = "1y"          # daily bars for technicals
-EXCLUDED_SECTORS = {"Consumer Defensive", "Utilities"}   # XLP / XLU
+HISTORY_PERIOD   = "1y"
 PEG_MAX          = 1.8
-VOL_MIN          = 0.40          # 40% annual range
+VOL_MIN          = 0.40
 CATALYST_MIN_D   = 15
 CATALYST_MAX_D   = 45
-STOP_MULT        = 0.985         # 10-day low * 0.985
-RS_TOLERANCE     = -0.003        # fell < 0.3% (or green) on QQQ's worst red day
-FIB_TOL          = 0.03          # within 3% of a fib level
-SUPPORT_TOL      = 0.025         # horizontal support clustering tolerance
-VOL_CLIMAX_MULT  = 2.0           # >= 2x avg volume
+STOP_MULT        = 0.985
+RS_TOLERANCE     = -0.003
+FIB_TOL          = 0.03
+SUPPORT_TOL      = 0.025
+VOL_CLIMAX_MULT  = 2.0
 EMA_FAST         = 21
 
 # Regime ETF proxies
@@ -42,10 +41,16 @@ ETF_SOFTWARE = "IGV"
 ETF_SEMIS    = "SOXX"
 ETF_DEFAULT  = "QQQ"
 
-# Known mega-caps the live Wikipedia article silently drops -> sentinel backfill
+# ---- Tech-focus universe filter (Option B) --------------------------------------
+# Pass ONLY if sector is Tech/Comm, OR the ticker is a digital-growth titan that
+# yfinance miscategorizes as Consumer Cyclical (AMZN, TSLA...). Everything else NO_GO.
+TECH_SECTORS          = {"Technology", "Communication Services"}
+TECH_TITANS_WHITELIST = {"AMZN", "TSLA", "MELI", "BKNG", "ABNB", "NFLX"}
+
+# Known mega-caps the live source sometimes drops -> sentinel backfill
 SENTINELS = ["NOW"]
 
-# Hardcoded NDX-100 fallback (used ONLY if live fetch fails) — keep reasonably current
+# Hardcoded NDX-100 fallback (used ONLY if live fetch fails)
 NDX_FALLBACK = [
     "AAPL","MSFT","NVDA","AMZN","GOOGL","GOOG","META","AVGO","TSLA","COST",
     "NFLX","AMD","PEP","ADBE","LIN","CSCO","TMUS","INTU","TXN","QCOM",
@@ -61,28 +66,40 @@ NDX_FALLBACK = [
 ]
 
 # ----------------------------------------------------------------------------------
-# UNIVERSE
+# UNIVERSE  (live constituents TABLE via pandas.read_html — robust, no regex)
 # ----------------------------------------------------------------------------------
 def fetch_universe():
-    """Returns (tickers:list, source:str). Live Wikipedia MediaWiki API + sentinel backfill,
-    else hardcoded fallback."""
+    """Returns (tickers:list, source:str)."""
     try:
-        url = "https://en.wikipedia.org/w/api.php"
-        params = {"action": "parse", "page": "Nasdaq-100", "prop": "wikitext", "format": "json"}
-        r = requests.get(url, params=params, timeout=20,
-                         headers={"User-Agent": "stocksagent/2.0"})
+        import io
+        url = "https://en.wikipedia.org/wiki/Nasdaq-100"
+        r = requests.get(url, timeout=20,
+                         headers={"User-Agent": "Mozilla/5.0 (stocksagent/2.1)"})
         r.raise_for_status()
-        wt = r.json()["parse"]["wikitext"]["*"]
+        tables = pd.read_html(io.StringIO(r.text))
 
-        import re
-        cand = set(re.findall(r"\b([A-Z]{1,5})\b", wt))
-        tickers = sorted({t for t in cand if 1 <= len(t) <= 5})
-        noise = {"THE","AND","INC","CORP","ETF","USD","NYSE","SEC","CEO","API","USA","ID","UTC","ISO"}
-        tickers = [t for t in tickers if t not in noise]
-        if not (80 <= len(tickers) <= 130):
-            raise ValueError(f"implausible parse count={len(tickers)}")
+        tickers = []
+        for t in tables:
+            cols = [str(c).strip().lower() for c in t.columns]
+            tcol = None
+            for cand in ("ticker", "symbol"):
+                for i, c in enumerate(cols):
+                    if cand in c:
+                        tcol = t.columns[i]; break
+                if tcol is not None: break
+            if tcol is None:
+                continue
+            syms = [str(s).strip().upper() for s in t[tcol].dropna().tolist()]
+            syms = [s for s in syms if 1 <= len(s) <= 6 and s.replace(".", "").isalpha()]
+            syms = list(dict.fromkeys(syms))
+            if 80 <= len(syms) <= 130:
+                tickers = syms
+                break
 
-        src = f"live: Wikipedia MediaWiki API ({len(tickers)} tickers)"
+        if not tickers:
+            raise ValueError("no constituents table with 80-130 tickers found")
+
+        src = f"live: Wikipedia constituents table ({len(tickers)} tickers)"
         added = [s for s in SENTINELS if s not in tickers]
         if added:
             tickers += added
@@ -149,7 +166,6 @@ def gate_volatility(df):
                 f"52w range {rng*100:.1f}%", round(float(rng), 4), "(52wH-52wL)/52wL >= 40%")
 
 def detect_floor(df):
-    """Returns (is_on_floor:bool, reason:str). Fib 0.5/0.618 OR horizontal support (2+ touches)."""
     close = df["Close"]; low = df["Low"]
     recent = close.iloc[-1]
     win = df.iloc[-126:] if len(df) >= 126 else df
@@ -357,16 +373,22 @@ def scan_ticker(symbol, etf_cache, qqq_close, universe_source):
 
         gates = []
 
-        # ----- Sector exclusion (hard) -----
+        # ----- Tech-focus gate (Option B: Tech/Comm sector OR Tech-Titans whitelist) -----
         sector = info.get("sector")
-        if sector in EXCLUDED_SECTORS:
-            gates.append(gate(1, "Sector exclusion", "NO_GO",
-                              f"{sector} (XLP/XLU excluded)", sector, "not Consumer Defensive / Utilities"))
+        in_tech = sector in TECH_SECTORS
+        in_wl   = symbol in TECH_TITANS_WHITELIST
+        if not (in_tech or in_wl):
+            gates.append(gate(1, "Sector focus (Tech-only)", "NO_GO",
+                              f"{sector or 'unknown'} — not Tech/Comm and not in Tech-Titans whitelist",
+                              sector,
+                              "sector in {Technology, Communication Services} OR ticker in Tech-Titans whitelist"))
             item["gates"] = gates
-            item["blocked_at"] = f"Sector exclusion ({sector})"
+            item["blocked_at"] = f"Sector focus ({sector or 'unknown'})"
             return item
-        gates.append(gate(1, "Sector exclusion", "GO",
-                          f"{sector or 'unknown'}", sector, "not Consumer Defensive / Utilities"))
+        reason = "Technology/Comm sector" if in_tech else "Tech-Titans whitelist"
+        gates.append(gate(1, "Sector focus (Tech-only)", "GO",
+                          f"{sector or 'unknown'} ({reason})", sector,
+                          "Tech/Comm sector OR Tech-Titans whitelist"))
 
         # ----- CORE (AND, NO_GO) -----
         etf = classify_regime_etf(info)
