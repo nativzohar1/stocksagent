@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.1 (Tech-focus + live universe fix)
+scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.2 (Open Volatility Radar)
 Runs on GitHub Actions (has internet). Writes results/out.json.
-Spec: FROZEN PRD v2.0 + Tech-only universe focus.
+
+UNIVERSE: S&P 500 (live Wikipedia constituents table). SECTOR-AGNOSTIC.
+The ONLY gate keeping slow names out is Volatility >= 40%.
 
 Python OWNS (hard quant):
-  CORE (AND, NO_GO):  Tech-focus | Regime>200SMA | Volatility>=40% | Concrete floor+EMA21 | RS on red day | Hard stop
+  CORE (AND, NO_GO):  Regime>200SMA | Volatility>=40% | Concrete floor+EMA21 | RS on red day | Hard stop
   SCORE (rank only):  PEG<1.8 | FCF positive+growing | Catalyst (earnings 15-45d)
                       -> SKIP = data MISSING (AI heals) ; NO_GO = data PRESENT but bad (no rank point, never rejects)
 AI OWNS (NEEDS_LLM):  Rule-of-40/RPO decoupling | Insider Form4 | Disruption | Devil's Advocate | Data-Healing
@@ -26,7 +28,7 @@ import yfinance as yf
 OUT_PATH         = Path("results/out.json")
 HISTORY_PERIOD   = "1y"
 PEG_MAX          = 1.8
-VOL_MIN          = 0.40
+VOL_MIN          = 0.40          # the ONLY sector-replacement filter
 CATALYST_MIN_D   = 15
 CATALYST_MAX_D   = 45
 STOP_MULT        = 0.985
@@ -36,45 +38,37 @@ SUPPORT_TOL      = 0.025
 VOL_CLIMAX_MULT  = 2.0
 EMA_FAST         = 21
 
-# Regime ETF proxies
-ETF_SOFTWARE = "IGV"
-ETF_SEMIS    = "SOXX"
-ETF_DEFAULT  = "QQQ"
+# Regime ETF proxies (v2.2 alignment)
+ETF_TECH   = "XLK"     # Technology sector
+ETF_SEMIS  = "SOXX"    # Semiconductors
+ETF_BROAD  = "SPY"     # everything else (incl. Utilities like VST, Consumer, Energy, etc.)
 
-# ---- Tech-focus universe filter (Option B) --------------------------------------
-# Pass ONLY if sector is Tech/Comm, OR the ticker is a digital-growth titan that
-# yfinance miscategorizes as Consumer Cyclical (AMZN, TSLA...). Everything else NO_GO.
-TECH_SECTORS          = {"Technology", "Communication Services"}
-TECH_TITANS_WHITELIST = {"AMZN", "TSLA", "MELI", "BKNG", "ABNB", "NFLX"}
+# Market benchmark for Relative Strength (worst-red-day test) — broad market now
+RS_BENCHMARK = "SPY"
 
-# Known mega-caps the live source sometimes drops -> sentinel backfill
-SENTINELS = ["NOW"]
+# Optional mega-caps to force-include if the live source drops them (rarely needed for SP500)
+SENTINELS = []
 
-# Hardcoded NDX-100 fallback (used ONLY if live fetch fails)
-NDX_FALLBACK = [
-    "AAPL","MSFT","NVDA","AMZN","GOOGL","GOOG","META","AVGO","TSLA","COST",
-    "NFLX","AMD","PEP","ADBE","LIN","CSCO","TMUS","INTU","TXN","QCOM",
-    "AMGN","ISRG","CMCSA","AMAT","HON","BKNG","VRTX","PANW","ADP","GILD",
-    "SBUX","ADI","MU","REGN","LRCX","MDLZ","KLAC","SNPS","CDNS","PYPL",
-    "MELI","CRWD","MAR","CTAS","ORLY","ASML","ABNB","CEG","WDAY","NXPI",
-    "ROP","MNST","CSX","FTNT","ADSK","PCAR","AEP","DASH","CHTR","PAYX",
-    "TTD","ODFL","KDP","ROST","FANG","EA","CPRT","BKR","FAST","VRSK",
-    "GEHC","CTSH","EXC","XEL","KHC","IDXX","CCEP","TEAM","MCHP","ON",
-    "DXCM","ANSS","CSGP","ZS","DDOG","BIIB","ARM","WBD","ILMN","GFS",
-    "MRVL","TTWO","WBA","MDB","SMCI","LULU","PDD","DLTR","SIRI","ENPH",
-    "NOW","HON"
+# Emergency PARTIAL fallback (used ONLY if live fetch fails). NOT the full S&P 500 —
+# a liquid high-beta subset so the scanner still produces something. Source string flags it.
+SP500_PARTIAL_FALLBACK = [
+    "AAPL","MSFT","NVDA","AMZN","GOOGL","GOOG","META","AVGO","TSLA","ORCL",
+    "AMD","CRM","ADBE","NFLX","NOW","INTC","QCOM","TXN","MU","AMAT",
+    "LRCX","KLAC","PLTR","SMCI","ARM","PANW","CRWD","SNPS","CDNS","MRVL",
+    "ON","NXPI","FTNT","DDOG","ANET","MSTR","APP","UBER","SHOP","ABNB",
+    "BKNG","MELI","COIN","CEG","VST","NRG","ENPH","FSLR","DASH","RBLX"
 ]
 
 # ----------------------------------------------------------------------------------
-# UNIVERSE  (live constituents TABLE via pandas.read_html — robust, no regex)
+# UNIVERSE  (live S&P 500 constituents TABLE via pandas.read_html)
 # ----------------------------------------------------------------------------------
 def fetch_universe():
-    """Returns (tickers:list, source:str)."""
+    """Returns (tickers:list, source:str). Live S&P 500 Wikipedia constituents table."""
     try:
         import io
-        url = "https://en.wikipedia.org/wiki/Nasdaq-100"
+        url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
         r = requests.get(url, timeout=20,
-                         headers={"User-Agent": "Mozilla/5.0 (stocksagent/2.1)"})
+                         headers={"User-Agent": "Mozilla/5.0 (stocksagent/2.2)"})
         r.raise_for_status()
         tables = pd.read_html(io.StringIO(r.text))
 
@@ -82,32 +76,37 @@ def fetch_universe():
         for t in tables:
             cols = [str(c).strip().lower() for c in t.columns]
             tcol = None
-            for cand in ("ticker", "symbol"):
+            for cand in ("symbol", "ticker"):
                 for i, c in enumerate(cols):
                     if cand in c:
                         tcol = t.columns[i]; break
                 if tcol is not None: break
             if tcol is None:
                 continue
-            syms = [str(s).strip().upper() for s in t[tcol].dropna().tolist()]
-            syms = [s for s in syms if 1 <= len(s) <= 6 and s.replace(".", "").isalpha()]
+            raw = [str(s).strip().upper() for s in t[tcol].dropna().tolist()]
+            syms = []
+            for s in raw:
+                # keep clean tickers; normalize Wikipedia dots to yfinance dashes (BRK.B -> BRK-B)
+                if 1 <= len(s) <= 6 and s.replace(".", "").replace("-", "").isalpha():
+                    syms.append(s.replace(".", "-"))
             syms = list(dict.fromkeys(syms))
-            if 80 <= len(syms) <= 130:
+            if 490 <= len(syms) <= 510:        # plausibility window for the S&P 500 table
                 tickers = syms
                 break
 
         if not tickers:
-            raise ValueError("no constituents table with 80-130 tickers found")
+            raise ValueError("no S&P 500 constituents table with 490-510 tickers found")
 
-        src = f"live: Wikipedia constituents table ({len(tickers)} tickers)"
+        src = f"live: Wikipedia S&P 500 constituents table ({len(tickers)} tickers)"
         added = [s for s in SENTINELS if s not in tickers]
         if added:
             tickers += added
             src += f" + sentinel backfill ({','.join(added)})"
         return sorted(set(tickers)), src
     except Exception as e:
-        return list(dict.fromkeys(NDX_FALLBACK)), \
-               f"FALLBACK: NDX_FALLBACK hardcoded list ({len(set(NDX_FALLBACK))} tickers) — live fetch failed ({e})"
+        return list(dict.fromkeys(SP500_PARTIAL_FALLBACK)), \
+               (f"FALLBACK: SP500_PARTIAL_FALLBACK ({len(set(SP500_PARTIAL_FALLBACK))} tickers, "
+                f"PARTIAL — not full S&P 500) — live fetch failed ({e})")
 
 # ----------------------------------------------------------------------------------
 # TECHNICAL HELPERS
@@ -130,13 +129,14 @@ def gate(stage, name, status, detail, value=None, criterion=""):
 # CORE GATES (AND, NO_GO)
 # ----------------------------------------------------------------------------------
 def classify_regime_etf(info):
+    """v2.2: Technology->XLK | Semiconductors->SOXX | everything else->SPY."""
     sector = (info.get("sector") or "").lower()
     industry = (info.get("industry") or "").lower()
     if "semiconductor" in industry or "semiconductor" in sector:
         return ETF_SEMIS
-    if "software" in industry or "technology" in sector or "communication" in sector:
-        return ETF_SOFTWARE
-    return ETF_DEFAULT
+    if "technology" in sector:
+        return ETF_TECH
+    return ETF_BROAD
 
 def gate_regime(etf_symbol, etf_cache):
     if etf_symbol not in etf_cache:
@@ -234,26 +234,27 @@ def gate_concrete_floor(df):
     ]
     return main, sub
 
-def gate_relative_strength(df, qqq_close):
-    if qqq_close is None or len(qqq_close) < 30:
-        return gate(4, "Relative Strength", "SKIP", "QQQ history unavailable", None,
-                    "on QQQ worst red day: stock fell <0.3% or green")
-    qret = qqq_close.pct_change()
-    worst_day = qret.iloc[-30:].idxmin()
+def gate_relative_strength(df, bench_close):
+    if bench_close is None or len(bench_close) < 30:
+        return gate(4, "Relative Strength", "SKIP", f"{RS_BENCHMARK} history unavailable", None,
+                    f"on {RS_BENCHMARK} worst red day: stock fell <0.3% or green")
+    bret = bench_close.pct_change()
+    worst_day = bret.iloc[-30:].idxmin()
     if worst_day not in df.index:
-        common = df["Close"].reindex(qqq_close.index).dropna()
+        common = df["Close"].reindex(bench_close.index).dropna()
         sret = common.pct_change()
         if worst_day not in sret.index:
             return gate(4, "Relative Strength", "SKIP", "no aligned red-day bar", None,
-                        "on QQQ worst red day: stock fell <0.3% or green")
+                        f"on {RS_BENCHMARK} worst red day: stock fell <0.3% or green")
         stock_move = sret.loc[worst_day]
     else:
         stock_move = df["Close"].pct_change().loc[worst_day]
-    qqq_move = qret.loc[worst_day]
+    bench_move = bret.loc[worst_day]
     ok = stock_move >= RS_TOLERANCE
     return gate(4, "Relative Strength", "GO" if ok else "NO_GO",
-                f"QQQ red day {worst_day.date()} {qqq_move*100:.2f}% -> stock {stock_move*100:.2f}%",
-                round(float(stock_move), 4), "stock fell <0.3% or green on QQQ worst red day")
+                f"{RS_BENCHMARK} red day {worst_day.date()} {bench_move*100:.2f}% -> stock {stock_move*100:.2f}%",
+                round(float(stock_move), 4),
+                f"stock fell <0.3% or green on {RS_BENCHMARK} worst red day")
 
 def gate_hard_stop(df):
     low10 = df["Low"].iloc[-10:].min()
@@ -352,9 +353,9 @@ def ai_gates():
     ]
 
 # ----------------------------------------------------------------------------------
-# PER-TICKER PIPELINE
+# PER-TICKER PIPELINE  (v2.2: SECTOR-AGNOSTIC — no Sector focus gate)
 # ----------------------------------------------------------------------------------
-def scan_ticker(symbol, etf_cache, qqq_close, universe_source):
+def scan_ticker(symbol, etf_cache, bench_close, universe_source):
     item = {"ticker": symbol, "price": None, "verdict": "NO_GO",
             "go_count": 0, "blocked_at": None,
             "universe_source": universe_source, "gates": []}
@@ -373,29 +374,12 @@ def scan_ticker(symbol, etf_cache, qqq_close, universe_source):
 
         gates = []
 
-        # ----- Tech-focus gate (Option B: Tech/Comm sector OR Tech-Titans whitelist) -----
-        sector = info.get("sector")
-        in_tech = sector in TECH_SECTORS
-        in_wl   = symbol in TECH_TITANS_WHITELIST
-        if not (in_tech or in_wl):
-            gates.append(gate(1, "Sector focus (Tech-only)", "NO_GO",
-                              f"{sector or 'unknown'} — not Tech/Comm and not in Tech-Titans whitelist",
-                              sector,
-                              "sector in {Technology, Communication Services} OR ticker in Tech-Titans whitelist"))
-            item["gates"] = gates
-            item["blocked_at"] = f"Sector focus ({sector or 'unknown'})"
-            return item
-        reason = "Technology/Comm sector" if in_tech else "Tech-Titans whitelist"
-        gates.append(gate(1, "Sector focus (Tech-only)", "GO",
-                          f"{sector or 'unknown'} ({reason})", sector,
-                          "Tech/Comm sector OR Tech-Titans whitelist"))
-
-        # ----- CORE (AND, NO_GO) -----
+        # ----- CORE (AND, NO_GO) — sector-agnostic; Volatility is the only screen -----
         etf = classify_regime_etf(info)
         g_regime = gate_regime(etf, etf_cache)
         g_vol    = gate_volatility(df)
         g_floor, g_subs = gate_concrete_floor(df)
-        g_rs     = gate_relative_strength(df, qqq_close)
+        g_rs     = gate_relative_strength(df, bench_close)
         g_stop   = gate_hard_stop(df)
 
         # ----- SCORE (rank only) -----
@@ -403,12 +387,17 @@ def scan_ticker(symbol, etf_cache, qqq_close, universe_source):
         g_fcf = gate_fcf(tk)
         g_cat = gate_catalyst(tk)
 
+        # informational: record the sector so the AI knows what it's looking at
+        sector = info.get("sector") or "unknown"
+        gates.append(gate(1, "Sector (info only)", "GO",
+                          f"{sector} -> regime ETF {etf}", sector, "informational, not a filter"))
+
         gates += [g_regime, g_vol, g_floor] + g_subs + [g_rs, g_peg, g_fcf, g_cat, g_stop]
         gates += ai_gates()
         item["gates"] = gates
 
         # ----- Verdict: any CORE NO_GO => rejected. SCORE NO_GO never rejects -----
-        core = [g_regime, g_vol, g_floor, g_rs]   # g_stop always GO; SCORE gates intentionally excluded
+        core = [g_regime, g_vol, g_floor, g_rs]   # g_stop always GO; SCORE gates excluded
         blocker = next((g for g in core if g["status"] == "NO_GO"), None)
         if blocker:
             item["verdict"] = "NO_GO"
@@ -433,15 +422,15 @@ def main():
 
     etf_cache = {}
     try:
-        qqq_close = yf.Ticker("QQQ").history(period="6mo")["Close"].dropna()
+        bench_close = yf.Ticker(RS_BENCHMARK).history(period="6mo")["Close"].dropna()
     except Exception:
-        qqq_close = None
+        bench_close = None
 
     results = []
     for i, sym in enumerate(tickers, 1):
         print(f"[{i}/{len(tickers)}] {sym}")
-        results.append(scan_ticker(sym, etf_cache, qqq_close, universe_source))
-        time.sleep(0.4)
+        results.append(scan_ticker(sym, etf_cache, bench_close, universe_source))
+        time.sleep(0.25)   # ~500 names -> keep total runtime in check
 
     results.sort(key=lambda x: (x["verdict"] != "GO_PENDING_THESIS", -x["go_count"]))
     survivors = [r["ticker"] for r in results if r["verdict"] == "GO_PENDING_THESIS"]
