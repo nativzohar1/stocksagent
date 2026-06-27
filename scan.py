@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.3 (Mega-Cap Monster Radar)
+scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.4 (Mega-Cap Monster Radar)
 Runs on GitHub Actions (has internet). Writes results/out.json.
 
 UNIVERSE: S&P 100 (OEX) — the ~101 largest, most established US companies, EXCHANGE-AGNOSTIC
@@ -11,10 +11,14 @@ Plus a SENTINELS force-include list for elite high-vol growth monsters not yet i
 out is Volatility >= 40%.
 
 Python OWNS (hard quant):
-  CORE (AND, NO_GO):  Regime>200SMA | Volatility>=40% | Concrete floor+EMA21 | RS on red day | Hard stop
-  SCORE (rank only):  PEG<1.8 | FCF positive+growing | Catalyst (earnings 15-45d)
+  CORE (AND, NO_GO):  Volatility>=40% | Concrete floor+EMA21 | RS on red day | Hard stop
+  SCORE (rank only):  Regime>200SMA | PEG<1.8 | FCF positive+growing | Catalyst (earnings 15-45d)
                       -> SKIP = data MISSING (AI heals) ; NO_GO = data PRESENT but bad (no rank point, never rejects)
 AI OWNS (NEEDS_LLM):  Rule-of-40/RPO decoupling | Insider Form4 | Disruption | Devil's Advocate | Data-Healing
+
+v2.4 CHANGE: Regime is NO LONGER a rejecting CORE gate. A monster that decoupled from a
+bleeding sector and landed on a concrete floor (broke EMA21) must NOT be thrown away just
+because XLK/SPY is under its 200SMA. Regime now only affects go_count (rank), like PEG/FCF.
 """
 
 import json, time, math, datetime as dt
@@ -71,7 +75,7 @@ def fetch_universe():
         import io
         url = "https://en.wikipedia.org/wiki/S%26P_100"
         r = requests.get(url, timeout=20,
-                         headers={"User-Agent": "Mozilla/5.0 (stocksagent/2.3)"})
+                         headers={"User-Agent": "Mozilla/5.0 (stocksagent/2.4)"})
         r.raise_for_status()
         tables = pd.read_html(io.StringIO(r.text))
 
@@ -129,7 +133,7 @@ def gate(stage, name, status, detail, value=None, criterion=""):
             "detail": detail, "value": value, "criterion": criterion}
 
 # ----------------------------------------------------------------------------------
-# CORE GATES (AND, NO_GO)
+# REGIME GATE (now rank-only, informational — does NOT reject)
 # ----------------------------------------------------------------------------------
 def classify_regime_etf(info):
     """Technology->XLK | Semiconductors->SOXX | everything else->SPY."""
@@ -150,15 +154,19 @@ def gate_regime(etf_symbol, etf_cache):
             etf_cache[etf_symbol] = pd.Series(dtype=float)
     h = etf_cache[etf_symbol]
     if h is None or len(h) < 200:
-        return gate(1, "Sector trend (Regime)", "SKIP",
-                    f"{etf_symbol} history unavailable", None, "ETF > 200SMA")
+        return gate(1, "Sector trend (Regime, rank-only)", "SKIP",
+                    f"{etf_symbol} history unavailable", None, "ETF > 200SMA (rank-only, non-rejecting)")
     sma200 = h.rolling(200).mean().iloc[-1]
     last = h.iloc[-1]
     ok = last > sma200
-    return gate(1, "Sector trend (Regime)", "GO" if ok else "NO_GO",
-                f"{etf_symbol} {last:.2f} {'>' if ok else '<'} 200SMA {sma200:.2f}",
-                round(float(last), 2), "ETF > 200SMA")
+    return gate(1, "Sector trend (Regime, rank-only)", "GO" if ok else "NO_GO",
+                f"{etf_symbol} {last:.2f} {'>' if ok else '<'} 200SMA {sma200:.2f}"
+                f"{'' if ok else ' (sector weak — DECOUPLING context, NOT a rejection)'}",
+                round(float(last), 2), "ETF > 200SMA (rank-only, non-rejecting)")
 
+# ----------------------------------------------------------------------------------
+# CORE GATES (AND, NO_GO)
+# ----------------------------------------------------------------------------------
 def gate_volatility(df):
     hi = df["High"].max(); lo = df["Low"].min()
     if lo <= 0 or math.isnan(lo):
@@ -356,7 +364,7 @@ def ai_gates():
     ]
 
 # ----------------------------------------------------------------------------------
-# PER-TICKER PIPELINE  (SECTOR-AGNOSTIC — no Sector focus gate)
+# PER-TICKER PIPELINE  (SECTOR-AGNOSTIC — Regime is rank-only, NOT a rejecting gate)
 # ----------------------------------------------------------------------------------
 def scan_ticker(symbol, etf_cache, bench_close, universe_source):
     item = {"ticker": symbol, "price": None, "verdict": "NO_GO",
@@ -377,9 +385,11 @@ def scan_ticker(symbol, etf_cache, bench_close, universe_source):
 
         gates = []
 
-        # ----- CORE (AND, NO_GO) — sector-agnostic; Volatility is the only screen -----
+        # ----- Regime (rank-only, NON-rejecting) -----
         etf = classify_regime_etf(info)
         g_regime = gate_regime(etf, etf_cache)
+
+        # ----- CORE (AND, NO_GO) — sector-agnostic; Volatility is the only screen -----
         g_vol    = gate_volatility(df)
         g_floor, g_subs = gate_concrete_floor(df)
         g_rs     = gate_relative_strength(df, bench_close)
@@ -399,8 +409,10 @@ def scan_ticker(symbol, etf_cache, bench_close, universe_source):
         gates += ai_gates()
         item["gates"] = gates
 
-        # ----- Verdict: any CORE NO_GO => rejected. SCORE NO_GO never rejects -----
-        core = [g_regime, g_vol, g_floor, g_rs]   # g_stop always GO; SCORE gates excluded
+        # ----- Verdict: any CORE NO_GO => rejected. Regime/PEG/FCF NO_GO never reject -----
+        # v2.4: g_regime REMOVED from core. A decoupled monster on a concrete floor that broke
+        # EMA21 stays GO_PENDING_THESIS even when its sector ETF is below the 200SMA.
+        core = [g_vol, g_floor, g_rs]   # g_stop always GO; Regime & SCORE gates excluded
         blocker = next((g for g in core if g["status"] == "NO_GO"), None)
         if blocker:
             item["verdict"] = "NO_GO"
