@@ -17,7 +17,7 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45     # S&P 500 (~503 names) can take 15-25 min — margin for safety
 
     steps:
       - name: Checkout repo
