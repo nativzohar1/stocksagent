@@ -22,7 +22,10 @@ UNIVERSE       = scan.SP100_PARTIAL_FALLBACK
 def download(sym):
     try:
         df = yf.Ticker(sym).history(start=LOOKBACK_START, end=END).dropna()
-        return df if len(df) >= MIN_BARS else None
+        if len(df) < MIN_BARS:
+            return None
+        df.index = df.index.tz_localize(None)   # strip timezone -> tz-naive
+        return df
     except Exception:
         return None
 
@@ -37,7 +40,7 @@ def evaluate(df_win, bench_win):
 
 def main():
     print(f"Downloading {len(UNIVERSE)} tickers + {RS_BENCH} ...")
-    bench = yf.Ticker(RS_BENCH).history(start=LOOKBACK_START, end=END)["Close"].dropna()
+    bench = yf.Ticker(RS_BENCH).history(start=LOOKBACK_START, end=END)["Close"].dropna()     bench.index = bench.index.tz_localize(None)   # strip timezone -> tz-naive
     data  = {s: d for s in UNIVERSE if (d := download(s)) is not None}
     print(f"Loaded {len(data)} tickers.")
 
