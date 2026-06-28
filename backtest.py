@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-backtest.py — Decoupling Hunter TECHNICAL backtest v2.6 "Institutional Risk Guard".
+backtest.py — Decoupling Hunter TECHNICAL backtest v2.7 "Sniper Mode".
 Runs on GitHub Actions (needs internet). Imports the EXACT gate functions from scan.py and
 replays them POINT-IN-TIME over [START, END].
 
-v2.6 changes:
-  1. Holiday-glitch fix: iterate REAL trading days (union of all bars) + forward-fill a price
-     panel for mark-to-market, so US market holidays no longer fake-crash the equity curve.
-  2. Earnings Blackout (CORE): block any entry whose NEXT earnings date (point-in-time, from
-     historical get_earnings_dates) is within EARN_BLACKOUT_DAYS. No entering an earnings minefield.
+Risk guards stacked:
+  v2.6: holiday-glitch fix (ffill panel) + Earnings Blackout (<=14d to earnings = no entry).
+  v2.7: (1) REGIME hard filter — no entry unless SPY > 200SMA (point-in-time).
+        (2) CONFLUENCE trigger — require RSI-Divergence AND/OR Volume-Climax.
+             NOTE: scan.gate_concrete_floor already enforces (RSI-Div OR Vol-Climax) for a GO,
+             so CONFLUENCE_MODE="OR" is a no-op; "AND" demands BOTH = the real Sniper tightening.
 """
 import numpy as np, pandas as pd, yfinance as yf
 import scan   # single source of truth — same gates as production
@@ -24,7 +25,10 @@ MAX_POS            = 3
 START_EQUITY       = 100_000
 COST_BPS           = 5
 MIN_BARS           = 200
-EARN_BLACKOUT_DAYS = 14          # <-- v2.6: no entry if earnings within this many days
+EARN_BLACKOUT_DAYS = 14
+REGIME_FILTER      = True          # v2.7: require SPY > 200SMA to enter
+REGIME_SMA         = 200
+CONFLUENCE_MODE    = "AND"         # v2.7: "AND" = both RSI-Div & Vol-Climax (Sniper); "OR" = either
 RS_BENCH           = "SPY"
 UNIVERSE           = scan.SP100_PARTIAL_FALLBACK
 
@@ -34,14 +38,13 @@ def download(sym):
         df = yf.Ticker(sym).history(start=LOOKBACK_START, end=END).dropna()
         if len(df) < MIN_BARS:
             return None
-        df.index = df.index.tz_localize(None)   # strip timezone -> tz-naive
+        df.index = df.index.tz_localize(None)
         return df
     except Exception:
         return None
 
 
 def load_earnings(sym):
-    """Point-in-time earnings calendar: sorted list of normalized (tz-naive) earnings dates."""
     try:
         e = yf.Ticker(sym).get_earnings_dates(limit=40)
         if e is None or len(e) == 0:
@@ -55,13 +58,17 @@ def load_earnings(sym):
 
 
 def evaluate(df_win, bench_win):
+    """Returns (survivor, go_count, stop, rsi_div_go, vclimax_go)."""
     gv = scan.gate_volatility(df_win)
-    gf, _ = scan.gate_concrete_floor(df_win)
+    gf, sub = scan.gate_concrete_floor(df_win)
     gr = scan.gate_relative_strength(df_win, bench_win)
     gs = scan.gate_hard_stop(df_win)
     survivor = all(g["status"] != "NO_GO" for g in (gv, gf, gr)) and gf["status"] == "GO"
     gocount = sum(1 for g in (gv, gf, gr) if g["status"] == "GO")
-    return survivor, gocount, gs["value"]
+    # sub[0] = Bullish RSI divergence, sub[1] = Volume climax
+    rsi_div_go = sub[0]["status"] == "GO"
+    vclimax_go = sub[1]["status"] == "GO"
+    return survivor, gocount, gs["value"], rsi_div_go, vclimax_go
 
 
 def main():
@@ -71,21 +78,20 @@ def main():
     data = {s: d for s in UNIVERSE if (d := download(s)) is not None}
     print(f"Loaded {len(data)} tickers. Fetching earnings calendars ...")
     earnings = {s: load_earnings(s) for s in data}
-    print("Earnings calendars loaded.")
+    print(f"Earnings calendars loaded. Regime filter={REGIME_FILTER} | Confluence={CONFLUENCE_MODE}")
 
     def in_blackout(sym, day):
         for ed in earnings.get(sym, []):
-            delta = (ed - day).days
-            if 0 <= delta <= EARN_BLACKOUT_DAYS:
+            if 0 <= (ed - day).days <= EARN_BLACKOUT_DAYS:
                 return True
         return False
 
-    # ---- v2.6 holiday fix: real trading days + ffilled price panel for mark-to-market ----
+    # holiday fix: real trading days + ffilled price panel for mark-to-market
     all_days = sorted(set().union(*[set(df.loc[START:END].index) for df in data.values()]))
     panel = pd.concat({sym: df["Close"] for sym, df in data.items()}, axis=1).reindex(all_days).ffill()
 
     cash, positions, trades, curve = START_EQUITY, {}, [], []
-    blocked_by_earnings = 0
+    blocked_earnings = blocked_confluence = regime_blocked_days = 0
 
     for day in all_days:
         # ---- EXITS (bracket, gap-aware) ----
@@ -108,10 +114,18 @@ def main():
                                "ret": round(fill / p["entry"] - 1, 4)})
                 del positions[sym]
 
-        # ---- ENTRIES (signal on prior close, fill at today's open) ----
+        # ---- REGIME GATE (v2.7, point-in-time SPY > 200SMA) ----
+        prev = day - pd.Timedelta(days=1)
+        regime_ok = True
+        if REGIME_FILTER:
+            bh = bench.loc[:prev]
+            regime_ok = (len(bh) >= REGIME_SMA) and (bh.iloc[-1] > bh.rolling(REGIME_SMA).mean().iloc[-1])
+
+        # ---- ENTRIES ----
         slots = MAX_POS - len(positions)
-        if slots > 0:
-            prev = day - pd.Timedelta(days=1)
+        if slots > 0 and not regime_ok:
+            regime_blocked_days += 1
+        if slots > 0 and regime_ok:
             cands = []
             for sym, df in data.items():
                 if sym in positions or day not in df.index:
@@ -121,11 +135,15 @@ def main():
                     continue
                 df_win = hist.tail(WIN_DAYS)
                 bench_win = bench.loc[:prev].tail(BENCH_DAYS)
-                ok, gc, stop = evaluate(df_win, bench_win)
+                ok, gc, stop, rdiv, vclmx = evaluate(df_win, bench_win)
                 if not (ok and stop and stop < df_win["Close"].iloc[-1]):
                     continue
-                if in_blackout(sym, day):            # v2.6 CORE: earnings blackout
-                    blocked_by_earnings += 1
+                conf = (rdiv and vclmx) if CONFLUENCE_MODE == "AND" else (rdiv or vclmx)
+                if not conf:                          # v2.7 confluence
+                    blocked_confluence += 1
+                    continue
+                if in_blackout(sym, day):             # v2.6 earnings blackout
+                    blocked_earnings += 1
                     continue
                 cands.append((gc, sym, df_win["Close"].iloc[-1], stop))
             cands.sort(reverse=True)
@@ -161,16 +179,16 @@ def main():
     else:
         win = pf = avg_hold = expectancy = float("nan")
 
-    print("=" * 60)
-    print(f"PERIOD {START} -> {END}   (v2.6 Institutional Risk Guard)")
+    print("=" * 64)
+    print(f"PERIOD {START} -> {END}   (v2.7 Sniper Mode | Regime={REGIME_FILTER} | Confluence={CONFLUENCE_MODE})")
     print(f"Final equity: ${eq['equity'].iloc[-1]:,.0f}")
     print(f"Trades: {len(tr)} | Win%: {win:.0%} | Profit factor: {pf:.2f}")
     print(f"Expectancy/trade: ${expectancy:,.0f}")
     print(f"Avg hold: {avg_hold:.0f} days | Max drawdown: {dd:.1%}")
-    print(f"Entries blocked by earnings blackout: {blocked_by_earnings}")
+    print(f"Blocked -> earnings: {blocked_earnings} | confluence: {blocked_confluence} | regime-off days: {regime_blocked_days}")
     print(f"STRATEGY total return: {total_ret:.1%}")
     print(f"SPY buy&hold return : {spy_ret:.1%}")
-    print("=" * 60)
+    print("=" * 64)
     eq.to_csv("results/backtest_equity.csv", index=False)
     tr.to_csv("results/backtest_trades.csv", index=False)
     print("Wrote results/backtest_equity.csv + results/backtest_trades.csv")
