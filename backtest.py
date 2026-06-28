@@ -1,25 +1,32 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-backtest.py — Decoupling Hunter TECHNICAL backtest, 1-to-1 with scan.py.
+backtest.py — Decoupling Hunter TECHNICAL backtest v2.6 "Institutional Risk Guard".
 Runs on GitHub Actions (needs internet). Imports the EXACT gate functions from scan.py and
-replays them POINT-IN-TIME (each day T sees only data up to T) over [START, END].
+replays them POINT-IN-TIME over [START, END].
+
+v2.6 changes:
+  1. Holiday-glitch fix: iterate REAL trading days (union of all bars) + forward-fill a price
+     panel for mark-to-market, so US market holidays no longer fake-crash the equity curve.
+  2. Earnings Blackout (CORE): block any entry whose NEXT earnings date (point-in-time, from
+     historical get_earnings_dates) is within EARN_BLACKOUT_DAYS. No entering an earnings minefield.
 """
 import numpy as np, pandas as pd, yfinance as yf
 import scan   # single source of truth — same gates as production
 
-START, END     = "2025-01-01", "2026-06-28"
-LOOKBACK_START = "2023-12-01"
-WIN_DAYS       = 252
-BENCH_DAYS     = 126
-TARGET         = 0.25
-RISK_PCT       = 0.01
-MAX_POS        = 3
-START_EQUITY   = 100_000
-COST_BPS       = 5
-MIN_BARS       = 200
-RS_BENCH       = "SPY"
-UNIVERSE       = scan.SP100_PARTIAL_FALLBACK
+START, END         = "2025-01-01", "2026-06-28"
+LOOKBACK_START     = "2023-12-01"
+WIN_DAYS           = 252
+BENCH_DAYS         = 126
+TARGET             = 0.25
+RISK_PCT           = 0.01
+MAX_POS            = 3
+START_EQUITY       = 100_000
+COST_BPS           = 5
+MIN_BARS           = 200
+EARN_BLACKOUT_DAYS = 14          # <-- v2.6: no entry if earnings within this many days
+RS_BENCH           = "SPY"
+UNIVERSE           = scan.SP100_PARTIAL_FALLBACK
 
 
 def download(sym):
@@ -31,6 +38,20 @@ def download(sym):
         return df
     except Exception:
         return None
+
+
+def load_earnings(sym):
+    """Point-in-time earnings calendar: sorted list of normalized (tz-naive) earnings dates."""
+    try:
+        e = yf.Ticker(sym).get_earnings_dates(limit=40)
+        if e is None or len(e) == 0:
+            return []
+        idx = e.index
+        if idx.tz is not None:
+            idx = idx.tz_convert("UTC").tz_localize(None)
+        return sorted(pd.Timestamp(d).normalize() for d in idx)
+    except Exception:
+        return []
 
 
 def evaluate(df_win, bench_win):
@@ -46,14 +67,27 @@ def evaluate(df_win, bench_win):
 def main():
     print(f"Downloading {len(UNIVERSE)} tickers + {RS_BENCH} ...")
     bench = yf.Ticker(RS_BENCH).history(start=LOOKBACK_START, end=END)["Close"].dropna()
-    bench.index = bench.index.tz_localize(None)   # strip timezone -> tz-naive
+    bench.index = bench.index.tz_localize(None)
     data = {s: d for s in UNIVERSE if (d := download(s)) is not None}
-    print(f"Loaded {len(data)} tickers.")
+    print(f"Loaded {len(data)} tickers. Fetching earnings calendars ...")
+    earnings = {s: load_earnings(s) for s in data}
+    print("Earnings calendars loaded.")
 
-    days = pd.bdate_range(START, END)
+    def in_blackout(sym, day):
+        for ed in earnings.get(sym, []):
+            delta = (ed - day).days
+            if 0 <= delta <= EARN_BLACKOUT_DAYS:
+                return True
+        return False
+
+    # ---- v2.6 holiday fix: real trading days + ffilled price panel for mark-to-market ----
+    all_days = sorted(set().union(*[set(df.loc[START:END].index) for df in data.values()]))
+    panel = pd.concat({sym: df["Close"] for sym, df in data.items()}, axis=1).reindex(all_days).ffill()
+
     cash, positions, trades, curve = START_EQUITY, {}, [], []
+    blocked_by_earnings = 0
 
-    for day in days:
+    for day in all_days:
         # ---- EXITS (bracket, gap-aware) ----
         for sym in list(positions):
             df = data[sym]
@@ -80,19 +114,22 @@ def main():
             prev = day - pd.Timedelta(days=1)
             cands = []
             for sym, df in data.items():
-                if sym in positions:
+                if sym in positions or day not in df.index:
                     continue
                 hist = df.loc[:prev]
-                if len(hist) < MIN_BARS or day not in df.index:
+                if len(hist) < MIN_BARS:
                     continue
                 df_win = hist.tail(WIN_DAYS)
                 bench_win = bench.loc[:prev].tail(BENCH_DAYS)
                 ok, gc, stop = evaluate(df_win, bench_win)
-                if ok and stop and stop < df_win["Close"].iloc[-1]:
-                    cands.append((gc, sym, df_win["Close"].iloc[-1], stop))
+                if not (ok and stop and stop < df_win["Close"].iloc[-1]):
+                    continue
+                if in_blackout(sym, day):            # v2.6 CORE: earnings blackout
+                    blocked_by_earnings += 1
+                    continue
+                cands.append((gc, sym, df_win["Close"].iloc[-1], stop))
             cands.sort(reverse=True)
-            equity = cash + sum(p["qty"] * data[s].loc[day, "Close"]
-                                for s, p in positions.items() if day in data[s].index)
+            equity = cash + sum(p["qty"] * panel.at[day, s] for s, p in positions.items())
             for gc, sym, sig_close, stop in cands[:slots]:
                 entry = data[sym].loc[day, "Open"] * (1 + COST_BPS / 1e4)
                 if entry <= stop:
@@ -105,8 +142,7 @@ def main():
                                   "qty": qty, "stop": round(stop, 2),
                                   "target": round(sig_close * (1 + TARGET), 2)}
 
-        mtm = cash + sum(p["qty"] * data[s].loc[day, "Close"]
-                         for s, p in positions.items() if day in data[s].index)
+        mtm = cash + sum(p["qty"] * panel.at[day, s] for s, p in positions.items())
         curve.append({"date": day.date(), "equity": round(mtm, 2)})
 
     # ---- METRICS ----
@@ -121,13 +157,17 @@ def main():
         losses = abs(tr.loc[tr.pnl < 0, "pnl"].sum())
         pf = (tr.loc[tr.pnl > 0, "pnl"].sum() / losses) if losses else float("inf")
         avg_hold = (pd.to_datetime(tr.exit_date) - pd.to_datetime(tr.entry_date)).dt.days.mean()
+        expectancy = tr["pnl"].mean()
     else:
-        win = pf = avg_hold = float("nan")
+        win = pf = avg_hold = expectancy = float("nan")
 
     print("=" * 60)
-    print(f"PERIOD {START} -> {END}")
+    print(f"PERIOD {START} -> {END}   (v2.6 Institutional Risk Guard)")
+    print(f"Final equity: ${eq['equity'].iloc[-1]:,.0f}")
     print(f"Trades: {len(tr)} | Win%: {win:.0%} | Profit factor: {pf:.2f}")
+    print(f"Expectancy/trade: ${expectancy:,.0f}")
     print(f"Avg hold: {avg_hold:.0f} days | Max drawdown: {dd:.1%}")
+    print(f"Entries blocked by earnings blackout: {blocked_by_earnings}")
     print(f"STRATEGY total return: {total_ret:.1%}")
     print(f"SPY buy&hold return : {spy_ret:.1%}")
     print("=" * 60)
