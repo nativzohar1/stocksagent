@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-backtest.py — Decoupling Hunter TECHNICAL backtest v2.7 "Sniper Mode".
+backtest.py — Decoupling Hunter TECHNICAL backtest v2.7.1 "Goldilocks".
 Runs on GitHub Actions (needs internet). Imports the EXACT gate functions from scan.py and
 replays them POINT-IN-TIME over [START, END].
 
-Risk guards stacked:
-  v2.6: holiday-glitch fix (ffill panel) + Earnings Blackout (<=14d to earnings = no entry).
-  v2.7: (1) REGIME hard filter — no entry unless SPY > 200SMA (point-in-time).
-        (2) CONFLUENCE trigger — require RSI-Divergence AND/OR Volume-Climax.
-             NOTE: scan.gate_concrete_floor already enforces (RSI-Div OR Vol-Climax) for a GO,
-             so CONFLUENCE_MODE="OR" is a no-op; "AND" demands BOTH = the real Sniper tightening.
+Config (v2.7.1):
+  - REGIME_FILTER = True   -> hard NO_GO unless SPY > 200SMA (no buying in a bear market).
+  - CONFLUENCE_MODE = "OR" -> entry needs (Close>EMA21) AND (Floor) AND (RSI-Div OR Vol-Climax).
+                             (This is what scan.gate_concrete_floor already enforces for a GO.)
+  - Earnings Blackout (<=14d) + holiday-glitch ffill fix: ACTIVE (from v2.6).
 """
 import numpy as np, pandas as pd, yfinance as yf
 import scan   # single source of truth — same gates as production
@@ -26,9 +25,9 @@ START_EQUITY       = 100_000
 COST_BPS           = 5
 MIN_BARS           = 200
 EARN_BLACKOUT_DAYS = 14
-REGIME_FILTER      = True          # v2.7: require SPY > 200SMA to enter
+REGIME_FILTER      = True          # hard: require SPY > 200SMA to enter
 REGIME_SMA         = 200
-CONFLUENCE_MODE    = "AND"         # v2.7: "AND" = both RSI-Div & Vol-Climax (Sniper); "OR" = either
+CONFLUENCE_MODE    = "OR"          # v2.7.1: "OR" = RSI-Div OR Vol-Climax (Goldilocks)
 RS_BENCH           = "SPY"
 UNIVERSE           = scan.SP100_PARTIAL_FALLBACK
 
@@ -65,9 +64,8 @@ def evaluate(df_win, bench_win):
     gs = scan.gate_hard_stop(df_win)
     survivor = all(g["status"] != "NO_GO" for g in (gv, gf, gr)) and gf["status"] == "GO"
     gocount = sum(1 for g in (gv, gf, gr) if g["status"] == "GO")
-    # sub[0] = Bullish RSI divergence, sub[1] = Volume climax
-    rsi_div_go = sub[0]["status"] == "GO"
-    vclimax_go = sub[1]["status"] == "GO"
+    rsi_div_go = sub[0]["status"] == "GO"   # Bullish RSI divergence
+    vclimax_go = sub[1]["status"] == "GO"   # Volume climax
     return survivor, gocount, gs["value"], rsi_div_go, vclimax_go
 
 
@@ -78,7 +76,7 @@ def main():
     data = {s: d for s in UNIVERSE if (d := download(s)) is not None}
     print(f"Loaded {len(data)} tickers. Fetching earnings calendars ...")
     earnings = {s: load_earnings(s) for s in data}
-    print(f"Earnings calendars loaded. Regime filter={REGIME_FILTER} | Confluence={CONFLUENCE_MODE}")
+    print(f"Earnings loaded. Regime filter={REGIME_FILTER} | Confluence={CONFLUENCE_MODE}")
 
     def in_blackout(sym, day):
         for ed in earnings.get(sym, []):
@@ -86,7 +84,6 @@ def main():
                 return True
         return False
 
-    # holiday fix: real trading days + ffilled price panel for mark-to-market
     all_days = sorted(set().union(*[set(df.loc[START:END].index) for df in data.values()]))
     panel = pd.concat({sym: df["Close"] for sym, df in data.items()}, axis=1).reindex(all_days).ffill()
 
@@ -114,7 +111,7 @@ def main():
                                "ret": round(fill / p["entry"] - 1, 4)})
                 del positions[sym]
 
-        # ---- REGIME GATE (v2.7, point-in-time SPY > 200SMA) ----
+        # ---- REGIME GATE (point-in-time SPY > 200SMA) ----
         prev = day - pd.Timedelta(days=1)
         regime_ok = True
         if REGIME_FILTER:
@@ -139,10 +136,10 @@ def main():
                 if not (ok and stop and stop < df_win["Close"].iloc[-1]):
                     continue
                 conf = (rdiv and vclmx) if CONFLUENCE_MODE == "AND" else (rdiv or vclmx)
-                if not conf:                          # v2.7 confluence
+                if not conf:
                     blocked_confluence += 1
                     continue
-                if in_blackout(sym, day):             # v2.6 earnings blackout
+                if in_blackout(sym, day):
                     blocked_earnings += 1
                     continue
                 cands.append((gc, sym, df_win["Close"].iloc[-1], stop))
@@ -180,7 +177,7 @@ def main():
         win = pf = avg_hold = expectancy = float("nan")
 
     print("=" * 64)
-    print(f"PERIOD {START} -> {END}   (v2.7 Sniper Mode | Regime={REGIME_FILTER} | Confluence={CONFLUENCE_MODE})")
+    print(f"PERIOD {START} -> {END}   (v2.7.1 Goldilocks | Regime={REGIME_FILTER} | Confluence={CONFLUENCE_MODE})")
     print(f"Final equity: ${eq['equity'].iloc[-1]:,.0f}")
     print(f"Trades: {len(tr)} | Win%: {win:.0%} | Profit factor: {pf:.2f}")
     print(f"Expectancy/trade: ${expectancy:,.0f}")
