@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.5 (Mega-Cap Monster Radar)
+scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.6 (Mega-Cap Monster Radar)
 Runs on GitHub Actions (has internet). Writes results/out.json.
 
 UNIVERSE: S&P 100 (OEX) — the ~101 largest, most established US companies, EXCHANGE-AGNOSTIC
@@ -20,6 +20,10 @@ v2.5: CURE 'LATENCY BLINDNESS'. yfinance daily history often lags the latest com
       (esp. right after close / over a weekend), so a fresh EMA21 breakout is missed. We now
       patch the last bar's Close/High/Low with the live yfinance fast_info.last_price BEFORE
       any price gate runs, so floor/EMA21-breakout/RS/stop all see the current price.
+v2.6: ZERO-DEPENDENCY HOLIDAY/WEEKEND GUARD. On a US non-trading day, SPY has no bar for
+      "today", so its most recent session date != today's date. main() detects this and exits
+      WITHOUT overwriting out.json (keeps the last valid trading-day scan intact). No extra
+      dependency — reuses yfinance, which is already imported.
 """
 
 import json, time, math, datetime as dt
@@ -76,7 +80,7 @@ def fetch_universe():
         import io
         url = "https://en.wikipedia.org/wiki/S%26P_100"
         r = requests.get(url, timeout=20,
-                         headers={"User-Agent": "Mozilla/5.0 (stocksagent/2.5)"})
+                         headers={"User-Agent": "Mozilla/5.0 (stocksagent/2.6)"})
         r.raise_for_status()
         tables = pd.read_html(io.StringIO(r.text))
 
@@ -472,6 +476,24 @@ def scan_ticker(symbol, etf_cache, bench_close, universe_source):
 # MAIN
 # ----------------------------------------------------------------------------------
 def main():
+    # ---------------------------------------------------------------------------
+    # v2.6 — ZERO-DEPENDENCY HOLIDAY / WEEKEND GUARD
+    # On a US market holiday (e.g. July 4th) or weekend, dt.date.today() still
+    # returns that calendar day, but the NYSE is closed so SPY's most recent bar
+    # is the PRIOR trading session. We detect the date mismatch and exit safely
+    # WITHOUT overwriting out.json (the last valid trading-day scan is preserved).
+    # Reuses yfinance — no extra dependency, keeps requirements.txt lean.
+    # ---------------------------------------------------------------------------
+    try:
+        last_valid_session = yf.download("SPY", period="5d", progress=False).index[-1].date()
+        if last_valid_session != dt.date.today():
+            print(f"[!] NYSE Closed Today (last valid session: {last_valid_session}). "
+                  f"Skipping out.json overwrite.")
+            return
+    except Exception as e:
+        # A transient yfinance hiccup must NOT falsely skip a real trading day.
+        print(f"[holiday-guard] SPY session check failed ({e}); proceeding with scan.")
+
     tickers, universe_source = fetch_universe()
     print(f"UNIVERSE {{count: {len(tickers)}, source: {universe_source}}}")
 
