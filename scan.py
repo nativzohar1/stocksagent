@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.6 (Mega-Cap Monster Radar)
+scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.7 (Mega-Cap Monster Radar)
 Runs on GitHub Actions (has internet). Writes results/out.json.
 
 UNIVERSE: S&P 100 (OEX) — the ~101 largest, most established US companies, EXCHANGE-AGNOSTIC
 (includes NYSE names like ORCL/CRM and Nasdaq names like NOW/PLTR). SECTOR-AGNOSTIC.
-Plus a SENTINELS force-include list (VST, CEG, PLTR, CRWD, DDOG). The ONLY screen keeping
-slow blue-chips (banks/staples) out is Volatility >= 40%.
+Plus a SENTINELS force-include list (VST, CEG, PLTR, CRWD, DDOG, TASE.TA). The ONLY screen
+keeping slow blue-chips (banks/staples) out is Volatility >= 40%.
 
 Python OWNS (hard quant):
   CORE (AND, NO_GO):  Volatility>=40% | Concrete floor+EMA21 | RS on red day | Hard stop
@@ -16,14 +16,15 @@ Python OWNS (hard quant):
 AI OWNS (NEEDS_LLM):  Rule-of-40/RPO decoupling | Insider Form4 | Disruption | Devil's Advocate | Data-Healing
 
 v2.4: Regime is rank-only (never rejects) — catch monsters that decoupled from a weak sector.
-v2.5: CURE 'LATENCY BLINDNESS'. yfinance daily history often lags the latest completed bar
-      (esp. right after close / over a weekend), so a fresh EMA21 breakout is missed. We now
-      patch the last bar's Close/High/Low with the live yfinance fast_info.last_price BEFORE
+v2.5: CURE 'LATENCY BLINDNESS'. Patch the last daily bar with the live fast_info price BEFORE
       any price gate runs, so floor/EMA21-breakout/RS/stop all see the current price.
-v2.6: ZERO-DEPENDENCY HOLIDAY/WEEKEND GUARD. On a US non-trading day, SPY has no bar for
-      "today", so its most recent session date != today's date. main() detects this and exits
-      WITHOUT overwriting out.json (keeps the last valid trading-day scan intact). No extra
-      dependency — reuses yfinance, which is already imported.
+v2.6: ZERO-DEPENDENCY HOLIDAY/WEEKEND GUARD. On a US non-trading day, SPY's most recent
+      session date != today's date -> main() exits WITHOUT overwriting out.json.
+v2.7: ISRAELI SENTINEL + AGOROT GUARDRAIL. TASE.TA (Tel Aviv Stock Exchange Ltd) is force-
+      included. For any ".TA" (Tel Aviv) ticker the RS benchmark and the Regime ETF are
+      measured against the Israeli TA-125 index (^TA125.TA), NOT SPY/XLK/SOXX. A
+      'Currency (info only)' gate stamps that .TA prices are in AGOROT (ILA) — divide by 100
+      for ILS — so the LLM never falls into the agorot trap (12,500 agorot = ILS 125.00, NOT USD).
 """
 
 import json, time, math, datetime as dt
@@ -51,16 +52,21 @@ VOL_CLIMAX_MULT  = 2.0
 EMA_FAST         = 21
 LIVE_OVERRIDE_TOL = 0.001        # only override if live price differs >0.1% from last close
 
-# Regime ETF proxies
+# Regime ETF proxies (US)
 ETF_TECH   = "XLK"     # Technology sector
 ETF_SEMIS  = "SOXX"    # Semiconductors
 ETF_BROAD  = "SPY"     # everything else
 
-# Market benchmark for Relative Strength (worst-red-day test)
+# Market benchmark for Relative Strength (worst-red-day test) — US default
 RS_BENCHMARK = "SPY"
 
-# Elite high-vol growth monsters force-included even if not (yet) in the S&P 100.
-SENTINELS = ["VST", "CEG", "PLTR", "CRWD", "DDOG"]
+# v2.7 — Israeli market: TA-125 index proxy (used for both RS and Regime of ".TA" tickers)
+ISRAELI_SUFFIX = ".TA"
+ETF_ISRAEL     = "^TA125.TA"
+
+# Elite high-vol monsters force-included even if not (yet) in the S&P 100.
+# TASE.TA = Tel Aviv Stock Exchange Ltd (prices in AGOROT — see Currency gate).
+SENTINELS = ["VST", "CEG", "PLTR", "CRWD", "DDOG", "TASE.TA"]
 
 # Emergency PARTIAL fallback (used ONLY if live fetch fails). Mega-cap subset.
 SP100_PARTIAL_FALLBACK = [
@@ -68,7 +74,7 @@ SP100_PARTIAL_FALLBACK = [
     "AMD","CRM","ADBE","NFLX","NOW","ACN","INTC","QCOM","TXN","AMAT",
     "PLTR","CSCO","IBM","INTU","PYPL","UBER","LIN","PEP","COST","JPM",
     "V","MA","HD","LLY","ABBV","MRK","UNH","XOM","CVX","CAT","BA","GE",
-    "VST","CEG","CRWD","DDOG"
+    "VST","CEG","CRWD","DDOG","TASE.TA"
 ]
 
 # ----------------------------------------------------------------------------------
@@ -80,7 +86,7 @@ def fetch_universe():
         import io
         url = "https://en.wikipedia.org/wiki/S%26P_100"
         r = requests.get(url, timeout=20,
-                         headers={"User-Agent": "Mozilla/5.0 (stocksagent/2.6)"})
+                         headers={"User-Agent": "Mozilla/5.0 (stocksagent/2.7)"})
         r.raise_for_status()
         tables = pd.read_html(io.StringIO(r.text))
 
@@ -136,6 +142,21 @@ def gate(stage, name, status, detail, value=None, criterion=""):
     return {"stage": stage, "name": name, "status": status,
             "detail": detail, "value": value, "criterion": criterion}
 
+def is_israeli(symbol):
+    return symbol.upper().endswith(ISRAELI_SUFFIX)
+
+def gate_currency(symbol, price):
+    """v2.7 AGOROT GUARDRAIL — info only, never a filter."""
+    if is_israeli(symbol):
+        ils = (price / 100.0) if price else None
+        return gate(0, "Currency (info only)", "GO",
+                    f"ILA (agorot): yfinance price {price} = ILS {ils:.2f} (divide by 100). "
+                    f"Stop/Target are in AGOROT too -> divide by 100 for ILS display. "
+                    f"P/L% is currency-agnostic. NEVER read as USD.",
+                    "ILA", "agorot guardrail: .TA price is agorot; show ILS = price/100, not USD")
+    return gate(0, "Currency (info only)", "GO", f"USD {price}", "USD",
+                "informational, US dollars")
+
 def get_live_price(tk):
     """Best-effort current/last price from yfinance fast_info (quote endpoint),
     which is fresher than the daily-history bar. Returns float or None."""
@@ -173,10 +194,21 @@ def apply_live_last_price(df, tk):
     return df, "GO", f"LIVE OVERRIDE: lagged daily close {last_close:.2f} -> live {live:.2f} (fast_info)"
 
 # ----------------------------------------------------------------------------------
-# REGIME GATE (rank-only, informational — does NOT reject)
+# BENCHMARK / REGIME RESOLUTION
 # ----------------------------------------------------------------------------------
-def classify_regime_etf(info):
-    """Technology->XLK | Semiconductors->SOXX | everything else->SPY."""
+def get_benchmark_close(symbol, bench_cache):
+    """6-month close series for the Relative-Strength benchmark (cached)."""
+    if symbol not in bench_cache:
+        try:
+            bench_cache[symbol] = yf.Ticker(symbol).history(period="6mo")["Close"].dropna()
+        except Exception:
+            bench_cache[symbol] = None
+    return bench_cache[symbol]
+
+def classify_regime_etf(symbol, info):
+    """Israeli (.TA) -> TA-125 | Semiconductors -> SOXX | Technology -> XLK | else -> SPY."""
+    if is_israeli(symbol):
+        return ETF_ISRAEL
     sector = (info.get("sector") or "").lower()
     industry = (info.get("industry") or "").lower()
     if "semiconductor" in industry or "semiconductor" in sector:
@@ -201,7 +233,7 @@ def gate_regime(etf_symbol, etf_cache):
     ok = last > sma200
     return gate(1, "Sector trend (Regime, rank-only)", "GO" if ok else "NO_GO",
                 f"{etf_symbol} {last:.2f} {'>' if ok else '<'} 200SMA {sma200:.2f}"
-                f"{'' if ok else ' (sector weak — DECOUPLING context, NOT a rejection)'}",
+                f"{'' if ok else ' (sector/market weak — DECOUPLING context, NOT a rejection)'}",
                 round(float(last), 2), "ETF > 200SMA (rank-only, non-rejecting)")
 
 # ----------------------------------------------------------------------------------
@@ -285,10 +317,10 @@ def gate_concrete_floor(df):
     ]
     return main, sub
 
-def gate_relative_strength(df, bench_close):
+def gate_relative_strength(df, bench_close, bench_name=RS_BENCHMARK):
     if bench_close is None or len(bench_close) < 30:
-        return gate(4, "Relative Strength", "SKIP", f"{RS_BENCHMARK} history unavailable", None,
-                    f"on {RS_BENCHMARK} worst red day: stock fell <0.3% or green")
+        return gate(4, "Relative Strength", "SKIP", f"{bench_name} history unavailable", None,
+                    f"on {bench_name} worst red day: stock fell <0.3% or green")
     bret = bench_close.pct_change()
     worst_day = bret.iloc[-30:].idxmin()
     if worst_day not in df.index:
@@ -296,16 +328,16 @@ def gate_relative_strength(df, bench_close):
         sret = common.pct_change()
         if worst_day not in sret.index:
             return gate(4, "Relative Strength", "SKIP", "no aligned red-day bar", None,
-                        f"on {RS_BENCHMARK} worst red day: stock fell <0.3% or green")
+                        f"on {bench_name} worst red day: stock fell <0.3% or green")
         stock_move = sret.loc[worst_day]
     else:
         stock_move = df["Close"].pct_change().loc[worst_day]
     bench_move = bret.loc[worst_day]
     ok = stock_move >= RS_TOLERANCE
     return gate(4, "Relative Strength", "GO" if ok else "NO_GO",
-                f"{RS_BENCHMARK} red day {worst_day.date()} {bench_move*100:.2f}% -> stock {stock_move*100:.2f}%",
+                f"{bench_name} red day {worst_day.date()} {bench_move*100:.2f}% -> stock {stock_move*100:.2f}%",
                 round(float(stock_move), 4),
-                f"stock fell <0.3% or green on {RS_BENCHMARK} worst red day")
+                f"stock fell <0.3% or green on {bench_name} worst red day")
 
 def gate_hard_stop(df):
     low10 = df["Low"].iloc[-10:].min()
@@ -406,7 +438,7 @@ def ai_gates():
 # ----------------------------------------------------------------------------------
 # PER-TICKER PIPELINE  (SECTOR-AGNOSTIC — Regime is rank-only, NOT a rejecting gate)
 # ----------------------------------------------------------------------------------
-def scan_ticker(symbol, etf_cache, bench_close, universe_source):
+def scan_ticker(symbol, etf_cache, bench_cache, universe_source):
     item = {"ticker": symbol, "price": None, "verdict": "NO_GO",
             "go_count": 0, "blocked_at": None,
             "universe_source": universe_source, "gates": []}
@@ -425,18 +457,22 @@ def scan_ticker(symbol, etf_cache, bench_close, universe_source):
         info = {}
         try: info = tk.info or {}
         except Exception: info = {}
-        item["price"] = round(float(df["Close"].iloc[-1]), 2)   # now reflects the live override
+        item["price"] = round(float(df["Close"].iloc[-1]), 2)   # native units (USD, or AGOROT for .TA)
 
         gates = []
 
-        # ----- Regime (rank-only, NON-rejecting) -----
-        etf = classify_regime_etf(info)
+        # ----- v2.7: choose benchmark & regime ETF (Israeli .TA -> TA-125) -----
+        israeli = is_israeli(symbol)
+        bench_symbol = ETF_ISRAEL if israeli else RS_BENCHMARK
+        bench_close  = get_benchmark_close(bench_symbol, bench_cache)
+        etf          = classify_regime_etf(symbol, info)
+
         g_regime = gate_regime(etf, etf_cache)
 
         # ----- CORE (AND, NO_GO) — sector-agnostic; Volatility is the only screen -----
         g_vol    = gate_volatility(df)
         g_floor, g_subs = gate_concrete_floor(df)
-        g_rs     = gate_relative_strength(df, bench_close)
+        g_rs     = gate_relative_strength(df, bench_close, bench_symbol)
         g_stop   = gate_hard_stop(df)
 
         # ----- SCORE (rank only) -----
@@ -444,8 +480,9 @@ def scan_ticker(symbol, etf_cache, bench_close, universe_source):
         g_fcf = gate_fcf(tk)
         g_cat = gate_catalyst(tk)
 
-        # informational: sector + live-price freshness (NOT filters)
-        sector = info.get("sector") or "unknown"
+        # informational: currency (agorot guardrail), sector, live-price freshness (NOT filters)
+        gates.append(gate_currency(symbol, item["price"]))
+        sector = info.get("sector") or ("Financials (TASE)" if israeli else "unknown")
         gates.append(gate(1, "Sector (info only)", "GO",
                           f"{sector} -> regime ETF {etf}", sector, "informational, not a filter"))
         gates.append(gate(0, "Live price (fast_info)", live_status, live_note,
@@ -483,6 +520,8 @@ def main():
     # is the PRIOR trading session. We detect the date mismatch and exit safely
     # WITHOUT overwriting out.json (the last valid trading-day scan is preserved).
     # Reuses yfinance — no extra dependency, keeps requirements.txt lean.
+    # NOTE: the guard is US-centric (SPY). On a rare US-closed / TASE-open day the
+    # whole scan (incl. TASE.TA) is skipped — acceptable for a post-US-close schedule.
     # ---------------------------------------------------------------------------
     try:
         last_valid_session = yf.download("SPY", period="5d", progress=False).index[-1].date()
@@ -498,15 +537,14 @@ def main():
     print(f"UNIVERSE {{count: {len(tickers)}, source: {universe_source}}}")
 
     etf_cache = {}
-    try:
-        bench_close = yf.Ticker(RS_BENCHMARK).history(period="6mo")["Close"].dropna()
-    except Exception:
-        bench_close = None
+    bench_cache = {}
+    # warm the US benchmark cache (Israeli TA-125 is fetched lazily per .TA ticker)
+    get_benchmark_close(RS_BENCHMARK, bench_cache)
 
     results = []
     for i, sym in enumerate(tickers, 1):
         print(f"[{i}/{len(tickers)}] {sym}")
-        results.append(scan_ticker(sym, etf_cache, bench_close, universe_source))
+        results.append(scan_ticker(sym, etf_cache, bench_cache, universe_source))
         time.sleep(0.3)
 
     results.sort(key=lambda x: (x["verdict"] != "GO_PENDING_THESIS", -x["go_count"]))
