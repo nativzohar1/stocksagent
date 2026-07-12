@@ -555,5 +555,44 @@ def main():
     OUT_PATH.write_text(json.dumps(results, indent=2, default=str), encoding="utf-8")
     print(f"WROTE {OUT_PATH} ({len(results)} items, {len(survivors)} survivors)")
 
+    # -----------------------------------------------------------------------
+    # v2.8 — COMPANION FILES (browse-friendly). PURELY ADDITIVE.
+    # Small derived VIEWS of the SAME `results` so an LLM agent can read the
+    # FULL universe without hitting the browser's ~92KB fetch cap.
+    # Does NOT touch results/out.json or any scan logic.
+    # -----------------------------------------------------------------------
+    results_dir = OUT_PATH.parent
+    (results_dir / "tickers").mkdir(parents=True, exist_ok=True)
+
+    # 1) Compact universe index — every ticker, NO gates. Always fully readable.
+    summary = {
+        "generated_utc": dt.datetime.utcnow().isoformat() + "Z",
+        "universe_source": results[0]["universe_source"] if results else None,
+        "n": len(results),
+        "survivors": survivors,
+        "stocks": [
+            {"ticker": r["ticker"], "price": r["price"], "verdict": r["verdict"],
+             "go_count": r["go_count"], "blocked_at": r["blocked_at"]}
+            for r in results
+        ],
+    }
+    (results_dir / "out_summary.json").write_text(
+        json.dumps(summary, indent=2, default=str), encoding="utf-8")
+
+    # 2) Full gate detail for SURVIVORS ONLY (small — for Mode-B deep analysis).
+    (results_dir / "out_survivors.json").write_text(
+        json.dumps([r for r in results if r["verdict"] == "GO_PENDING_THESIS"],
+                   indent=2, default=str), encoding="utf-8")
+
+    # 3) One small file per ticker (for Mode-A specific lookups, incl. TASE.TA).
+    for r in results:
+        safe = r["ticker"].replace("/", "_")
+        (results_dir / "tickers" / f"{safe}.json").write_text(
+            json.dumps(r, indent=2, default=str), encoding="utf-8")
+
+    print(f"WROTE companion files: out_summary.json, out_survivors.json, "
+          f"tickers/*.json ({len(results)} ticker files)")
+
+
 if __name__ == "__main__":
     main()
