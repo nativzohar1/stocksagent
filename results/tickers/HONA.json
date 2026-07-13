@@ -1,0 +1,18 @@
+{
+  "ticker": "HONA",
+  "price": null,
+  "verdict": "NO_GO",
+  "go_count": 0,
+  "blocked_at": "data: insufficient history",
+  "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
+  "gates": [
+    {
+      "stage": 0,
+      "name": "Data availability",
+      "status": "NO_GO",
+      "detail": "only 19 bars",
+      "value": 19,
+      "criterion": ">=200 daily bars"
+    }
+  ]
+}
