@@ -1,6 +1,6 @@
 {
   "ticker": "TMO",
-  "price": 528.51,
+  "price": 534.07,
   "verdict": "NO_GO",
   "go_count": 7,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 528.51",
+      "detail": "USD 534.07",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 528.51 == last close 528.51 (fresh, no override)",
-      "value": 528.51,
+      "detail": "live 534.07 == last close 534.07 (fresh, no override)",
+      "value": 534.07,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 749.17 > 200SMA 691.55",
-      "value": 749.17,
+      "detail": "SPY 751.83 > 200SMA 692.03",
+      "value": 751.83,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@538.77 / Fib 0.618@514.24] | bounce=True | confirm[none] | close 528.51 > EMA21 503.39",
+      "detail": "floor[Fib 0.5@538.77; horizontal support (2 touches)] | bounce=True | confirm[none] | close 534.07 > EMA21 506.18",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-23 (in 10d, window 15-45)",
-      "value": 10,
+      "detail": "earnings 2026-07-23 (in 9d, window 15-45)",
+      "value": 9,
       "criterion": "earnings in 15-45 days"
     },
     {

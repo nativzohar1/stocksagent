@@ -1,6 +1,6 @@
 {
   "ticker": "MU",
-  "price": 937.0,
+  "price": 983.12,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 937.0",
+      "detail": "USD 983.12",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 937.00 == last close 937.00 (fresh, no override)",
-      "value": 937.0,
+      "detail": "live 983.12 == last close 983.12 (fresh, no override)",
+      "value": 983.12,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SOXX 553.61 > 200SMA 385.09",
-      "value": 553.61,
+      "detail": "SOXX 567.92 > 200SMA 386.58",
+      "value": 567.92,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 937.00 < EMA21 1002.32",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 983.12 < EMA21 1000.57",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.97,
+      "value": 0.79,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-09-23 (in 72d, window 15-45)",
-      "value": 72,
+      "detail": "earnings 2026-09-23 (in 71d, window 15-45)",
+      "value": 71,
       "criterion": "earnings in 15-45 days"
     },
     {
