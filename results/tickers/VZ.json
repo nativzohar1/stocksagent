@@ -1,6 +1,6 @@
 {
   "ticker": "VZ",
-  "price": 42.47,
+  "price": 42.83,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Volatility (Upside DNA)",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 42.47",
+      "detail": "USD 42.83",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 42.47 == last close 42.47 (fresh, no override)",
-      "value": 42.47,
+      "detail": "live 42.83 == last close 42.83 (fresh, no override)",
+      "value": 42.83,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 751.83 > 200SMA 692.03",
-      "value": 751.83,
+      "detail": "SPY 754.81 > 200SMA 692.54",
+      "value": 754.81,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.618@42.28] | bounce=True | confirm[none] | close 42.47 < EMA21 43.32",
+      "detail": "floor[Fib 0.5@43.76 / Fib 0.618@42.28; horizontal support (2 touches)] | bounce=True | confirm[none] | close 42.83 < EMA21 43.28",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-24 (in 10d, window 15-45)",
-      "value": 10,
+      "detail": "earnings 2026-07-24 (in 9d, window 15-45)",
+      "value": 9,
       "criterion": "earnings in 15-45 days"
     },
     {

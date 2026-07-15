@@ -1,6 +1,6 @@
 {
   "ticker": "JPM",
-  "price": 342.89,
+  "price": 346.91,
   "verdict": "NO_GO",
   "go_count": 7,
   "blocked_at": "Volatility (Upside DNA)",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 342.89",
+      "detail": "USD 346.91",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,40 +26,40 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 342.89 == last close 342.89 (fresh, no override)",
-      "value": 342.89,
+      "detail": "live 346.91 == last close 346.91 (fresh, no override)",
+      "value": 346.91,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 751.83 > 200SMA 692.03",
-      "value": 751.83,
+      "detail": "SPY 754.81 > 200SMA 692.54",
+      "value": 754.81,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "NO_GO",
-      "detail": "52w range 24.7%",
-      "value": 0.2471,
+      "detail": "52w range 27.1%",
+      "value": 0.2706,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 342.89 > EMA21 329.69",
+      "detail": "floor[no floor near price] | bounce=True | confirm[RSI-Div] | close 346.91 > EMA21 331.26",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
     {
       "stage": 3,
       "name": "Bullish RSI divergence",
-      "status": "SKIP",
+      "status": "GO",
       "detail": "informational sub-signal",
-      "value": false,
+      "value": true,
       "criterion": "price LL & RSI HL"
     },
     {
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.95,
+      "value": 1.61,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -81,9 +81,9 @@
     {
       "stage": 2,
       "name": "PEG",
-      "status": "GO",
-      "detail": "PEG 1.76 (< 1.8)",
-      "value": 1.76,
+      "status": "NO_GO",
+      "detail": "PEG 1.80 (>= 1.8)",
+      "value": 1.8,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-14 (in 0d, window 15-45)",
-      "value": 0,
+      "detail": "earnings 2026-10-13 (in 90d, window 15-45)",
+      "value": 90,
       "criterion": "earnings in 15-45 days"
     },
     {

@@ -1,8 +1,8 @@
 {
   "ticker": "TASE.TA",
-  "price": 12640.0,
+  "price": 13000.0,
   "verdict": "NO_GO",
-  "go_count": 8,
+  "go_count": 9,
   "blocked_at": "Concrete floor + EMA21 breakout",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "ILA (agorot): yfinance price 12640.0 = ILS 126.40 (divide by 100). Stop/Target are in AGOROT too -> divide by 100 for ILS display. P/L% is currency-agnostic. NEVER read as USD.",
+      "detail": "ILA (agorot): yfinance price 13000.0 = ILS 130.00 (divide by 100). Stop/Target are in AGOROT too -> divide by 100 for ILS display. P/L% is currency-agnostic. NEVER read as USD.",
       "value": "ILA",
       "criterion": "agorot guardrail: .TA price is agorot; show ILS = price/100, not USD"
     },
@@ -26,40 +26,40 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "LIVE OVERRIDE: lagged daily close 12300.00 -> live 12640.00 (fast_info)",
-      "value": 12640.0,
+      "detail": "LIVE OVERRIDE: lagged daily close 12640.00 -> live 13000.00 (fast_info)",
+      "value": 13000.0,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "^TA125.TA 4004.34 > 200SMA 3867.57",
-      "value": 4004.34,
+      "detail": "^TA125.TA 4022.50 > 200SMA 3872.65",
+      "value": 4022.5,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "GO",
-      "detail": "52w range 203.5%",
-      "value": 2.0351,
+      "detail": "52w range 190.6%",
+      "value": 1.9057,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (4 touches)] | bounce=True | confirm[none] | close 12640.00 < EMA21 12958.48",
+      "detail": "floor[no floor near price] | bounce=True | confirm[RSI-Div] | close 13000.00 > EMA21 12934.16",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
     {
       "stage": 3,
       "name": "Bullish RSI divergence",
-      "status": "SKIP",
+      "status": "GO",
       "detail": "informational sub-signal",
-      "value": false,
+      "value": true,
       "criterion": "price LL & RSI HL"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "GO",
-      "detail": "earnings 2026-08-04 (in 21d, window 15-45)",
-      "value": 21,
+      "detail": "earnings 2026-08-04 (in 20d, window 15-45)",
+      "value": 20,
       "criterion": "earnings in 15-45 days"
     },
     {

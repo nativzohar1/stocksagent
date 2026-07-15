@@ -1,16 +1,16 @@
 {
   "ticker": "BAC",
-  "price": 60.62,
+  "price": 61.59,
   "verdict": "NO_GO",
-  "go_count": 8,
-  "blocked_at": "Volatility (Upside DNA)",
+  "go_count": 9,
+  "blocked_at": "Concrete floor + EMA21 breakout",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
     {
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 60.62",
+      "detail": "USD 61.59",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,31 +26,31 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 60.62 == last close 60.62 (fresh, no override)",
-      "value": 60.62,
+      "detail": "live 61.59 == last close 61.59 (fresh, no override)",
+      "value": 61.59,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 751.83 > 200SMA 692.03",
-      "value": 751.83,
+      "detail": "SPY 754.81 > 200SMA 692.54",
+      "value": 754.81,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
-      "status": "NO_GO",
-      "detail": "52w range 39.8%",
-      "value": 0.3976,
+      "status": "GO",
+      "detail": "52w range 41.6%",
+      "value": 0.4163,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 60.62 > EMA21 57.91",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 61.59 > EMA21 58.25",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.06 (< 1.8)",
-      "value": 1.06,
+      "detail": "PEG 1.08 (< 1.8)",
+      "value": 1.08,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,16 +98,16 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-14 (in 0d, window 15-45)",
-      "value": 0,
+      "detail": "earnings 2026-10-14 (in 91d, window 15-45)",
+      "value": 91,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 56.84 x 0.985",
-      "value": 55.99,
+      "detail": "10d low 56.85 x 0.985",
+      "value": 56.0,
       "criterion": "10d-low * 0.985"
     },
     {
