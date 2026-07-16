@@ -1,6 +1,6 @@
 {
   "ticker": "VST",
-  "price": 160.23,
+  "price": 152.56,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 160.23",
+      "detail": "USD 152.56",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 160.23 == last close 160.23 (fresh, no override)",
-      "value": 160.23,
+      "detail": "live 152.56 == last close 152.56 (fresh, no override)",
+      "value": 152.56,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 754.81 > 200SMA 692.54",
-      "value": 754.81,
+      "detail": "SPY 750.72 > 200SMA 693.01",
+      "value": 750.72,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@157.27; horizontal support (4 touches)] | bounce=True | confirm[none] | close 160.23 > EMA21 157.45",
+      "detail": "floor[Fib 0.618@151.41; horizontal support (14 touches)] | bounce=True | confirm[none] | close 152.56 < EMA21 157.00",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.12,
+      "value": 1.21,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "GO",
-      "detail": "earnings 2026-08-07 (in 23d, window 15-45)",
-      "value": 23,
+      "detail": "earnings 2026-08-07 (in 22d, window 15-45)",
+      "value": 22,
       "criterion": "earnings in 15-45 days"
     },
     {

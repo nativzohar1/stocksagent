@@ -1,6 +1,6 @@
 {
   "ticker": "TMUS",
-  "price": 187.62,
+  "price": 192.85,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 187.62",
+      "detail": "USD 192.85",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 187.62 == last close 187.62 (fresh, no override)",
-      "value": 187.62,
+      "detail": "live 192.85 == last close 192.85 (fresh, no override)",
+      "value": 192.85,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 754.81 > 200SMA 692.54",
-      "value": 754.81,
+      "detail": "SPY 750.72 > 200SMA 693.01",
+      "value": 750.72,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.618@187.36; horizontal support (11 touches)] | bounce=True | confirm[none] | close 187.62 > EMA21 183.16",
+      "detail": "floor[Fib 0.5@194.06 / Fib 0.618@187.36; horizontal support (5 touches)] | bounce=True | confirm[none] | close 192.85 > EMA21 184.04",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.86,
+      "value": 0.85,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -98,16 +98,16 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-23 (in 8d, window 15-45)",
-      "value": 8,
+      "detail": "earnings 2026-07-23 (in 7d, window 15-45)",
+      "value": 7,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 169.35 x 0.985",
-      "value": 166.81,
+      "detail": "10d low 172.85 x 0.985",
+      "value": 170.26,
       "criterion": "10d-low * 0.985"
     },
     {

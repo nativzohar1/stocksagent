@@ -1,6 +1,6 @@
 {
   "ticker": "CRM",
-  "price": 167.0,
+  "price": 172.68,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 167.0",
+      "detail": "USD 172.68",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 167.00 == last close 167.00 (fresh, no override)",
-      "value": 167.0,
+      "detail": "live 172.68 == last close 172.68 (fresh, no override)",
+      "value": 172.68,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 181.58 > 200SMA 153.07",
-      "value": 181.58,
+      "detail": "XLK 177.52 > 200SMA 153.26",
+      "value": 177.52,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[none] | close 167.00 > EMA21 165.47",
+      "detail": "floor[horizontal support (5 touches)] | bounce=True | confirm[none] | close 172.68 > EMA21 166.13",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 0.70 (< 1.8)",
-      "value": 0.7,
+      "detail": "PEG 0.69 (< 1.8)",
+      "value": 0.69,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-09-02 (in 49d, window 15-45)",
-      "value": 49,
+      "detail": "earnings 2026-09-02 (in 48d, window 15-45)",
+      "value": 48,
       "criterion": "earnings in 15-45 days"
     },
     {

@@ -1,6 +1,6 @@
 {
   "ticker": "NVDA",
-  "price": 212.5,
+  "price": 207.4,
   "verdict": "NO_GO",
   "go_count": 11,
   "blocked_at": "Relative Strength",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 212.5",
+      "detail": "USD 207.4",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 212.50 == last close 212.50 (fresh, no override)",
-      "value": 212.5,
+      "detail": "live 207.40 == last close 207.40 (fresh, no override)",
+      "value": 207.4,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SOXX 555.27 > 200SMA 388.02",
-      "value": 555.27,
+      "detail": "SOXX 530.50 > 200SMA 389.33",
+      "value": 530.5,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "GO",
-      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[RSI-Div] | close 212.50 > EMA21 204.55",
+      "detail": "floor[horizontal support (4 touches)] | bounce=True | confirm[RSI-Div] | close 207.40 > EMA21 204.81",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "GO",
-      "detail": "earnings 2026-08-26 (in 42d, window 15-45)",
-      "value": 42,
+      "detail": "earnings 2026-08-26 (in 41d, window 15-45)",
+      "value": 41,
       "criterion": "earnings in 15-45 days"
     },
     {

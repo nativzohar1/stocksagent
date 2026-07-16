@@ -1,8 +1,8 @@
 {
   "ticker": "CL",
-  "price": 91.47,
+  "price": 94.07,
   "verdict": "NO_GO",
-  "go_count": 9,
+  "go_count": 11,
   "blocked_at": "Volatility (Upside DNA)",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 91.47",
+      "detail": "USD 94.07",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 91.47 == last close 91.47 (fresh, no override)",
-      "value": 91.47,
+      "detail": "live 94.07 == last close 94.07 (fresh, no override)",
+      "value": 94.07,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 754.81 > 200SMA 692.54",
-      "value": 754.81,
+      "detail": "SPY 750.72 > 200SMA 693.01",
+      "value": 750.72,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -49,17 +49,17 @@
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
-      "status": "NO_GO",
-      "detail": "floor[Fib 0.5@89.61; horizontal support (10 touches)] | bounce=True | confirm[none] | close 91.47 < EMA21 91.65",
+      "status": "GO",
+      "detail": "floor[horizontal support (7 touches)] | bounce=True | confirm[RSI-Div] | close 94.07 > EMA21 91.87",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
     {
       "stage": 3,
       "name": "Bullish RSI divergence",
-      "status": "SKIP",
+      "status": "GO",
       "detail": "informational sub-signal",
-      "value": false,
+      "value": true,
       "criterion": "price LL & RSI HL"
     },
     {
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.18,
+      "value": 0.82,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "GO",
-      "detail": "earnings 2026-07-31 (in 16d, window 15-45)",
-      "value": 16,
+      "detail": "earnings 2026-07-31 (in 15d, window 15-45)",
+      "value": 15,
       "criterion": "earnings in 15-45 days"
     },
     {
