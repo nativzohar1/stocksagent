@@ -1,6 +1,6 @@
 {
   "ticker": "GM",
-  "price": 77.72,
+  "price": 76.07,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 77.72",
+      "detail": "USD 76.07",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 77.72 == last close 77.72 (fresh, no override)",
-      "value": 77.72,
+      "detail": "live 76.07 == last close 76.07 (fresh, no override)",
+      "value": 76.07,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 750.72 > 200SMA 693.01",
-      "value": 750.72,
+      "detail": "SPY 743.29 > 200SMA 693.44",
+      "value": 743.29,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@78.75 / Fib 0.618@76.75; horizontal support (10 touches)] | bounce=True | confirm[none] | close 77.72 < EMA21 77.88",
+      "detail": "floor[Fib 0.618@76.75; horizontal support (10 touches)] | bounce=True | confirm[none] | close 76.07 < EMA21 77.71",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -98,16 +98,16 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-21 (in 5d, window 15-45)",
-      "value": 5,
+      "detail": "earnings 2026-07-21 (in 4d, window 15-45)",
+      "value": 4,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 74.22 x 0.985",
-      "value": 73.11,
+      "detail": "10d low 74.58 x 0.985",
+      "value": 73.46,
       "criterion": "10d-low * 0.985"
     },
     {
