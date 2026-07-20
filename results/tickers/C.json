@@ -1,6 +1,6 @@
 {
   "ticker": "C",
-  "price": 129.36,
+  "price": 128.72,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 129.36",
+      "detail": "USD 128.72",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 129.36 == last close 129.36 (fresh, no override)",
-      "value": 129.36,
+      "detail": "live 128.72 == last close 128.72 (fresh, no override)",
+      "value": 128.72,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 743.29 > 200SMA 693.44",
-      "value": 743.29,
+      "detail": "SPY 742.09 > 200SMA 693.85",
+      "value": 742.09,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (4 touches)] | bounce=True | confirm[Vol climax 2.5x] | close 129.36 < EMA21 137.23",
+      "detail": "floor[horizontal support (6 touches)] | bounce=True | confirm[Vol climax 2.5x] | close 128.72 < EMA21 136.45",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 0.71 (< 1.8)",
-      "value": 0.71,
+      "detail": "PEG 0.70 (< 1.8)",
+      "value": 0.7,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-13 (in 88d, window 15-45)",
-      "value": 88,
+      "detail": "earnings 2026-10-13 (in 85d, window 15-45)",
+      "value": 85,
       "criterion": "earnings in 15-45 days"
     },
     {

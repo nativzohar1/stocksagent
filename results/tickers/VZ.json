@@ -1,6 +1,6 @@
 {
   "ticker": "VZ",
-  "price": 43.59,
+  "price": 43.5,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Volatility (Upside DNA)",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 43.59",
+      "detail": "USD 43.5",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 43.59 == last close 43.59 (fresh, no override)",
-      "value": 43.59,
+      "detail": "live 43.50 == last close 43.50 (fresh, no override)",
+      "value": 43.5,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 743.29 > 200SMA 693.44",
-      "value": 743.29,
+      "detail": "SPY 742.09 > 200SMA 693.85",
+      "value": 742.09,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@43.76; horizontal support (8 touches)] | bounce=True | confirm[none] | close 43.59 > EMA21 43.36",
+      "detail": "floor[Fib 0.5@43.76 / Fib 0.618@42.28; horizontal support (8 touches)] | bounce=True | confirm[none] | close 43.50 > EMA21 43.37",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -98,16 +98,16 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-24 (in 7d, window 15-45)",
-      "value": 7,
+      "detail": "earnings 2026-07-24 (in 4d, window 15-45)",
+      "value": 4,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 40.93 x 0.985",
-      "value": 40.32,
+      "detail": "10d low 40.96 x 0.985",
+      "value": 40.35,
       "criterion": "10d-low * 0.985"
     },
     {

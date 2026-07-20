@@ -1,8 +1,8 @@
 {
   "ticker": "CRWD",
-  "price": 203.08,
+  "price": 198.49,
   "verdict": "NO_GO",
-  "go_count": 7,
+  "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 203.08",
+      "detail": "USD 198.49",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 203.08 == last close 203.08 (fresh, no override)",
-      "value": 203.08,
+      "detail": "live 198.49 == last close 198.49 (fresh, no override)",
+      "value": 198.49,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 175.59 > 200SMA 153.44",
-      "value": 175.59,
+      "detail": "XLK 175.71 > 200SMA 153.62",
+      "value": 175.71,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 203.08 > EMA21 190.05",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 198.49 > EMA21 190.82",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "NO_GO",
-      "detail": "PEG 6.63 (>= 1.8)",
-      "value": 6.63,
+      "detail": "PEG 6.60 (>= 1.8)",
+      "value": 6.6,
       "criterion": "PEG < 1.8"
     },
     {
@@ -97,9 +97,9 @@
     {
       "stage": 2,
       "name": "Next earnings (Catalyst)",
-      "status": "NO_GO",
-      "detail": "earnings 2026-09-01 (in 46d, window 15-45)",
-      "value": 46,
+      "status": "GO",
+      "detail": "earnings 2026-09-01 (in 43d, window 15-45)",
+      "value": 43,
       "criterion": "earnings in 15-45 days"
     },
     {
