@@ -1,6 +1,6 @@
 {
   "ticker": "BAC",
-  "price": 60.42,
+  "price": 61.22,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 60.42",
+      "detail": "USD 61.22",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 60.42 == last close 60.42 (fresh, no override)",
-      "value": 60.42,
+      "detail": "live 61.22 == last close 61.22 (fresh, no override)",
+      "value": 61.22,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 742.09 > 200SMA 693.85",
-      "value": 742.09,
+      "detail": "SPY 748.28 > 200SMA 694.27",
+      "value": 748.28,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 60.42 > EMA21 58.94",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 61.22 > EMA21 59.15",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,23 +67,23 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.33,
+      "value": 1.21,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "SPY red day 2026-06-05 -2.58% -> stock -0.11%",
-      "value": -0.0011,
+      "detail": "SPY red day 2026-06-10 -1.58% -> stock 0.22%",
+      "value": 0.0022,
       "criterion": "stock fell <0.3% or green on SPY worst red day"
     },
     {
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.06 (< 1.8)",
-      "value": 1.06,
+      "detail": "PEG 1.05 (< 1.8)",
+      "value": 1.05,
       "criterion": "PEG < 1.8"
     },
     {

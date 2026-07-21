@@ -1,6 +1,6 @@
 {
   "ticker": "ABBV",
-  "price": 253.38,
+  "price": 256.1,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 253.38",
+      "detail": "USD 256.1",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,31 +26,31 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 253.38 == last close 253.38 (fresh, no override)",
-      "value": 253.38,
+      "detail": "live 256.10 == last close 256.10 (fresh, no override)",
+      "value": 256.1,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 742.09 > 200SMA 693.85",
-      "value": 742.09,
+      "detail": "SPY 748.28 > 200SMA 694.27",
+      "value": 748.28,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "GO",
-      "detail": "52w range 45.7%",
-      "value": 0.4573,
+      "detail": "52w range 45.5%",
+      "value": 0.4551,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 253.38 > EMA21 244.43",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 256.10 > EMA21 245.49",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,15 +67,15 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.97,
+      "value": 0.98,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "SPY red day 2026-06-05 -2.58% -> stock 1.02%",
-      "value": 0.0102,
+      "detail": "SPY red day 2026-06-10 -1.58% -> stock -0.21%",
+      "value": -0.0021,
       "criterion": "stock fell <0.3% or green on SPY worst red day"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-31 (in 11d, window 15-45)",
-      "value": 11,
+      "detail": "earnings 2026-07-31 (in 10d, window 15-45)",
+      "value": 10,
       "criterion": "earnings in 15-45 days"
     },
     {

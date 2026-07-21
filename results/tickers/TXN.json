@@ -1,6 +1,6 @@
 {
   "ticker": "TXN",
-  "price": 284.07,
+  "price": 291.3,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 284.07",
+      "detail": "USD 291.3",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 284.07 == last close 284.07 (fresh, no override)",
-      "value": 284.07,
+      "detail": "live 291.30 == last close 291.30 (fresh, no override)",
+      "value": 291.3,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SOXX 524.14 > 200SMA 391.87",
-      "value": 524.14,
+      "detail": "SOXX 552.69 > 200SMA 393.26",
+      "value": 552.69,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (6 touches)] | bounce=True | confirm[none] | close 284.07 < EMA21 297.73",
+      "detail": "floor[horizontal support (8 touches)] | bounce=True | confirm[none] | close 291.30 < EMA21 297.15",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,8 +74,8 @@
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "SPY red day 2026-06-05 -2.58% -> stock -6.65%",
-      "value": -0.0665,
+      "detail": "SPY red day 2026-06-10 -1.58% -> stock -2.29%",
+      "value": -0.0229,
       "criterion": "stock fell <0.3% or green on SPY worst red day"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-22 (in 2d, window 15-45)",
-      "value": 2,
+      "detail": "earnings 2026-07-22 (in 1d, window 15-45)",
+      "value": 1,
       "criterion": "earnings in 15-45 days"
     },
     {

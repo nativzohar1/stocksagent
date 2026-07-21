@@ -1,6 +1,6 @@
 {
   "ticker": "MU",
-  "price": 865.46,
+  "price": 970.82,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 865.46",
+      "detail": "USD 970.82",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 865.46 == last close 865.46 (fresh, no override)",
-      "value": 865.46,
+      "detail": "live 970.82 == last close 970.82 (fresh, no override)",
+      "value": 970.82,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SOXX 524.14 > 200SMA 391.87",
-      "value": 524.14,
+      "detail": "SOXX 552.69 > 200SMA 393.26",
+      "value": 552.69,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[none] | close 865.46 < EMA21 958.11",
+      "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[none] | close 970.82 > EMA21 959.26",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,16 +74,16 @@
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "SPY red day 2026-06-05 -2.58% -> stock -13.25%",
-      "value": -0.1325,
+      "detail": "SPY red day 2026-06-10 -1.58% -> stock -4.70%",
+      "value": -0.047,
       "criterion": "stock fell <0.3% or green on SPY worst red day"
     },
     {
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 0.12 (< 1.8)",
-      "value": 0.12,
+      "detail": "PEG 0.13 (< 1.8)",
+      "value": 0.13,
       "criterion": "PEG < 1.8"
     },
     {

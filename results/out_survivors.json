@@ -1,7 +1,7 @@
 [
   {
-    "ticker": "ABT",
-    "price": 101.66,
+    "ticker": "T",
+    "price": 22.26,
     "verdict": "GO_PENDING_THESIS",
     "go_count": 11,
     "blocked_at": null,
@@ -11,7 +11,7 @@
         "stage": 0,
         "name": "Currency (info only)",
         "status": "GO",
-        "detail": "USD 101.66",
+        "detail": "USD 22.26",
         "value": "USD",
         "criterion": "informational, US dollars"
       },
@@ -19,39 +19,39 @@
         "stage": 1,
         "name": "Sector (info only)",
         "status": "GO",
-        "detail": "Healthcare -> regime ETF SPY",
-        "value": "Healthcare",
+        "detail": "Communication Services -> regime ETF SPY",
+        "value": "Communication Services",
         "criterion": "informational, not a filter"
       },
       {
         "stage": 0,
         "name": "Live price (fast_info)",
         "status": "GO",
-        "detail": "live 101.66 == last close 101.66 (fresh, no override)",
-        "value": 101.66,
+        "detail": "live 22.26 == last close 22.26 (fresh, no override)",
+        "value": 22.26,
         "criterion": "patch lagged daily bar with live price"
       },
       {
         "stage": 1,
         "name": "Sector trend (Regime, rank-only)",
         "status": "GO",
-        "detail": "SPY 742.09 > 200SMA 693.85",
-        "value": 742.09,
+        "detail": "SPY 748.28 > 200SMA 694.27",
+        "value": 748.28,
         "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
       },
       {
         "stage": 1,
         "name": "Volatility (Upside DNA)",
         "status": "GO",
-        "detail": "52w range 65.1%",
-        "value": 0.6511,
+        "detail": "52w range 46.5%",
+        "value": 0.4648,
         "criterion": "(52wH-52wL)/52wL >= 40%"
       },
       {
         "stage": 3,
         "name": "Concrete floor + EMA21 breakout",
         "status": "GO",
-        "detail": "floor[Fib 0.5@101.62; horizontal support (5 touches)] | bounce=True | confirm[Vol climax 2.44x] | close 101.66 > EMA21 93.50",
+        "detail": "floor[horizontal support (5 touches)] | bounce=True | confirm[Vol climax 2.14x] | close 22.26 > EMA21 21.71",
         "value": null,
         "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
       },
@@ -68,47 +68,47 @@
         "name": "Volume climax",
         "status": "GO",
         "detail": "informational sub-signal",
-        "value": 2.44,
+        "value": 2.14,
         "criterion": ">= 2x avg volume"
       },
       {
         "stage": 4,
         "name": "Relative Strength",
         "status": "GO",
-        "detail": "SPY red day 2026-06-05 -2.58% -> stock 0.32%",
-        "value": 0.0032,
+        "detail": "SPY red day 2026-06-10 -1.58% -> stock 2.20%",
+        "value": 0.022,
         "criterion": "stock fell <0.3% or green on SPY worst red day"
       },
       {
         "stage": 2,
         "name": "PEG",
         "status": "GO",
-        "detail": "PEG 1.50 (< 1.8)",
-        "value": 1.5,
+        "detail": "PEG 1.53 (< 1.8)",
+        "value": 1.53,
         "criterion": "PEG < 1.8"
       },
       {
         "stage": 2,
         "name": "FCF",
         "status": "GO",
-        "detail": "FCF 7.39B vs prior 6.35B (positive & growing)",
-        "value": 7395000000.0,
+        "detail": "FCF 19.44B vs prior 18.51B (positive & growing)",
+        "value": 19442000000.0,
         "criterion": "FCF positive & growing YoY"
       },
       {
         "stage": 2,
         "name": "Next earnings (Catalyst)",
         "status": "NO_GO",
-        "detail": "earnings 2026-10-14 (in 86d, window 15-45)",
-        "value": 86,
+        "detail": "earnings 2026-07-22 (in 1d, window 15-45)",
+        "value": 1,
         "criterion": "earnings in 15-45 days"
       },
       {
         "stage": 5,
         "name": "Hard stop price",
         "status": "GO",
-        "detail": "10d low 87.64 x 0.985",
-        "value": 86.33,
+        "detail": "10d low 20.46 x 0.985",
+        "value": 20.15,
         "criterion": "10d-low * 0.985"
       },
       {

@@ -1,6 +1,6 @@
 {
   "ticker": "NEE",
-  "price": 88.0,
+  "price": 87.93,
   "verdict": "NO_GO",
   "go_count": 7,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 88.0",
+      "detail": "USD 87.93",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 88.00 == last close 88.00 (fresh, no override)",
-      "value": 88.0,
+      "detail": "live 87.93 == last close 87.93 (fresh, no override)",
+      "value": 87.93,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 742.09 > 200SMA 693.85",
-      "value": 742.09,
+      "detail": "SPY 748.28 > 200SMA 694.27",
+      "value": 748.28,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@89.51 / Fib 0.618@87.50; horizontal support (20 touches)] | bounce=True | confirm[none] | close 88.00 < EMA21 88.02",
+      "detail": "floor[Fib 0.5@89.70 / Fib 0.618@87.73; horizontal support (19 touches)] | bounce=True | confirm[none] | close 87.93 < EMA21 88.01",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,23 +67,23 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.88,
+      "value": 0.85,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "SPY red day 2026-06-05 -2.58% -> stock 0.92%",
-      "value": 0.0092,
+      "detail": "SPY red day 2026-06-10 -1.58% -> stock 0.34%",
+      "value": 0.0034,
       "criterion": "stock fell <0.3% or green on SPY worst red day"
     },
     {
       "stage": 2,
       "name": "PEG",
       "status": "NO_GO",
-      "detail": "PEG 1.95 (>= 1.8)",
-      "value": 1.95,
+      "detail": "PEG 1.93 (>= 1.8)",
+      "value": 1.93,
       "criterion": "PEG < 1.8"
     },
     {
