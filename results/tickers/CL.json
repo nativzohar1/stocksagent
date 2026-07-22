@@ -1,8 +1,8 @@
 {
   "ticker": "CL",
-  "price": 90.5,
+  "price": 91.63,
   "verdict": "NO_GO",
-  "go_count": 9,
+  "go_count": 8,
   "blocked_at": "Volatility (Upside DNA)",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 90.5",
+      "detail": "USD 91.63",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 90.50 == last close 90.50 (fresh, no override)",
-      "value": 90.5,
+      "detail": "live 91.63 == last close 91.63 (fresh, no override)",
+      "value": 91.63,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 748.28 > 200SMA 694.27",
-      "value": 748.28,
+      "detail": "SPY 747.41 > 200SMA 694.69",
+      "value": 747.41,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,16 +50,16 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@89.74; horizontal support (11 touches)] | bounce=True | confirm[RSI-Div] | close 90.50 < EMA21 91.40",
+      "detail": "floor[Fib 0.5@89.74; horizontal support (11 touches)] | bounce=True | confirm[none] | close 91.63 > EMA21 91.42",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
     {
       "stage": 3,
       "name": "Bullish RSI divergence",
-      "status": "GO",
+      "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": true,
+      "value": false,
       "criterion": "price LL & RSI HL"
     },
     {
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.64 (< 1.8)",
-      "value": 1.64,
+      "detail": "PEG 1.62 (< 1.8)",
+      "value": 1.62,
       "criterion": "PEG < 1.8"
     },
     {

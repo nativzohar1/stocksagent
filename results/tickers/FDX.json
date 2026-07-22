@@ -1,6 +1,6 @@
 {
   "ticker": "FDX",
-  "price": 315.19,
+  "price": 321.02,
   "verdict": "NO_GO",
   "go_count": 7,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 315.19",
+      "detail": "USD 321.02",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 315.19 == last close 315.19 (fresh, no override)",
-      "value": 315.19,
+      "detail": "live 321.02 == last close 321.02 (fresh, no override)",
+      "value": 321.02,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 748.28 > 200SMA 694.27",
-      "value": 748.28,
+      "detail": "SPY 747.41 > 200SMA 694.69",
+      "value": 747.41,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (8 touches)] | bounce=True | confirm[none] | close 315.19 < EMA21 315.56",
+      "detail": "floor[horizontal support (7 touches)] | bounce=True | confirm[none] | close 321.02 > EMA21 316.06",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.27 (< 1.8)",
-      "value": 1.27,
+      "detail": "PEG 1.31 (< 1.8)",
+      "value": 1.31,
       "criterion": "PEG < 1.8"
     },
     {

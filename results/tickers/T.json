@@ -1,6 +1,6 @@
 {
   "ticker": "T",
-  "price": 22.26,
+  "price": 23.04,
   "verdict": "GO_PENDING_THESIS",
   "go_count": 11,
   "blocked_at": null,
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 22.26",
+      "detail": "USD 23.04",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 22.26 == last close 22.26 (fresh, no override)",
-      "value": 22.26,
+      "detail": "live 23.04 == last close 23.04 (fresh, no override)",
+      "value": 23.04,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 748.28 > 200SMA 694.27",
-      "value": 748.28,
+      "detail": "SPY 747.41 > 200SMA 694.69",
+      "value": 747.41,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "GO",
-      "detail": "floor[horizontal support (5 touches)] | bounce=True | confirm[Vol climax 2.14x] | close 22.26 > EMA21 21.71",
+      "detail": "floor[Fib 0.618@23.11; horizontal support (2 touches)] | bounce=True | confirm[Vol climax 2.92x] | close 23.04 > EMA21 21.84",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "GO",
       "detail": "informational sub-signal",
-      "value": 2.14,
+      "value": 2.92,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.53 (< 1.8)",
-      "value": 1.53,
+      "detail": "PEG 1.55 (< 1.8)",
+      "value": 1.55,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-22 (in 1d, window 15-45)",
-      "value": 1,
+      "detail": "earnings 2026-07-22 (in 0d, window 15-45)",
+      "value": 0,
       "criterion": "earnings in 15-45 days"
     },
     {

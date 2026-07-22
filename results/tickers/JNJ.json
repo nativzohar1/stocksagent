@@ -1,16 +1,16 @@
 {
   "ticker": "JNJ",
-  "price": 250.61,
-  "verdict": "NO_GO",
-  "go_count": 8,
-  "blocked_at": "Concrete floor + EMA21 breakout",
+  "price": 255.63,
+  "verdict": "GO_PENDING_THESIS",
+  "go_count": 10,
+  "blocked_at": null,
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
     {
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 250.61",
+      "detail": "USD 255.63",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 250.61 == last close 250.61 (fresh, no override)",
-      "value": 250.61,
+      "detail": "live 255.63 == last close 255.63 (fresh, no override)",
+      "value": 255.63,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 748.28 > 200SMA 694.27",
-      "value": 748.28,
+      "detail": "SPY 747.41 > 200SMA 694.69",
+      "value": 747.41,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -49,17 +49,17 @@
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
-      "status": "NO_GO",
-      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[none] | close 250.61 > EMA21 250.51",
+      "status": "GO",
+      "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[RSI-Div] | close 255.63 > EMA21 250.98",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
     {
       "stage": 3,
       "name": "Bullish RSI divergence",
-      "status": "SKIP",
+      "status": "GO",
       "detail": "informational sub-signal",
-      "value": false,
+      "value": true,
       "criterion": "price LL & RSI HL"
     },
     {
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.33,
+      "value": 1.31,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "NO_GO",
-      "detail": "PEG 4.11 (>= 1.8)",
-      "value": 4.11,
+      "detail": "PEG 4.14 (>= 1.8)",
+      "value": 4.14,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,16 +98,16 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-13 (in 84d, window 15-45)",
-      "value": 84,
+      "detail": "earnings 2026-10-13 (in 83d, window 15-45)",
+      "value": 83,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 245.51 x 0.985",
-      "value": 241.83,
+      "detail": "10d low 245.49 x 0.985",
+      "value": 241.81,
       "criterion": "10d-low * 0.985"
     },
     {

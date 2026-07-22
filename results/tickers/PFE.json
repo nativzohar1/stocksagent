@@ -1,6 +1,6 @@
 {
   "ticker": "PFE",
-  "price": 24.94,
+  "price": 24.82,
   "verdict": "NO_GO",
   "go_count": 5,
   "blocked_at": "Volatility (Upside DNA)",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 24.94",
+      "detail": "USD 24.82",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 24.94 == last close 24.94 (fresh, no override)",
-      "value": 24.94,
+      "detail": "live 24.82 == last close 24.82 (fresh, no override)",
+      "value": 24.82,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 748.28 > 200SMA 694.27",
-      "value": 748.28,
+      "detail": "SPY 747.41 > 200SMA 694.69",
+      "value": 747.41,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.618@25.40; horizontal support (6 touches)] | bounce=True | confirm[none] | close 24.94 > EMA21 24.70",
+      "detail": "floor[Fib 0.618@25.40; horizontal support (6 touches)] | bounce=True | confirm[none] | close 24.82 > EMA21 24.71",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "NO_GO",
-      "detail": "PEG 2.92 (>= 1.8)",
-      "value": 2.92,
+      "detail": "PEG 2.95 (>= 1.8)",
+      "value": 2.95,
       "criterion": "PEG < 1.8"
     },
     {
@@ -106,8 +106,8 @@
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 23.89 x 0.985",
-      "value": 23.53,
+      "detail": "10d low 24.01 x 0.985",
+      "value": 23.65,
       "criterion": "10d-low * 0.985"
     },
     {

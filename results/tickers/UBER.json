@@ -1,8 +1,8 @@
 {
   "ticker": "UBER",
-  "price": 71.55,
+  "price": 70.33,
   "verdict": "NO_GO",
-  "go_count": 8,
+  "go_count": 7,
   "blocked_at": "Concrete floor + EMA21 breakout",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 71.55",
+      "detail": "USD 70.33",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 71.55 == last close 71.55 (fresh, no override)",
-      "value": 71.55,
+      "detail": "live 70.33 == last close 70.33 (fresh, no override)",
+      "value": 70.33,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 180.78 > 200SMA 153.81",
-      "value": 180.78,
+      "detail": "XLK 180.27 > 200SMA 154.00",
+      "value": 180.27,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (22 touches)] | bounce=True | confirm[none] | close 71.55 < EMA21 72.89",
+      "detail": "floor[horizontal support (15 touches)] | bounce=True | confirm[none] | close 70.33 < EMA21 72.65",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "NO_GO",
-      "detail": "PEG 5.85 (>= 1.8)",
-      "value": 5.85,
+      "detail": "PEG 5.80 (>= 1.8)",
+      "value": 5.8,
       "criterion": "PEG < 1.8"
     },
     {
@@ -97,17 +97,17 @@
     {
       "stage": 2,
       "name": "Next earnings (Catalyst)",
-      "status": "GO",
-      "detail": "earnings 2026-08-05 (in 15d, window 15-45)",
-      "value": 15,
+      "status": "NO_GO",
+      "detail": "earnings 2026-08-05 (in 14d, window 15-45)",
+      "value": 14,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 71.24 x 0.985",
-      "value": 70.17,
+      "detail": "10d low 69.96 x 0.985",
+      "value": 68.91,
       "criterion": "10d-low * 0.985"
     },
     {

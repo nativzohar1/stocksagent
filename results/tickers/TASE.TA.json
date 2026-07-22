@@ -1,6 +1,6 @@
 {
   "ticker": "TASE.TA",
-  "price": 12540.0,
+  "price": 12910.0,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "ILA (agorot): yfinance price 12540.0 = ILS 125.40 (divide by 100). Stop/Target are in AGOROT too -> divide by 100 for ILS display. P/L% is currency-agnostic. NEVER read as USD.",
+      "detail": "ILA (agorot): yfinance price 12910.0 = ILS 129.10 (divide by 100). Stop/Target are in AGOROT too -> divide by 100 for ILS display. P/L% is currency-agnostic. NEVER read as USD.",
       "value": "ILA",
       "criterion": "agorot guardrail: .TA price is agorot; show ILS = price/100, not USD"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "LIVE OVERRIDE: lagged daily close 12250.00 -> live 12540.00 (fast_info)",
-      "value": 12540.0,
+      "detail": "LIVE OVERRIDE: lagged daily close 12540.00 -> live 12910.00 (fast_info)",
+      "value": 12910.0,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "^TA125.TA 4081.45 > 200SMA 3893.61",
-      "value": 4081.45,
+      "detail": "^TA125.TA 4129.39 > 200SMA 3898.94",
+      "value": 4129.39,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[RSI-Div] | close 12540.00 < EMA21 12836.84",
+      "detail": "floor[no floor near price] | bounce=True | confirm[RSI-Div] | close 12910.00 > EMA21 12819.52",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.3,
+      "value": 0.93,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-08-04 (in 14d, window 15-45)",
-      "value": 14,
+      "detail": "earnings 2026-08-04 (in 13d, window 15-45)",
+      "value": 13,
       "criterion": "earnings in 15-45 days"
     },
     {

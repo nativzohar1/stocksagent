@@ -1,6 +1,6 @@
 {
   "ticker": "SO",
-  "price": 93.85,
+  "price": 95.8,
   "verdict": "NO_GO",
   "go_count": 6,
   "blocked_at": "Volatility (Upside DNA)",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 93.85",
+      "detail": "USD 95.8",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 93.85 == last close 93.85 (fresh, no override)",
-      "value": 93.85,
+      "detail": "live 95.80 == last close 95.80 (fresh, no override)",
+      "value": 95.8,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 748.28 > 200SMA 694.27",
-      "value": 748.28,
+      "detail": "SPY 747.41 > 200SMA 694.69",
+      "value": 747.41,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@92.38; horizontal support (19 touches)] | bounce=True | confirm[none] | close 93.85 < EMA21 95.17",
+      "detail": "floor[horizontal support (10 touches)] | bounce=True | confirm[none] | close 95.80 > EMA21 95.23",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },

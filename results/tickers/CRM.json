@@ -1,6 +1,6 @@
 {
   "ticker": "CRM",
-  "price": 170.06,
+  "price": 163.0,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 170.06",
+      "detail": "USD 163.0",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 170.06 == last close 170.06 (fresh, no override)",
-      "value": 170.06,
+      "detail": "live 163.00 == last close 163.00 (fresh, no override)",
+      "value": 163.0,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 180.78 > 200SMA 153.81",
-      "value": 180.78,
+      "detail": "XLK 180.27 > 200SMA 154.00",
+      "value": 180.27,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (6 touches)] | bounce=True | confirm[none] | close 170.06 > EMA21 167.47",
+      "detail": "floor[horizontal support (5 touches)] | bounce=True | confirm[none] | close 163.00 < EMA21 167.06",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 0.72 (< 1.8)",
-      "value": 0.72,
+      "detail": "PEG 0.71 (< 1.8)",
+      "value": 0.71,
       "criterion": "PEG < 1.8"
     },
     {

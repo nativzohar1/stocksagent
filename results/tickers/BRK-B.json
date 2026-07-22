@@ -1,6 +1,6 @@
 {
   "ticker": "BRK-B",
-  "price": 489.65,
+  "price": 489.39,
   "verdict": "NO_GO",
   "go_count": 6,
   "blocked_at": "Volatility (Upside DNA)",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 489.65",
+      "detail": "USD 489.39",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 489.65 == last close 489.65 (fresh, no override)",
-      "value": 489.65,
+      "detail": "live 489.39 == last close 489.39 (fresh, no override)",
+      "value": 489.39,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 748.28 > 200SMA 694.27",
-      "value": 748.28,
+      "detail": "SPY 747.41 > 200SMA 694.69",
+      "value": 747.41,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@488.30 / Fib 0.618@482.56; horizontal support (15 touches)] | bounce=True | confirm[none] | close 489.65 < EMA21 493.00",
+      "detail": "floor[Fib 0.5@488.30 / Fib 0.618@482.56; horizontal support (16 touches)] | bounce=True | confirm[none] | close 489.39 < EMA21 492.67",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.12,
+      "value": 1.13,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-08-01 (in 11d, window 15-45)",
-      "value": 11,
+      "detail": "earnings 2026-08-01 (in 10d, window 15-45)",
+      "value": 10,
       "criterion": "earnings in 15-45 days"
     },
     {

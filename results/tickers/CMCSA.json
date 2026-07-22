@@ -1,6 +1,6 @@
 {
   "ticker": "CMCSA",
-  "price": 23.81,
+  "price": 23.52,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 23.81",
+      "detail": "USD 23.52",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 23.81 == last close 23.81 (fresh, no override)",
-      "value": 23.81,
+      "detail": "live 23.52 == last close 23.52 (fresh, no override)",
+      "value": 23.52,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 748.28 > 200SMA 694.27",
-      "value": 748.28,
+      "detail": "SPY 747.41 > 200SMA 694.69",
+      "value": 747.41,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (5 touches)] | bounce=True | confirm[none] | close 23.81 > EMA21 23.60",
+      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[none] | close 23.52 < EMA21 23.59",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-23 (in 2d, window 15-45)",
-      "value": 2,
+      "detail": "earnings 2026-07-23 (in 1d, window 15-45)",
+      "value": 1,
       "criterion": "earnings in 15-45 days"
     },
     {

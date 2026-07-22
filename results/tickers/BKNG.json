@@ -1,6 +1,6 @@
 {
   "ticker": "BKNG",
-  "price": 179.4,
+  "price": 177.86,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 179.4",
+      "detail": "USD 177.86",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 179.40 == last close 179.40 (fresh, no override)",
-      "value": 179.4,
+      "detail": "live 177.86 == last close 177.86 (fresh, no override)",
+      "value": 177.86,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 748.28 > 200SMA 694.27",
-      "value": 748.28,
+      "detail": "SPY 747.41 > 200SMA 694.69",
+      "value": 747.41,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@179.35; horizontal support (2 touches)] | bounce=True | confirm[none] | close 179.40 > EMA21 177.77",
+      "detail": "floor[Fib 0.5@179.35; horizontal support (4 touches)] | bounce=True | confirm[none] | close 177.86 > EMA21 177.78",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.94,
+      "value": 0.95,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-08-04 (in 14d, window 15-45)",
-      "value": 14,
+      "detail": "earnings 2026-08-04 (in 13d, window 15-45)",
+      "value": 13,
       "criterion": "earnings in 15-45 days"
     },
     {

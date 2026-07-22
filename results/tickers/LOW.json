@@ -1,6 +1,6 @@
 {
   "ticker": "LOW",
-  "price": 203.51,
+  "price": 204.35,
   "verdict": "NO_GO",
   "go_count": 7,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 203.51",
+      "detail": "USD 204.35",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 203.51 == last close 203.51 (fresh, no override)",
-      "value": 203.51,
+      "detail": "live 204.35 == last close 204.35 (fresh, no override)",
+      "value": 204.35,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 748.28 > 200SMA 694.27",
-      "value": 748.28,
+      "detail": "SPY 747.41 > 200SMA 694.69",
+      "value": 747.41,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (4 touches)] | bounce=True | confirm[none] | close 203.51 < EMA21 213.34",
+      "detail": "floor[horizontal support (5 touches)] | bounce=True | confirm[none] | close 204.35 < EMA21 212.52",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.37,
+      "value": 1.36,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.34 (< 1.8)",
-      "value": 1.34,
+      "detail": "PEG 1.33 (< 1.8)",
+      "value": 1.33,
       "criterion": "PEG < 1.8"
     },
     {

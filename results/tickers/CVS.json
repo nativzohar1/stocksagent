@@ -1,8 +1,8 @@
 {
   "ticker": "CVS",
-  "price": 110.6,
+  "price": 108.08,
   "verdict": "NO_GO",
-  "go_count": 10,
+  "go_count": 9,
   "blocked_at": "Concrete floor + EMA21 breakout",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 110.6",
+      "detail": "USD 108.08",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,31 +26,31 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 110.60 == last close 110.60 (fresh, no override)",
-      "value": 110.6,
+      "detail": "live 108.08 == last close 108.08 (fresh, no override)",
+      "value": 108.08,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 748.28 > 200SMA 694.27",
-      "value": 748.28,
+      "detail": "SPY 747.41 > 200SMA 694.69",
+      "value": 747.41,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "GO",
-      "detail": "52w range 93.9%",
-      "value": 0.939,
+      "detail": "52w range 94.0%",
+      "value": 0.94,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 110.60 > EMA21 104.43",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 108.08 > EMA21 104.76",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.44,
+      "value": 1.45,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 0.30 (< 1.8)",
-      "value": 0.3,
+      "detail": "PEG 0.31 (< 1.8)",
+      "value": 0.31,
       "criterion": "PEG < 1.8"
     },
     {
@@ -97,9 +97,9 @@
     {
       "stage": 2,
       "name": "Next earnings (Catalyst)",
-      "status": "GO",
-      "detail": "earnings 2026-08-05 (in 15d, window 15-45)",
-      "value": 15,
+      "status": "NO_GO",
+      "detail": "earnings 2026-08-05 (in 14d, window 15-45)",
+      "value": 14,
       "criterion": "earnings in 15-45 days"
     },
     {
