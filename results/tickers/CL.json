@@ -1,6 +1,6 @@
 {
   "ticker": "CL",
-  "price": 91.63,
+  "price": 90.08,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Volatility (Upside DNA)",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 91.63",
+      "detail": "USD 90.08",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 91.63 == last close 91.63 (fresh, no override)",
-      "value": 91.63,
+      "detail": "live 90.08 == last close 90.08 (fresh, no override)",
+      "value": 90.08,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 747.41 > 200SMA 694.69",
-      "value": 747.41,
+      "detail": "SPY 738.18 > 200SMA 695.06",
+      "value": 738.18,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@89.74; horizontal support (11 touches)] | bounce=True | confirm[none] | close 91.63 > EMA21 91.42",
+      "detail": "floor[Fib 0.5@89.74 / Fib 0.618@87.75; horizontal support (15 touches)] | bounce=True | confirm[none] | close 90.08 < EMA21 91.30",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.62 (< 1.8)",
-      "value": 1.62,
+      "detail": "PEG 1.64 (< 1.8)",
+      "value": 1.64,
       "criterion": "PEG < 1.8"
     },
     {
@@ -97,9 +97,9 @@
     {
       "stage": 2,
       "name": "Next earnings (Catalyst)",
-      "status": "SKIP",
-      "detail": "earnings date unknown",
-      "value": null,
+      "status": "NO_GO",
+      "detail": "earnings 2026-07-31 (in 8d, window 15-45)",
+      "value": 8,
       "criterion": "earnings in 15-45 days"
     },
     {

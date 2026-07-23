@@ -1,6 +1,6 @@
 {
   "ticker": "AMAT",
-  "price": 553.92,
+  "price": 562.8,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 553.92",
+      "detail": "USD 562.8",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 553.92 == last close 553.92 (fresh, no override)",
-      "value": 553.92,
+      "detail": "live 562.80 == last close 562.80 (fresh, no override)",
+      "value": 562.8,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SOXX 555.52 > 200SMA 394.63",
-      "value": 555.52,
+      "detail": "SOXX 551.24 > 200SMA 395.99",
+      "value": 551.24,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[none] | close 553.92 < EMA21 571.49",
+      "detail": "floor[horizontal support (4 touches)] | bounce=True | confirm[none] | close 562.80 < EMA21 570.70",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.43 (< 1.8)",
-      "value": 1.43,
+      "detail": "PEG 1.40 (< 1.8)",
+      "value": 1.4,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "GO",
-      "detail": "earnings 2026-08-13 (in 22d, window 15-45)",
-      "value": 22,
+      "detail": "earnings 2026-08-13 (in 21d, window 15-45)",
+      "value": 21,
       "criterion": "earnings in 15-45 days"
     },
     {

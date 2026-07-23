@@ -1,6 +1,6 @@
 {
   "ticker": "CRWD",
-  "price": 188.42,
+  "price": 183.42,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 188.42",
+      "detail": "USD 183.42",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 188.42 == last close 188.42 (fresh, no override)",
-      "value": 188.42,
+      "detail": "live 183.42 == last close 183.42 (fresh, no override)",
+      "value": 183.42,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 180.27 > 200SMA 154.00",
-      "value": 180.27,
+      "detail": "XLK 178.45 > 200SMA 154.18",
+      "value": 178.45,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[none] | close 188.42 < EMA21 190.63",
+      "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[none] | close 183.42 < EMA21 189.97",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "NO_GO",
-      "detail": "PEG 6.22 (>= 1.8)",
-      "value": 6.22,
+      "detail": "PEG 6.13 (>= 1.8)",
+      "value": 6.13,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "GO",
-      "detail": "earnings 2026-09-01 (in 41d, window 15-45)",
-      "value": 41,
+      "detail": "earnings 2026-09-01 (in 40d, window 15-45)",
+      "value": 40,
       "criterion": "earnings in 15-45 days"
     },
     {

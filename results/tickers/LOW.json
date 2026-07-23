@@ -1,8 +1,8 @@
 {
   "ticker": "LOW",
-  "price": 204.35,
+  "price": 201.92,
   "verdict": "NO_GO",
-  "go_count": 7,
+  "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 204.35",
+      "detail": "USD 201.92",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,31 +26,31 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 204.35 == last close 204.35 (fresh, no override)",
-      "value": 204.35,
+      "detail": "live 201.92 == last close 201.92 (fresh, no override)",
+      "value": 201.92,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 747.41 > 200SMA 694.69",
-      "value": 747.41,
+      "detail": "SPY 738.18 > 200SMA 695.06",
+      "value": 738.18,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "GO",
-      "detail": "52w range 44.5%",
-      "value": 0.4447,
+      "detail": "52w range 45.4%",
+      "value": 0.4537,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (5 touches)] | bounce=True | confirm[none] | close 204.35 < EMA21 212.52",
+      "detail": "floor[horizontal support (5 touches)] | bounce=True | confirm[none] | close 201.92 < EMA21 210.47",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.36,
+      "value": 1.1,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -97,17 +97,17 @@
     {
       "stage": 2,
       "name": "Next earnings (Catalyst)",
-      "status": "SKIP",
-      "detail": "earnings date unknown",
-      "value": null,
+      "status": "GO",
+      "detail": "earnings 2026-08-19 (in 27d, window 15-45)",
+      "value": 27,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 201.88 x 0.985",
-      "value": 198.85,
+      "detail": "10d low 199.40 x 0.985",
+      "value": 196.41,
       "criterion": "10d-low * 0.985"
     },
     {
