@@ -1,8 +1,8 @@
 {
   "ticker": "PEP",
-  "price": 134.95,
+  "price": 136.64,
   "verdict": "NO_GO",
-  "go_count": 9,
+  "go_count": 8,
   "blocked_at": "Volatility (Upside DNA)",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 134.95",
+      "detail": "USD 136.64",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 134.95 == last close 134.95 (fresh, no override)",
-      "value": 134.95,
+      "detail": "live 136.64 == last close 136.64 (fresh, no override)",
+      "value": 136.64,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 738.18 > 200SMA 695.06",
-      "value": 738.18,
+      "detail": "SPY 738.93 > 200SMA 695.43",
+      "value": 738.93,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,16 +50,16 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (4 touches)] | bounce=True | confirm[RSI-Div] | close 134.95 < EMA21 138.49",
+      "detail": "floor[horizontal support (9 touches)] | bounce=True | confirm[none] | close 136.64 < EMA21 138.33",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
     {
       "stage": 3,
       "name": "Bullish RSI divergence",
-      "status": "GO",
+      "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": true,
+      "value": false,
       "criterion": "price LL & RSI HL"
     },
     {
@@ -67,23 +67,23 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.97,
+      "value": 0.96,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "SPY red day 2026-06-10 -1.58% -> stock 1.08%",
-      "value": 0.0108,
+      "detail": "SPY red day 2026-06-23 -1.45% -> stock 0.95%",
+      "value": 0.0095,
       "criterion": "stock fell <0.3% or green on SPY worst red day"
     },
     {
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.47 (< 1.8)",
-      "value": 1.47,
+      "detail": "PEG 1.46 (< 1.8)",
+      "value": 1.46,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-08 (in 77d, window 15-45)",
-      "value": 77,
+      "detail": "earnings 2026-10-08 (in 76d, window 15-45)",
+      "value": 76,
       "criterion": "earnings in 15-45 days"
     },
     {

@@ -1,8 +1,8 @@
 {
   "ticker": "IBM",
-  "price": 206.65,
+  "price": 214.19,
   "verdict": "NO_GO",
-  "go_count": 6,
+  "go_count": 7,
   "blocked_at": "Concrete floor + EMA21 breakout",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 206.65",
+      "detail": "USD 214.19",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 206.65 == last close 206.65 (fresh, no override)",
-      "value": 206.65,
+      "detail": "live 214.19 == last close 214.19 (fresh, no override)",
+      "value": 214.19,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 178.45 > 200SMA 154.18",
-      "value": 178.45,
+      "detail": "XLK 175.88 > 200SMA 154.35",
+      "value": 175.88,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -43,14 +43,14 @@
       "name": "Volatility (Upside DNA)",
       "status": "GO",
       "detail": "52w range 66.9%",
-      "value": 0.669,
+      "value": 0.6691,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[none] | close 206.65 < EMA21 244.33",
+      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[none] | close 214.19 < EMA21 241.59",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,23 +67,23 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.26,
+      "value": 1.25,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
-      "status": "NO_GO",
-      "detail": "SPY red day 2026-06-10 -1.58% -> stock -1.85%",
-      "value": -0.0185,
+      "status": "GO",
+      "detail": "SPY red day 2026-06-23 -1.45% -> stock 5.04%",
+      "value": 0.0504,
       "criterion": "stock fell <0.3% or green on SPY worst red day"
     },
     {
       "stage": 2,
       "name": "PEG",
       "status": "NO_GO",
-      "detail": "PEG 1.99 (>= 1.8)",
-      "value": 1.99,
+      "detail": "PEG 2.00 (>= 1.8)",
+      "value": 2.0,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,16 +98,16 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-21 (in 90d, window 15-45)",
-      "value": 90,
+      "detail": "earnings 2026-10-21 (in 89d, window 15-45)",
+      "value": 89,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 199.20 x 0.985",
-      "value": 196.21,
+      "detail": "10d low 199.19 x 0.985",
+      "value": 196.2,
       "criterion": "10d-low * 0.985"
     },
     {

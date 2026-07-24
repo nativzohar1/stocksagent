@@ -1,6 +1,6 @@
 {
   "ticker": "NOW",
-  "price": 91.94,
+  "price": 98.78,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 91.94",
+      "detail": "USD 98.78",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,40 +26,40 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 91.94 == last close 91.94 (fresh, no override)",
-      "value": 91.94,
+      "detail": "live 98.78 == last close 98.78 (fresh, no override)",
+      "value": 98.78,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 178.45 > 200SMA 154.18",
-      "value": 178.45,
+      "detail": "XLK 175.88 > 200SMA 154.35",
+      "value": 175.88,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "GO",
-      "detail": "52w range 158.7%",
-      "value": 1.5874,
+      "detail": "52w range 147.6%",
+      "value": 1.476,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[RSI-Div] | close 91.94 < EMA21 102.51",
+      "detail": "floor[horizontal support (12 touches)] | bounce=True | confirm[none] | close 98.78 < EMA21 102.17",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
     {
       "stage": 3,
       "name": "Bullish RSI divergence",
-      "status": "GO",
+      "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": true,
+      "value": false,
       "criterion": "price LL & RSI HL"
     },
     {
@@ -73,17 +73,17 @@
     {
       "stage": 4,
       "name": "Relative Strength",
-      "status": "NO_GO",
-      "detail": "SPY red day 2026-06-10 -1.58% -> stock -0.85%",
-      "value": -0.0085,
+      "status": "GO",
+      "detail": "SPY red day 2026-06-23 -1.45% -> stock 3.15%",
+      "value": 0.0315,
       "criterion": "stock fell <0.3% or green on SPY worst red day"
     },
     {
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 0.83 (< 1.8)",
-      "value": 0.83,
+      "detail": "PEG 0.80 (< 1.8)",
+      "value": 0.8,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-22 (in -1d, window 15-45)",
-      "value": -1,
+      "detail": "earnings 2026-07-22 (in -2d, window 15-45)",
+      "value": -2,
       "criterion": "earnings in 15-45 days"
     },
     {

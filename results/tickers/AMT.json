@@ -1,16 +1,16 @@
 {
   "ticker": "AMT",
-  "price": 164.65,
+  "price": 166.67,
   "verdict": "NO_GO",
-  "go_count": 9,
-  "blocked_at": "Concrete floor + EMA21 breakout",
+  "go_count": 8,
+  "blocked_at": "Volatility (Upside DNA)",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
     {
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 164.65",
+      "detail": "USD 166.67",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,31 +26,31 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 164.65 == last close 164.65 (fresh, no override)",
-      "value": 164.65,
+      "detail": "live 166.67 == last close 166.67 (fresh, no override)",
+      "value": 166.67,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 738.18 > 200SMA 695.06",
-      "value": 738.18,
+      "detail": "SPY 738.93 > 200SMA 695.43",
+      "value": 738.93,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
-      "status": "GO",
-      "detail": "52w range 41.0%",
-      "value": 0.4096,
+      "status": "NO_GO",
+      "detail": "52w range 39.3%",
+      "value": 0.3928,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (11 touches)] | bounce=True | confirm[none] | close 164.65 < EMA21 169.07",
+      "detail": "floor[horizontal support (9 touches)] | bounce=True | confirm[none] | close 166.67 < EMA21 168.85",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,16 +74,16 @@
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "SPY red day 2026-06-10 -1.58% -> stock 0.88%",
-      "value": 0.0088,
+      "detail": "SPY red day 2026-06-23 -1.45% -> stock 1.67%",
+      "value": 0.0167,
       "criterion": "stock fell <0.3% or green on SPY worst red day"
     },
     {
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.74 (< 1.8)",
-      "value": 1.74,
+      "detail": "PEG 1.73 (< 1.8)",
+      "value": 1.73,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-28 (in 5d, window 15-45)",
-      "value": 5,
+      "detail": "earnings 2026-07-28 (in 4d, window 15-45)",
+      "value": 4,
       "criterion": "earnings in 15-45 days"
     },
     {

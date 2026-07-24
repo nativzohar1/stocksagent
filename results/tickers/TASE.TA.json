@@ -1,6 +1,6 @@
 {
   "ticker": "TASE.TA",
-  "price": 12910.0,
+  "price": 12970.0,
   "verdict": "NO_GO",
   "go_count": 7,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "ILA (agorot): yfinance price 12910.0 = ILS 129.10 (divide by 100). Stop/Target are in AGOROT too -> divide by 100 for ILS display. P/L% is currency-agnostic. NEVER read as USD.",
+      "detail": "ILA (agorot): yfinance price 12970.0 = ILS 129.70 (divide by 100). Stop/Target are in AGOROT too -> divide by 100 for ILS display. P/L% is currency-agnostic. NEVER read as USD.",
       "value": "ILA",
       "criterion": "agorot guardrail: .TA price is agorot; show ILS = price/100, not USD"
     },
@@ -26,8 +26,8 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 12910.00 == last close 12910.00 (fresh, no override)",
-      "value": 12910.0,
+      "detail": "LIVE OVERRIDE: lagged daily close 12910.00 -> live 12970.00 (fast_info)",
+      "value": 12970.0,
       "criterion": "patch lagged daily bar with live price"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 12910.00 > EMA21 12797.17",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 12970.00 > EMA21 12802.62",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-08-04 (in 12d, window 15-45)",
-      "value": 12,
+      "detail": "earnings 2026-08-04 (in 11d, window 15-45)",
+      "value": 11,
       "criterion": "earnings in 15-45 days"
     },
     {
