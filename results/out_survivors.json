@@ -1,7 +1,7 @@
 [
   {
     "ticker": "LMT",
-    "price": 582.6,
+    "price": 580.0,
     "verdict": "GO_PENDING_THESIS",
     "go_count": 11,
     "blocked_at": null,
@@ -11,7 +11,7 @@
         "stage": 0,
         "name": "Currency (info only)",
         "status": "GO",
-        "detail": "USD 582.6",
+        "detail": "USD 580.0",
         "value": "USD",
         "criterion": "informational, US dollars"
       },
@@ -27,16 +27,16 @@
         "stage": 0,
         "name": "Live price (fast_info)",
         "status": "GO",
-        "detail": "live 582.60 == last close 582.60 (fresh, no override)",
-        "value": 582.6,
+        "detail": "live 580.00 == last close 580.00 (fresh, no override)",
+        "value": 580.0,
         "criterion": "patch lagged daily bar with live price"
       },
       {
         "stage": 1,
         "name": "Sector trend (Regime, rank-only)",
         "status": "GO",
-        "detail": "SPY 738.93 > 200SMA 695.43",
-        "value": 738.93,
+        "detail": "SPY 739.09 > 200SMA 695.81",
+        "value": 739.09,
         "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
       },
       {
@@ -51,7 +51,7 @@
         "stage": 3,
         "name": "Concrete floor + EMA21 breakout",
         "status": "GO",
-        "detail": "floor[Fib 0.5@587.32; horizontal support (2 touches)] | bounce=True | confirm[Vol climax 2.59x] | close 582.60 > EMA21 527.15",
+        "detail": "floor[Fib 0.5@587.32 / Fib 0.618@563.68; horizontal support (3 touches)] | bounce=True | confirm[Vol climax 2.58x] | close 580.00 > EMA21 531.95",
         "value": null,
         "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
       },
@@ -68,7 +68,7 @@
         "name": "Volume climax",
         "status": "GO",
         "detail": "informational sub-signal",
-        "value": 2.59,
+        "value": 2.58,
         "criterion": ">= 2x avg volume"
       },
       {
@@ -83,8 +83,8 @@
         "stage": 2,
         "name": "PEG",
         "status": "GO",
-        "detail": "PEG 1.20 (< 1.8)",
-        "value": 1.2,
+        "detail": "PEG 1.23 (< 1.8)",
+        "value": 1.23,
         "criterion": "PEG < 1.8"
       },
       {
@@ -99,8 +99,8 @@
         "stage": 2,
         "name": "Next earnings (Catalyst)",
         "status": "NO_GO",
-        "detail": "earnings 2026-10-20 (in 88d, window 15-45)",
-        "value": 88,
+        "detail": "earnings 2026-10-20 (in 85d, window 15-45)",
+        "value": 85,
         "criterion": "earnings in 15-45 days"
       },
       {
@@ -155,7 +155,7 @@
   },
   {
     "ticker": "T",
-    "price": 24.13,
+    "price": 24.42,
     "verdict": "GO_PENDING_THESIS",
     "go_count": 11,
     "blocked_at": null,
@@ -165,7 +165,7 @@
         "stage": 0,
         "name": "Currency (info only)",
         "status": "GO",
-        "detail": "USD 24.13",
+        "detail": "USD 24.42",
         "value": "USD",
         "criterion": "informational, US dollars"
       },
@@ -181,16 +181,16 @@
         "stage": 0,
         "name": "Live price (fast_info)",
         "status": "GO",
-        "detail": "live 24.13 == last close 24.13 (fresh, no override)",
-        "value": 24.13,
+        "detail": "live 24.42 == last close 24.42 (fresh, no override)",
+        "value": 24.42,
         "criterion": "patch lagged daily bar with live price"
       },
       {
         "stage": 1,
         "name": "Sector trend (Regime, rank-only)",
         "status": "GO",
-        "detail": "SPY 738.93 > 200SMA 695.43",
-        "value": 738.93,
+        "detail": "SPY 739.09 > 200SMA 695.81",
+        "value": 739.09,
         "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
       },
       {
@@ -205,7 +205,7 @@
         "stage": 3,
         "name": "Concrete floor + EMA21 breakout",
         "status": "GO",
-        "detail": "floor[Fib 0.5@24.19; horizontal support (5 touches)] | bounce=True | confirm[Vol climax 2.82x] | close 24.13 > EMA21 22.14",
+        "detail": "floor[Fib 0.5@24.19; horizontal support (4 touches)] | bounce=True | confirm[Vol climax 2.79x] | close 24.42 > EMA21 22.34",
         "value": null,
         "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
       },
@@ -222,7 +222,7 @@
         "name": "Volume climax",
         "status": "GO",
         "detail": "informational sub-signal",
-        "value": 2.82,
+        "value": 2.79,
         "criterion": ">= 2x avg volume"
       },
       {
@@ -237,8 +237,8 @@
         "stage": 2,
         "name": "PEG",
         "status": "GO",
-        "detail": "PEG 1.60 (< 1.8)",
-        "value": 1.6,
+        "detail": "PEG 1.61 (< 1.8)",
+        "value": 1.61,
         "criterion": "PEG < 1.8"
       },
       {
@@ -253,16 +253,170 @@
         "stage": 2,
         "name": "Next earnings (Catalyst)",
         "status": "NO_GO",
-        "detail": "earnings 2026-10-21 (in 89d, window 15-45)",
-        "value": 89,
+        "detail": "earnings 2026-10-21 (in 86d, window 15-45)",
+        "value": 86,
         "criterion": "earnings in 15-45 days"
       },
       {
         "stage": 5,
         "name": "Hard stop price",
         "status": "GO",
-        "detail": "10d low 21.24 x 0.985",
-        "value": 20.92,
+        "detail": "10d low 21.25 x 0.985",
+        "value": 20.93,
+        "criterion": "10d-low * 0.985"
+      },
+      {
+        "stage": 2,
+        "name": "Rule-of-40 / RPO decoupling",
+        "status": "NEEDS_LLM",
+        "detail": "AI: rev growth + margin > 40%? RPO growing YoY? document price/perf decoupling (cite 10-Q/10-K)",
+        "value": null,
+        "criterion": "Rule of 40 true AND RPO up YoY"
+      },
+      {
+        "stage": 3,
+        "name": "Insider buying (Form 4)",
+        "status": "NEEDS_LLM",
+        "detail": "AI: search FRESH Form 4 insider BUYS only (NOT 13F)",
+        "value": null,
+        "criterion": "recent insider buying = confirming signal"
+      },
+      {
+        "stage": 1,
+        "name": "Disruption test",
+        "status": "NEEDS_LLM",
+        "detail": "AI: direct threat=STRONG SELL | adapting w/ AI=BUY\u26a0\ufe0f | infra/data moat=clean",
+        "value": null,
+        "criterion": "no direct 5y replacement threat"
+      },
+      {
+        "stage": 2,
+        "name": "Devil's advocate",
+        "status": "NEEDS_LLM",
+        "detail": "AI MUST write 2 concrete, evidenced bear reasons. NO OUTPUT without it.",
+        "value": null,
+        "criterion": "2 concrete crash reasons required"
+      },
+      {
+        "stage": 2,
+        "name": "Data healing (PEG/FCF)",
+        "status": "NEEDS_LLM",
+        "detail": "AI: if survivor has SKIP on PEG/FCF, web-fetch real value. Fwd PEG; Yahoo>SeekingAlpha>StockAnalysis; tag '(AI-healed, source, date)'; never guess; survivors only.",
+        "value": null,
+        "criterion": "heal SKIP PEG/FCF with cited value"
+      }
+    ]
+  },
+  {
+    "ticker": "DHR",
+    "price": 196.5,
+    "verdict": "GO_PENDING_THESIS",
+    "go_count": 10,
+    "blocked_at": null,
+    "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
+    "gates": [
+      {
+        "stage": 0,
+        "name": "Currency (info only)",
+        "status": "GO",
+        "detail": "USD 196.5",
+        "value": "USD",
+        "criterion": "informational, US dollars"
+      },
+      {
+        "stage": 1,
+        "name": "Sector (info only)",
+        "status": "GO",
+        "detail": "Healthcare -> regime ETF SPY",
+        "value": "Healthcare",
+        "criterion": "informational, not a filter"
+      },
+      {
+        "stage": 0,
+        "name": "Live price (fast_info)",
+        "status": "GO",
+        "detail": "live 196.50 == last close 196.50 (fresh, no override)",
+        "value": 196.5,
+        "criterion": "patch lagged daily bar with live price"
+      },
+      {
+        "stage": 1,
+        "name": "Sector trend (Regime, rank-only)",
+        "status": "GO",
+        "detail": "SPY 739.09 > 200SMA 695.81",
+        "value": 739.09,
+        "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
+      },
+      {
+        "stage": 1,
+        "name": "Volatility (Upside DNA)",
+        "status": "GO",
+        "detail": "52w range 50.6%",
+        "value": 0.5055,
+        "criterion": "(52wH-52wL)/52wL >= 40%"
+      },
+      {
+        "stage": 3,
+        "name": "Concrete floor + EMA21 breakout",
+        "status": "GO",
+        "detail": "floor[Fib 0.5@199.14; horizontal support (5 touches)] | bounce=True | confirm[Vol climax 5.56x] | close 196.50 > EMA21 192.46",
+        "value": null,
+        "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
+      },
+      {
+        "stage": 3,
+        "name": "Bullish RSI divergence",
+        "status": "SKIP",
+        "detail": "informational sub-signal",
+        "value": false,
+        "criterion": "price LL & RSI HL"
+      },
+      {
+        "stage": 3,
+        "name": "Volume climax",
+        "status": "GO",
+        "detail": "informational sub-signal",
+        "value": 5.56,
+        "criterion": ">= 2x avg volume"
+      },
+      {
+        "stage": 4,
+        "name": "Relative Strength",
+        "status": "GO",
+        "detail": "SPY red day 2026-06-23 -1.45% -> stock 0.44%",
+        "value": 0.0044,
+        "criterion": "stock fell <0.3% or green on SPY worst red day"
+      },
+      {
+        "stage": 2,
+        "name": "PEG",
+        "status": "GO",
+        "detail": "PEG 1.26 (< 1.8)",
+        "value": 1.26,
+        "criterion": "PEG < 1.8"
+      },
+      {
+        "stage": 2,
+        "name": "FCF",
+        "status": "NO_GO",
+        "detail": "FCF 5.26B vs prior 5.30B (negative or shrinking)",
+        "value": 5260000000.0,
+        "criterion": "FCF positive & growing YoY"
+      },
+      {
+        "stage": 2,
+        "name": "Next earnings (Catalyst)",
+        "status": "NO_GO",
+        "detail": "earnings 2026-10-20 (in 85d, window 15-45)",
+        "value": 85,
+        "criterion": "earnings in 15-45 days"
+      },
+      {
+        "stage": 5,
+        "name": "Hard stop price",
+        "status": "GO",
+        "detail": "10d low 165.75 x 0.985",
+        "value": 163.26,
         "criterion": "10d-low * 0.985"
       },
       {
@@ -309,7 +463,7 @@
   },
   {
     "ticker": "GE",
-    "price": 353.73,
+    "price": 361.61,
     "verdict": "GO_PENDING_THESIS",
     "go_count": 10,
     "blocked_at": null,
@@ -319,7 +473,7 @@
         "stage": 0,
         "name": "Currency (info only)",
         "status": "GO",
-        "detail": "USD 353.73",
+        "detail": "USD 361.61",
         "value": "USD",
         "criterion": "informational, US dollars"
       },
@@ -335,16 +489,16 @@
         "stage": 0,
         "name": "Live price (fast_info)",
         "status": "GO",
-        "detail": "live 353.73 == last close 353.73 (fresh, no override)",
-        "value": 353.73,
+        "detail": "live 361.61 == last close 361.61 (fresh, no override)",
+        "value": 361.61,
         "criterion": "patch lagged daily bar with live price"
       },
       {
         "stage": 1,
         "name": "Sector trend (Regime, rank-only)",
         "status": "GO",
-        "detail": "SPY 738.93 > 200SMA 695.43",
-        "value": 738.93,
+        "detail": "SPY 739.09 > 200SMA 695.81",
+        "value": 739.09,
         "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
       },
       {
@@ -359,7 +513,7 @@
         "stage": 3,
         "name": "Concrete floor + EMA21 breakout",
         "status": "GO",
-        "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[RSI-Div] | close 353.73 > EMA21 351.32",
+        "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[RSI-Div] | close 361.61 > EMA21 352.26",
         "value": null,
         "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
       },
@@ -376,7 +530,7 @@
         "name": "Volume climax",
         "status": "SKIP",
         "detail": "informational sub-signal",
-        "value": 0.87,
+        "value": 0.88,
         "criterion": ">= 2x avg volume"
       },
       {
@@ -391,8 +545,8 @@
         "stage": 2,
         "name": "PEG",
         "status": "NO_GO",
-        "detail": "PEG 5.21 (>= 1.8)",
-        "value": 5.21,
+        "detail": "PEG 5.20 (>= 1.8)",
+        "value": 5.2,
         "criterion": "PEG < 1.8"
       },
       {
@@ -407,8 +561,8 @@
         "stage": 2,
         "name": "Next earnings (Catalyst)",
         "status": "NO_GO",
-        "detail": "earnings 2026-10-20 (in 88d, window 15-45)",
-        "value": 88,
+        "detail": "earnings 2026-10-20 (in 85d, window 15-45)",
+        "value": 85,
         "criterion": "earnings in 15-45 days"
       },
       {
@@ -463,7 +617,7 @@
   },
   {
     "ticker": "AMGN",
-    "price": 376.04,
+    "price": 376.26,
     "verdict": "GO_PENDING_THESIS",
     "go_count": 9,
     "blocked_at": null,
@@ -473,7 +627,7 @@
         "stage": 0,
         "name": "Currency (info only)",
         "status": "GO",
-        "detail": "USD 376.04",
+        "detail": "USD 376.26",
         "value": "USD",
         "criterion": "informational, US dollars"
       },
@@ -489,16 +643,16 @@
         "stage": 0,
         "name": "Live price (fast_info)",
         "status": "GO",
-        "detail": "live 376.04 == last close 376.04 (fresh, no override)",
-        "value": 376.04,
+        "detail": "live 376.26 == last close 376.26 (fresh, no override)",
+        "value": 376.26,
         "criterion": "patch lagged daily bar with live price"
       },
       {
         "stage": 1,
         "name": "Sector trend (Regime, rank-only)",
         "status": "GO",
-        "detail": "SPY 738.93 > 200SMA 695.43",
-        "value": 738.93,
+        "detail": "SPY 739.09 > 200SMA 695.81",
+        "value": 739.09,
         "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
       },
       {
@@ -513,7 +667,7 @@
         "stage": 3,
         "name": "Concrete floor + EMA21 breakout",
         "status": "GO",
-        "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[RSI-Div] | close 376.04 > EMA21 363.08",
+        "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[RSI-Div] | close 376.26 > EMA21 364.28",
         "value": null,
         "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
       },
@@ -545,8 +699,8 @@
         "stage": 2,
         "name": "PEG",
         "status": "NO_GO",
-        "detail": "PEG 2.04 (>= 1.8)",
-        "value": 2.04,
+        "detail": "PEG 2.06 (>= 1.8)",
+        "value": 2.06,
         "criterion": "PEG < 1.8"
       },
       {
@@ -561,8 +715,8 @@
         "stage": 2,
         "name": "Next earnings (Catalyst)",
         "status": "NO_GO",
-        "detail": "earnings 2026-08-04 (in 11d, window 15-45)",
-        "value": 11,
+        "detail": "earnings 2026-08-04 (in 8d, window 15-45)",
+        "value": 8,
         "criterion": "earnings in 15-45 days"
       },
       {
@@ -571,6 +725,160 @@
         "status": "GO",
         "detail": "10d low 353.95 x 0.985",
         "value": 348.64,
+        "criterion": "10d-low * 0.985"
+      },
+      {
+        "stage": 2,
+        "name": "Rule-of-40 / RPO decoupling",
+        "status": "NEEDS_LLM",
+        "detail": "AI: rev growth + margin > 40%? RPO growing YoY? document price/perf decoupling (cite 10-Q/10-K)",
+        "value": null,
+        "criterion": "Rule of 40 true AND RPO up YoY"
+      },
+      {
+        "stage": 3,
+        "name": "Insider buying (Form 4)",
+        "status": "NEEDS_LLM",
+        "detail": "AI: search FRESH Form 4 insider BUYS only (NOT 13F)",
+        "value": null,
+        "criterion": "recent insider buying = confirming signal"
+      },
+      {
+        "stage": 1,
+        "name": "Disruption test",
+        "status": "NEEDS_LLM",
+        "detail": "AI: direct threat=STRONG SELL | adapting w/ AI=BUY\u26a0\ufe0f | infra/data moat=clean",
+        "value": null,
+        "criterion": "no direct 5y replacement threat"
+      },
+      {
+        "stage": 2,
+        "name": "Devil's advocate",
+        "status": "NEEDS_LLM",
+        "detail": "AI MUST write 2 concrete, evidenced bear reasons. NO OUTPUT without it.",
+        "value": null,
+        "criterion": "2 concrete crash reasons required"
+      },
+      {
+        "stage": 2,
+        "name": "Data healing (PEG/FCF)",
+        "status": "NEEDS_LLM",
+        "detail": "AI: if survivor has SKIP on PEG/FCF, web-fetch real value. Fwd PEG; Yahoo>SeekingAlpha>StockAnalysis; tag '(AI-healed, source, date)'; never guess; survivors only.",
+        "value": null,
+        "criterion": "heal SKIP PEG/FCF with cited value"
+      }
+    ]
+  },
+  {
+    "ticker": "TMO",
+    "price": 559.53,
+    "verdict": "GO_PENDING_THESIS",
+    "go_count": 9,
+    "blocked_at": null,
+    "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
+    "gates": [
+      {
+        "stage": 0,
+        "name": "Currency (info only)",
+        "status": "GO",
+        "detail": "USD 559.53",
+        "value": "USD",
+        "criterion": "informational, US dollars"
+      },
+      {
+        "stage": 1,
+        "name": "Sector (info only)",
+        "status": "GO",
+        "detail": "Healthcare -> regime ETF SPY",
+        "value": "Healthcare",
+        "criterion": "informational, not a filter"
+      },
+      {
+        "stage": 0,
+        "name": "Live price (fast_info)",
+        "status": "GO",
+        "detail": "live 559.53 == last close 559.53 (fresh, no override)",
+        "value": 559.53,
+        "criterion": "patch lagged daily bar with live price"
+      },
+      {
+        "stage": 1,
+        "name": "Sector trend (Regime, rank-only)",
+        "status": "GO",
+        "detail": "SPY 739.09 > 200SMA 695.81",
+        "value": 739.09,
+        "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
+      },
+      {
+        "stage": 1,
+        "name": "Volatility (Upside DNA)",
+        "status": "GO",
+        "detail": "52w range 47.8%",
+        "value": 0.4781,
+        "criterion": "(52wH-52wL)/52wL >= 40%"
+      },
+      {
+        "stage": 3,
+        "name": "Concrete floor + EMA21 breakout",
+        "status": "GO",
+        "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[Vol climax 2.49x] | close 559.53 > EMA21 529.03",
+        "value": null,
+        "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
+      },
+      {
+        "stage": 3,
+        "name": "Bullish RSI divergence",
+        "status": "SKIP",
+        "detail": "informational sub-signal",
+        "value": false,
+        "criterion": "price LL & RSI HL"
+      },
+      {
+        "stage": 3,
+        "name": "Volume climax",
+        "status": "GO",
+        "detail": "informational sub-signal",
+        "value": 2.49,
+        "criterion": ">= 2x avg volume"
+      },
+      {
+        "stage": 4,
+        "name": "Relative Strength",
+        "status": "GO",
+        "detail": "SPY red day 2026-06-23 -1.45% -> stock 1.15%",
+        "value": 0.0115,
+        "criterion": "stock fell <0.3% or green on SPY worst red day"
+      },
+      {
+        "stage": 2,
+        "name": "PEG",
+        "status": "NO_GO",
+        "detail": "PEG 1.87 (>= 1.8)",
+        "value": 1.87,
+        "criterion": "PEG < 1.8"
+      },
+      {
+        "stage": 2,
+        "name": "FCF",
+        "status": "NO_GO",
+        "detail": "FCF 6.29B vs prior 7.27B (negative or shrinking)",
+        "value": 6293000000.0,
+        "criterion": "FCF positive & growing YoY"
+      },
+      {
+        "stage": 2,
+        "name": "Next earnings (Catalyst)",
+        "status": "NO_GO",
+        "detail": "earnings 2026-10-21 (in 86d, window 15-45)",
+        "value": 86,
+        "criterion": "earnings in 15-45 days"
+      },
+      {
+        "stage": 5,
+        "name": "Hard stop price",
+        "status": "GO",
+        "detail": "10d low 495.04 x 0.985",
+        "value": 487.61,
         "criterion": "10d-low * 0.985"
       },
       {
