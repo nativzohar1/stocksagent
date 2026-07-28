@@ -1,6 +1,6 @@
 {
   "ticker": "AXP",
-  "price": 335.39,
+  "price": 336.63,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Volatility (Upside DNA)",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 335.39",
+      "detail": "USD 336.63",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 335.39 == last close 335.39 (fresh, no override)",
-      "value": 335.39,
+      "detail": "live 336.63 == last close 336.63 (fresh, no override)",
+      "value": 336.63,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 739.09 > 200SMA 695.81",
-      "value": 739.09,
+      "detail": "SPY 740.86 > 200SMA 696.17",
+      "value": 740.86,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@328.30; horizontal support (7 touches)] | bounce=True | confirm[Vol climax 2.02x] | close 335.39 < EMA21 343.68",
+      "detail": "floor[Fib 0.5@328.30; horizontal support (8 touches)] | bounce=True | confirm[Vol climax 2.04x] | close 336.63 < EMA21 343.04",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "GO",
       "detail": "informational sub-signal",
-      "value": 2.02,
+      "value": 2.04,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-23 (in 88d, window 15-45)",
-      "value": 88,
+      "detail": "earnings 2026-10-23 (in 87d, window 15-45)",
+      "value": 87,
       "criterion": "earnings in 15-45 days"
     },
     {

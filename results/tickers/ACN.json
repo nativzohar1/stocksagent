@@ -1,6 +1,6 @@
 {
   "ticker": "ACN",
-  "price": 154.06,
+  "price": 164.66,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 154.06",
+      "detail": "USD 164.66",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 154.06 == last close 154.06 (fresh, no override)",
-      "value": 154.06,
+      "detail": "live 164.66 == last close 164.66 (fresh, no override)",
+      "value": 164.66,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 174.30 > 200SMA 154.51",
-      "value": 174.3,
+      "detail": "XLK 171.09 > 200SMA 154.64",
+      "value": 171.09,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 154.06 > EMA21 142.59",
+      "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[none] | close 164.66 > EMA21 144.60",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.07 (< 1.8)",
-      "value": 1.07,
+      "detail": "PEG 1.12 (< 1.8)",
+      "value": 1.12,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,16 +98,16 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-09-24 (in 59d, window 15-45)",
-      "value": 59,
+      "detail": "earnings 2026-09-24 (in 58d, window 15-45)",
+      "value": 58,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 129.96 x 0.985",
-      "value": 128.01,
+      "detail": "10d low 135.50 x 0.985",
+      "value": 133.47,
       "criterion": "10d-low * 0.985"
     },
     {

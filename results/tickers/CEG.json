@@ -1,6 +1,6 @@
 {
   "ticker": "CEG",
-  "price": 270.0,
+  "price": 259.82,
   "verdict": "NO_GO",
   "go_count": 7,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 270.0",
+      "detail": "USD 259.82",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 270.00 == last close 270.00 (fresh, no override)",
-      "value": 270.0,
+      "detail": "live 259.82 == last close 259.82 (fresh, no override)",
+      "value": 259.82,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 739.09 > 200SMA 695.81",
-      "value": 739.09,
+      "detail": "SPY 740.86 > 200SMA 696.17",
+      "value": 740.86,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.618@268.44; horizontal support (6 touches)] | bounce=True | confirm[none] | close 270.00 > EMA21 261.46",
+      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[none] | close 259.82 < EMA21 261.31",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-08-06 (in 10d, window 15-45)",
-      "value": 10,
+      "detail": "earnings 2026-08-06 (in 9d, window 15-45)",
+      "value": 9,
       "criterion": "earnings in 15-45 days"
     },
     {

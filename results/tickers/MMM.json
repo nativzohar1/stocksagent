@@ -1,8 +1,8 @@
 {
   "ticker": "MMM",
-  "price": 178.23,
+  "price": 182.48,
   "verdict": "NO_GO",
-  "go_count": 8,
+  "go_count": 6,
   "blocked_at": "Volatility (Upside DNA)",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 178.23",
+      "detail": "USD 182.48",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,31 +26,31 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 178.23 == last close 178.23 (fresh, no override)",
-      "value": 178.23,
+      "detail": "live 182.48 == last close 182.48 (fresh, no override)",
+      "value": 182.48,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 739.09 > 200SMA 695.81",
-      "value": 739.09,
+      "detail": "SPY 740.86 > 200SMA 696.17",
+      "value": 740.86,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "NO_GO",
-      "detail": "52w range 29.3%",
-      "value": 0.2934,
+      "detail": "52w range 33.4%",
+      "value": 0.3338,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[Vol climax 2.83x] | close 178.23 > EMA21 164.13",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 182.48 > EMA21 165.80",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -65,9 +65,9 @@
     {
       "stage": 3,
       "name": "Volume climax",
-      "status": "GO",
+      "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 2.83,
+      "value": 1.4,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -81,9 +81,9 @@
     {
       "stage": 2,
       "name": "PEG",
-      "status": "GO",
-      "detail": "PEG 1.77 (< 1.8)",
-      "value": 1.77,
+      "status": "NO_GO",
+      "detail": "PEG 1.83 (>= 1.8)",
+      "value": 1.83,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,16 +98,16 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-20 (in 85d, window 15-45)",
-      "value": 85,
+      "detail": "earnings 2026-10-20 (in 84d, window 15-45)",
+      "value": 84,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 155.92 x 0.985",
-      "value": 153.58,
+      "detail": "10d low 157.00 x 0.985",
+      "value": 154.65,
       "criterion": "10d-low * 0.985"
     },
     {
