@@ -1,8 +1,8 @@
 {
   "ticker": "MSFT",
-  "price": 393.35,
+  "price": 390.54,
   "verdict": "NO_GO",
-  "go_count": 8,
+  "go_count": 7,
   "blocked_at": "Concrete floor + EMA21 breakout",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 393.35",
+      "detail": "USD 390.54",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 393.35 == last close 393.35 (fresh, no override)",
-      "value": 393.35,
+      "detail": "live 390.54 == last close 390.54 (fresh, no override)",
+      "value": 390.54,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 171.09 > 200SMA 154.64",
-      "value": 171.09,
+      "detail": "XLK 166.57 > 200SMA 154.75",
+      "value": 166.57,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.618@399.78; horizontal support (9 touches)] | bounce=True | confirm[none] | close 393.35 > EMA21 389.76",
+      "detail": "floor[Fib 0.618@399.78; horizontal support (11 touches)] | bounce=True | confirm[none] | close 390.54 > EMA21 389.83",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,23 +67,23 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.8,
+      "value": 1.07,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
-      "status": "GO",
-      "detail": "SPY red day 2026-06-23 -1.45% -> stock 1.80%",
-      "value": 0.018,
+      "status": "NO_GO",
+      "detail": "SPY red day 2026-07-29 -1.54% -> stock -0.71%",
+      "value": -0.0071,
       "criterion": "stock fell <0.3% or green on SPY worst red day"
     },
     {
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.20 (< 1.8)",
-      "value": 1.2,
+      "detail": "PEG 1.21 (< 1.8)",
+      "value": 1.21,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-29 (in 1d, window 15-45)",
-      "value": 1,
+      "detail": "earnings 2026-07-29 (in 0d, window 15-45)",
+      "value": 0,
       "criterion": "earnings in 15-45 days"
     },
     {

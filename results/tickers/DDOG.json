@@ -1,8 +1,8 @@
 {
   "ticker": "DDOG",
-  "price": 250.88,
+  "price": 264.2,
   "verdict": "NO_GO",
-  "go_count": 8,
+  "go_count": 10,
   "blocked_at": "Concrete floor + EMA21 breakout",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 250.88",
+      "detail": "USD 264.2",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 250.88 == last close 250.88 (fresh, no override)",
-      "value": 250.88,
+      "detail": "live 264.20 == last close 264.20 (fresh, no override)",
+      "value": 264.2,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 171.09 > 200SMA 154.64",
-      "value": 171.09,
+      "detail": "XLK 166.57 > 200SMA 154.75",
+      "value": 166.57,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,16 +50,16 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (4 touches)] | bounce=True | confirm[none] | close 250.88 < EMA21 251.30",
+      "detail": "floor[no floor near price] | bounce=True | confirm[RSI-Div] | close 264.20 > EMA21 252.47",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
     {
       "stage": 3,
       "name": "Bullish RSI divergence",
-      "status": "SKIP",
+      "status": "GO",
       "detail": "informational sub-signal",
-      "value": false,
+      "value": true,
       "criterion": "price LL & RSI HL"
     },
     {
@@ -67,15 +67,15 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.77,
+      "value": 1.3,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
-      "status": "NO_GO",
-      "detail": "SPY red day 2026-06-23 -1.45% -> stock -0.36%",
-      "value": -0.0036,
+      "status": "GO",
+      "detail": "SPY red day 2026-07-29 -1.54% -> stock 5.31%",
+      "value": 0.0531,
       "criterion": "stock fell <0.3% or green on SPY worst red day"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-08-06 (in 9d, window 15-45)",
-      "value": 9,
+      "detail": "earnings 2026-08-06 (in 8d, window 15-45)",
+      "value": 8,
       "criterion": "earnings in 15-45 days"
     },
     {

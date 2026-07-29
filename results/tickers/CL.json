@@ -1,6 +1,6 @@
 {
   "ticker": "CL",
-  "price": 92.73,
+  "price": 93.49,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Volatility (Upside DNA)",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 92.73",
+      "detail": "USD 93.49",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 92.73 == last close 92.73 (fresh, no override)",
-      "value": 92.73,
+      "detail": "live 93.49 == last close 93.49 (fresh, no override)",
+      "value": 93.49,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 740.86 > 200SMA 696.17",
-      "value": 740.86,
+      "detail": "SPY 729.46 > 200SMA 696.49",
+      "value": 729.46,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (7 touches)] | bounce=True | confirm[none] | close 92.73 > EMA21 91.45",
+      "detail": "floor[horizontal support (7 touches)] | bounce=True | confirm[none] | close 93.49 > EMA21 91.63",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,16 +74,16 @@
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "SPY red day 2026-06-23 -1.45% -> stock 3.11%",
-      "value": 0.0311,
+      "detail": "SPY red day 2026-07-29 -1.54% -> stock 0.82%",
+      "value": 0.0082,
       "criterion": "stock fell <0.3% or green on SPY worst red day"
     },
     {
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.64 (< 1.8)",
-      "value": 1.64,
+      "detail": "PEG 1.66 (< 1.8)",
+      "value": 1.66,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,16 +98,16 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-31 (in 3d, window 15-45)",
-      "value": 3,
+      "detail": "earnings 2026-07-31 (in 2d, window 15-45)",
+      "value": 2,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 89.08 x 0.985",
-      "value": 87.74,
+      "detail": "10d low 89.25 x 0.985",
+      "value": 87.91,
       "criterion": "10d-low * 0.985"
     },
     {

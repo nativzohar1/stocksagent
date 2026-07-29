@@ -1,6 +1,6 @@
 {
   "ticker": "UPS",
-  "price": 105.53,
+  "price": 104.56,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 105.53",
+      "detail": "USD 104.56",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 105.53 == last close 105.53 (fresh, no override)",
-      "value": 105.53,
+      "detail": "live 104.56 == last close 104.56 (fresh, no override)",
+      "value": 104.56,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 740.86 > 200SMA 696.17",
-      "value": 740.86,
+      "detail": "SPY 729.46 > 200SMA 696.49",
+      "value": 729.46,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@105.61 / Fib 0.618@102.52; horizontal support (5 touches)] | bounce=True | confirm[Vol climax 2.67x] | close 105.53 < EMA21 111.95",
+      "detail": "floor[Fib 0.5@105.61 / Fib 0.618@102.52; horizontal support (8 touches)] | bounce=True | confirm[Vol climax 2.68x] | close 104.56 < EMA21 111.28",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,23 +67,23 @@
       "name": "Volume climax",
       "status": "GO",
       "detail": "informational sub-signal",
-      "value": 2.67,
+      "value": 2.68,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "SPY red day 2026-06-23 -1.45% -> stock -1.31%",
-      "value": -0.0131,
+      "detail": "SPY red day 2026-07-29 -1.54% -> stock -0.92%",
+      "value": -0.0092,
       "criterion": "stock fell <0.3% or green on SPY worst red day"
     },
     {
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.78 (< 1.8)",
-      "value": 1.78,
+      "detail": "PEG 1.67 (< 1.8)",
+      "value": 1.67,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-28 (in 0d, window 15-45)",
-      "value": 0,
+      "detail": "earnings 2026-10-27 (in 90d, window 15-45)",
+      "value": 90,
       "criterion": "earnings in 15-45 days"
     },
     {

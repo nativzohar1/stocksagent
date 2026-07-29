@@ -1,8 +1,8 @@
 {
   "ticker": "GD",
-  "price": 393.19,
+  "price": 380.96,
   "verdict": "NO_GO",
-  "go_count": 7,
+  "go_count": 6,
   "blocked_at": "Volatility (Upside DNA)",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 393.19",
+      "detail": "USD 380.96",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,31 +26,31 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 393.19 == last close 393.19 (fresh, no override)",
-      "value": 393.19,
+      "detail": "live 380.96 == last close 380.96 (fresh, no override)",
+      "value": 380.96,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 740.86 > 200SMA 696.17",
-      "value": 740.86,
+      "detail": "SPY 729.46 > 200SMA 696.49",
+      "value": 729.46,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "NO_GO",
-      "detail": "52w range 31.5%",
-      "value": 0.3149,
+      "detail": "52w range 32.7%",
+      "value": 0.3267,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 393.19 > EMA21 372.42",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 380.96 > EMA21 373.19",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -73,17 +73,17 @@
     {
       "stage": 4,
       "name": "Relative Strength",
-      "status": "GO",
-      "detail": "SPY red day 2026-06-23 -1.45% -> stock 2.03%",
-      "value": 0.0203,
+      "status": "NO_GO",
+      "detail": "SPY red day 2026-07-29 -1.54% -> stock -3.11%",
+      "value": -0.0311,
       "criterion": "stock fell <0.3% or green on SPY worst red day"
     },
     {
       "stage": 2,
       "name": "PEG",
       "status": "NO_GO",
-      "detail": "PEG 2.89 (>= 1.8)",
-      "value": 2.89,
+      "detail": "PEG 2.92 (>= 1.8)",
+      "value": 2.92,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-07-29 (in 1d, window 15-45)",
-      "value": 1,
+      "detail": "earnings 2026-07-29 (in 0d, window 15-45)",
+      "value": 0,
       "criterion": "earnings in 15-45 days"
     },
     {

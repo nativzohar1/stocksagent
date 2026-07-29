@@ -1,745 +1,740 @@
 {
-  "generated_utc": "2026-07-28T21:50:21.784237Z",
+  "generated_utc": "2026-07-29T21:47:32.977627Z",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "n": 106,
-  "survivors": [
-    "LMT",
-    "T",
-    "DHR",
-    "GILD"
-  ],
+  "survivors": [],
   "stocks": [
     {
-      "ticker": "LMT",
-      "price": 581.31,
-      "verdict": "GO_PENDING_THESIS",
-      "go_count": 11,
-      "blocked_at": null
-    },
-    {
-      "ticker": "T",
-      "price": 24.66,
-      "verdict": "GO_PENDING_THESIS",
-      "go_count": 11,
-      "blocked_at": null
-    },
-    {
-      "ticker": "DHR",
-      "price": 199.05,
-      "verdict": "GO_PENDING_THESIS",
-      "go_count": 10,
-      "blocked_at": null
-    },
-    {
-      "ticker": "GILD",
-      "price": 134.32,
-      "verdict": "GO_PENDING_THESIS",
-      "go_count": 9,
-      "blocked_at": null
-    },
-    {
       "ticker": "ADBE",
-      "price": 249.18,
+      "price": 263.43,
       "verdict": "NO_GO",
       "go_count": 10,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "CRM",
-      "price": 181.5,
+      "price": 188.38,
+      "verdict": "NO_GO",
+      "go_count": 10,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "DDOG",
+      "price": 264.2,
+      "verdict": "NO_GO",
+      "go_count": 10,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "GOOG",
+      "price": 335.76,
+      "verdict": "NO_GO",
+      "go_count": 10,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "GOOGL",
+      "price": 336.71,
       "verdict": "NO_GO",
       "go_count": 10,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "INTU",
-      "price": 312.99,
+      "price": 333.13,
       "verdict": "NO_GO",
       "go_count": 10,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
+      "ticker": "LMT",
+      "price": 569.2,
+      "verdict": "NO_GO",
+      "go_count": 10,
+      "blocked_at": "Relative Strength"
+    },
+    {
       "ticker": "LOW",
-      "price": 218.24,
+      "price": 215.68,
       "verdict": "NO_GO",
       "go_count": 10,
       "blocked_at": "Relative Strength"
     },
     {
       "ticker": "MDT",
-      "price": 86.88,
+      "price": 87.54,
       "verdict": "NO_GO",
       "go_count": 10,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "ACN",
-      "price": 164.66,
+      "price": 173.17,
       "verdict": "NO_GO",
       "go_count": 9,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "AVGO",
-      "price": 380.91,
-      "verdict": "NO_GO",
-      "go_count": 9,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "AXP",
-      "price": 336.63,
-      "verdict": "NO_GO",
-      "go_count": 9,
-      "blocked_at": "Volatility (Upside DNA)"
-    },
-    {
-      "ticker": "BAC",
-      "price": 62.62,
+      "price": 370.32,
       "verdict": "NO_GO",
       "go_count": 9,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "BKNG",
-      "price": 199.31,
-      "verdict": "NO_GO",
-      "go_count": 9,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "BNY",
-      "price": 156.49,
-      "verdict": "NO_GO",
-      "go_count": 9,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "CRWD",
-      "price": 181.8,
-      "verdict": "NO_GO",
-      "go_count": 9,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "CSCO",
-      "price": 115.58,
-      "verdict": "NO_GO",
-      "go_count": 9,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "CVS",
-      "price": 109.34,
+      "price": 201.3,
       "verdict": "NO_GO",
       "go_count": 9,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "CVX",
-      "price": 187.58,
+      "price": 191.86,
       "verdict": "NO_GO",
       "go_count": 9,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
-      "ticker": "GE",
-      "price": 363.59,
+      "ticker": "DHR",
+      "price": 196.49,
+      "verdict": "NO_GO",
+      "go_count": 9,
+      "blocked_at": "Relative Strength"
+    },
+    {
+      "ticker": "FDX",
+      "price": 308.61,
       "verdict": "NO_GO",
       "go_count": 9,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
-      "ticker": "GOOG",
-      "price": 332.6,
+      "ticker": "LIN",
+      "price": 511.17,
       "verdict": "NO_GO",
       "go_count": 9,
       "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "GOOGL",
-      "price": 333.71,
-      "verdict": "NO_GO",
-      "go_count": 9,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "ISRG",
-      "price": 361.8,
-      "verdict": "NO_GO",
-      "go_count": 9,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "JNJ",
-      "price": 266.73,
-      "verdict": "NO_GO",
-      "go_count": 9,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "LLY",
-      "price": 1220.66,
-      "verdict": "NO_GO",
-      "go_count": 9,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "MCD",
-      "price": 273.02,
-      "verdict": "NO_GO",
-      "go_count": 9,
-      "blocked_at": "Volatility (Upside DNA)"
     },
     {
       "ticker": "MO",
-      "price": 74.82,
+      "price": 74.92,
       "verdict": "NO_GO",
       "go_count": 9,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "NFLX",
-      "price": 72.39,
+      "price": 73.63,
       "verdict": "NO_GO",
       "go_count": 9,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "NOW",
-      "price": 110.62,
+      "price": 115.76,
       "verdict": "NO_GO",
       "go_count": 9,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "NVDA",
-      "price": 197.01,
+      "price": 190.01,
       "verdict": "NO_GO",
       "go_count": 9,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "ORCL",
-      "price": 119.96,
+      "price": 117.74,
       "verdict": "NO_GO",
       "go_count": 9,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
-      "ticker": "TMUS",
-      "price": 182.39,
+      "ticker": "PLTR",
+      "price": 123.0,
       "verdict": "NO_GO",
       "go_count": 9,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "TXN",
-      "price": 277.07,
+      "price": 271.3,
       "verdict": "NO_GO",
       "go_count": 9,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "WMT",
-      "price": 113.1,
+      "price": 114.22,
       "verdict": "NO_GO",
       "go_count": 9,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "ABBV",
-      "price": 263.2,
+      "price": 263.3,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "ABT",
-      "price": 107.27,
+      "price": 108.0,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "AMAT",
-      "price": 476.46,
+      "price": 436.45,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "AMD",
-      "price": 454.62,
-      "verdict": "NO_GO",
-      "go_count": 8,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "AMGN",
-      "price": 393.1,
+      "price": 429.56,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "AMT",
-      "price": 171.5,
+      "price": 179.26,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Volatility (Upside DNA)"
     },
     {
-      "ticker": "AMZN",
-      "price": 230.86,
+      "ticker": "AXP",
+      "price": 331.5,
+      "verdict": "NO_GO",
+      "go_count": 8,
+      "blocked_at": "Volatility (Upside DNA)"
+    },
+    {
+      "ticker": "BAC",
+      "price": 61.07,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
-      "ticker": "BMY",
-      "price": 63.6,
+      "ticker": "BNY",
+      "price": 152.5,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "BRK-B",
-      "price": 512.37,
+      "price": 509.16,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Volatility (Upside DNA)"
     },
     {
       "ticker": "CL",
-      "price": 92.73,
+      "price": 93.49,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Volatility (Upside DNA)"
     },
     {
       "ticker": "CMCSA",
-      "price": 24.19,
+      "price": 24.61,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "COF",
-      "price": 212.41,
+      "price": 208.71,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "COP",
-      "price": 114.1,
+      "price": 118.06,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
-      "ticker": "DDOG",
-      "price": 250.88,
+      "ticker": "CRWD",
+      "price": 179.38,
+      "verdict": "NO_GO",
+      "go_count": 8,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "CSCO",
+      "price": 112.48,
+      "verdict": "NO_GO",
+      "go_count": 8,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "CVS",
+      "price": 105.92,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "DE",
-      "price": 639.84,
+      "price": 610.95,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
-      "ticker": "FDX",
-      "price": 312.64,
+      "ticker": "GE",
+      "price": 350.63,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "GEV",
-      "price": 943.38,
+      "price": 900.28,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
+      "ticker": "GILD",
+      "price": 132.73,
+      "verdict": "NO_GO",
+      "go_count": 8,
+      "blocked_at": "Relative Strength"
+    },
+    {
       "ticker": "GM",
-      "price": 90.3,
+      "price": 89.4,
+      "verdict": "NO_GO",
+      "go_count": 8,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "ISRG",
+      "price": 353.1,
+      "verdict": "NO_GO",
+      "go_count": 8,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "JNJ",
+      "price": 265.53,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "KO",
-      "price": 88.27,
+      "price": 89.08,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
-      "ticker": "LIN",
-      "price": 511.18,
+      "ticker": "LLY",
+      "price": 1210.02,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "LRCX",
-      "price": 269.61,
+      "price": 252.35,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "MA",
-      "price": 562.75,
+      "price": 563.32,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Volatility (Upside DNA)"
     },
     {
-      "ticker": "META",
-      "price": 593.41,
+      "ticker": "MCD",
+      "price": 271.52,
       "verdict": "NO_GO",
       "go_count": 8,
-      "blocked_at": "Concrete floor + EMA21 breakout"
+      "blocked_at": "Volatility (Upside DNA)"
     },
     {
-      "ticker": "MSFT",
-      "price": 393.35,
+      "ticker": "MDLZ",
+      "price": 64.99,
       "verdict": "NO_GO",
       "go_count": 8,
-      "blocked_at": "Concrete floor + EMA21 breakout"
+      "blocked_at": "Volatility (Upside DNA)"
     },
     {
       "ticker": "MU",
-      "price": 820.53,
+      "price": 739.0,
+      "verdict": "NO_GO",
+      "go_count": 8,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "NKE",
+      "price": 43.22,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "PEP",
-      "price": 142.86,
+      "price": 143.5,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Volatility (Upside DNA)"
     },
     {
       "ticker": "QCOM",
-      "price": 162.88,
-      "verdict": "NO_GO",
-      "go_count": 8,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "RTX",
-      "price": 218.58,
+      "price": 155.68,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "SBUX",
-      "price": 103.1,
+      "price": 104.14,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
-      "ticker": "SCHW",
-      "price": 105.97,
-      "verdict": "NO_GO",
-      "go_count": 8,
-      "blocked_at": "Volatility (Upside DNA)"
-    },
-    {
-      "ticker": "SPG",
-      "price": 236.7,
+      "ticker": "T",
+      "price": 23.94,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "TMO",
-      "price": 576.41,
+      "price": 576.46,
+      "verdict": "NO_GO",
+      "go_count": 8,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "TMUS",
+      "price": 181.52,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "TSLA",
-      "price": 307.44,
+      "price": 298.32,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
-      "ticker": "UNH",
-      "price": 428.79,
+      "ticker": "UBER",
+      "price": 71.2,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "UNP",
+      "price": 292.19,
+      "verdict": "NO_GO",
+      "go_count": 8,
+      "blocked_at": "Relative Strength"
     },
     {
       "ticker": "UPS",
-      "price": 105.53,
+      "price": 104.56,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "V",
-      "price": 366.59,
-      "verdict": "NO_GO",
-      "go_count": 8,
-      "blocked_at": "Volatility (Upside DNA)"
-    },
-    {
-      "ticker": "VZ",
-      "price": 48.19,
+      "price": 368.73,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Volatility (Upside DNA)"
     },
     {
       "ticker": "XOM",
-      "price": 153.04,
+      "price": 156.75,
       "verdict": "NO_GO",
       "go_count": 8,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
+      "ticker": "AMGN",
+      "price": 387.64,
+      "verdict": "NO_GO",
+      "go_count": 7,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "AMZN",
+      "price": 226.65,
+      "verdict": "NO_GO",
+      "go_count": 7,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "BMY",
+      "price": 63.1,
+      "verdict": "NO_GO",
+      "go_count": 7,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
       "ticker": "C",
-      "price": 132.47,
+      "price": 127.13,
       "verdict": "NO_GO",
       "go_count": 7,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "CEG",
-      "price": 259.82,
+      "price": 257.95,
       "verdict": "NO_GO",
       "go_count": 7,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "COST",
-      "price": 966.58,
-      "verdict": "NO_GO",
-      "go_count": 7,
-      "blocked_at": "Volatility (Upside DNA)"
-    },
-    {
-      "ticker": "DIS",
-      "price": 98.89,
-      "verdict": "NO_GO",
-      "go_count": 7,
-      "blocked_at": "Volatility (Upside DNA)"
-    },
-    {
-      "ticker": "GD",
-      "price": 393.19,
+      "price": 974.03,
       "verdict": "NO_GO",
       "go_count": 7,
       "blocked_at": "Volatility (Upside DNA)"
     },
     {
       "ticker": "GS",
-      "price": 1033.34,
+      "price": 980.75,
       "verdict": "NO_GO",
       "go_count": 7,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "HD",
-      "price": 344.47,
-      "verdict": "NO_GO",
-      "go_count": 7,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "IBM",
-      "price": 227.55,
+      "price": 338.27,
       "verdict": "NO_GO",
       "go_count": 7,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "INTC",
-      "price": 86.3,
+      "price": 81.88,
       "verdict": "NO_GO",
       "go_count": 7,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
-      "ticker": "JPM",
-      "price": 357.31,
+      "ticker": "META",
+      "price": 585.61,
+      "verdict": "NO_GO",
+      "go_count": 7,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "MSFT",
+      "price": 390.54,
+      "verdict": "NO_GO",
+      "go_count": 7,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "RTX",
+      "price": 215.25,
+      "verdict": "NO_GO",
+      "go_count": 7,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "SCHW",
+      "price": 104.47,
       "verdict": "NO_GO",
       "go_count": 7,
       "blocked_at": "Volatility (Upside DNA)"
     },
     {
-      "ticker": "MDLZ",
-      "price": 62.48,
-      "verdict": "NO_GO",
-      "go_count": 7,
-      "blocked_at": "Volatility (Upside DNA)"
-    },
-    {
-      "ticker": "MRK",
-      "price": 131.82,
-      "verdict": "NO_GO",
-      "go_count": 7,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "NEE",
-      "price": 89.28,
-      "verdict": "NO_GO",
-      "go_count": 7,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "NKE",
-      "price": 43.05,
-      "verdict": "NO_GO",
-      "go_count": 7,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "PLTR",
-      "price": 123.53,
-      "verdict": "NO_GO",
-      "go_count": 7,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "PM",
-      "price": 200.17,
+      "ticker": "SPG",
+      "price": 235.61,
       "verdict": "NO_GO",
       "go_count": 7,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "TASE.TA",
-      "price": 12330.0,
+      "price": 11930.0,
       "verdict": "NO_GO",
       "go_count": 7,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
-      "ticker": "UBER",
-      "price": 70.74,
-      "verdict": "NO_GO",
-      "go_count": 7,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "UNP",
-      "price": 294.45,
-      "verdict": "NO_GO",
-      "go_count": 7,
-      "blocked_at": "Concrete floor + EMA21 breakout"
-    },
-    {
-      "ticker": "USB",
-      "price": 64.43,
+      "ticker": "UNH",
+      "price": 420.57,
       "verdict": "NO_GO",
       "go_count": 7,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "VST",
-      "price": 148.64,
+      "price": 142.81,
       "verdict": "NO_GO",
       "go_count": 7,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
-      "ticker": "WFC",
-      "price": 86.87,
+      "ticker": "VZ",
+      "price": 47.22,
       "verdict": "NO_GO",
       "go_count": 7,
       "blocked_at": "Volatility (Upside DNA)"
     },
     {
       "ticker": "AAPL",
-      "price": 340.08,
+      "price": 338.19,
       "verdict": "NO_GO",
       "go_count": 6,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "BA",
-      "price": 221.56,
+      "price": 214.01,
       "verdict": "NO_GO",
       "go_count": 6,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
       "ticker": "BLK",
-      "price": 1097.55,
+      "price": 1079.19,
       "verdict": "NO_GO",
       "go_count": 6,
       "blocked_at": "Volatility (Upside DNA)"
     },
     {
       "ticker": "CAT",
-      "price": 840.85,
+      "price": 782.71,
       "verdict": "NO_GO",
       "go_count": 6,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
+      "ticker": "DIS",
+      "price": 98.48,
+      "verdict": "NO_GO",
+      "go_count": 6,
+      "blocked_at": "Volatility (Upside DNA)"
+    },
+    {
       "ticker": "DUK",
-      "price": 129.24,
+      "price": 129.08,
+      "verdict": "NO_GO",
+      "go_count": 6,
+      "blocked_at": "Volatility (Upside DNA)"
+    },
+    {
+      "ticker": "GD",
+      "price": 380.96,
+      "verdict": "NO_GO",
+      "go_count": 6,
+      "blocked_at": "Volatility (Upside DNA)"
+    },
+    {
+      "ticker": "IBM",
+      "price": 226.44,
+      "verdict": "NO_GO",
+      "go_count": 6,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "JPM",
+      "price": 344.71,
       "verdict": "NO_GO",
       "go_count": 6,
       "blocked_at": "Volatility (Upside DNA)"
     },
     {
       "ticker": "MMM",
-      "price": 182.48,
+      "price": 177.95,
       "verdict": "NO_GO",
       "go_count": 6,
       "blocked_at": "Volatility (Upside DNA)"
     },
     {
-      "ticker": "MS",
-      "price": 211.58,
+      "ticker": "MRK",
+      "price": 130.36,
       "verdict": "NO_GO",
       "go_count": 6,
       "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
-      "ticker": "PG",
-      "price": 148.88,
+      "ticker": "MS",
+      "price": 203.13,
       "verdict": "NO_GO",
       "go_count": 6,
-      "blocked_at": "Volatility (Upside DNA)"
+      "blocked_at": "Concrete floor + EMA21 breakout"
     },
     {
-      "ticker": "SO",
-      "price": 96.78,
+      "ticker": "NEE",
+      "price": 88.46,
+      "verdict": "NO_GO",
+      "go_count": 6,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "PM",
+      "price": 198.44,
+      "verdict": "NO_GO",
+      "go_count": 6,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "USB",
+      "price": 62.82,
+      "verdict": "NO_GO",
+      "go_count": 6,
+      "blocked_at": "Concrete floor + EMA21 breakout"
+    },
+    {
+      "ticker": "WFC",
+      "price": 83.87,
       "verdict": "NO_GO",
       "go_count": 6,
       "blocked_at": "Volatility (Upside DNA)"
     },
     {
       "ticker": "EMR",
-      "price": 151.81,
+      "price": 145.73,
       "verdict": "NO_GO",
       "go_count": 5,
       "blocked_at": "Volatility (Upside DNA)"
     },
     {
       "ticker": "PFE",
-      "price": 25.25,
+      "price": 25.15,
+      "verdict": "NO_GO",
+      "go_count": 5,
+      "blocked_at": "Volatility (Upside DNA)"
+    },
+    {
+      "ticker": "PG",
+      "price": 146.1,
+      "verdict": "NO_GO",
+      "go_count": 5,
+      "blocked_at": "Volatility (Upside DNA)"
+    },
+    {
+      "ticker": "SO",
+      "price": 96.05,
       "verdict": "NO_GO",
       "go_count": 5,
       "blocked_at": "Volatility (Upside DNA)"
