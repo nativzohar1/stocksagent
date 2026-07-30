@@ -1,6 +1,6 @@
 {
   "ticker": "NKE",
-  "price": 43.22,
+  "price": 42.29,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 43.22",
+      "detail": "USD 42.29",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 43.22 == last close 43.22 (fresh, no override)",
-      "value": 43.22,
+      "detail": "live 42.29 == last close 42.29 (fresh, no override)",
+      "value": 42.29,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 729.46 > 200SMA 696.49",
-      "value": 729.46,
+      "detail": "SPY 741.69 > 200SMA 696.96",
+      "value": 741.69,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (9 touches)] | bounce=True | confirm[none] | close 43.22 > EMA21 42.89",
+      "detail": "floor[horizontal support (10 touches)] | bounce=True | confirm[none] | close 42.29 < EMA21 42.83",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.65 (< 1.8)",
-      "value": 1.65,
+      "detail": "PEG 1.66 (< 1.8)",
+      "value": 1.66,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-09-29 (in 62d, window 15-45)",
-      "value": 62,
+      "detail": "earnings 2026-09-29 (in 61d, window 15-45)",
+      "value": 61,
       "criterion": "earnings in 15-45 days"
     },
     {
