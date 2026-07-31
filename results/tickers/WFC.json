@@ -1,6 +1,6 @@
 {
   "ticker": "WFC",
-  "price": 85.43,
+  "price": 86.45,
   "verdict": "NO_GO",
   "go_count": 6,
   "blocked_at": "Volatility (Upside DNA)",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 85.43",
+      "detail": "USD 86.45",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 85.43 == last close 85.43 (fresh, no override)",
-      "value": 85.43,
+      "detail": "live 86.45 == last close 86.45 (fresh, no override)",
+      "value": 86.45,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 741.69 > 200SMA 696.96",
-      "value": 741.69,
+      "detail": "SPY 747.03 > 200SMA 697.41",
+      "value": 747.03,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@83.66; horizontal support (6 touches)] | bounce=True | confirm[none] | close 85.43 < EMA21 85.85",
+      "detail": "floor[horizontal support (5 touches)] | bounce=True | confirm[none] | close 86.45 > EMA21 85.90",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.59 (< 1.8)",
-      "value": 1.59,
+      "detail": "PEG 1.61 (< 1.8)",
+      "value": 1.61,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-13 (in 75d, window 15-45)",
-      "value": 75,
+      "detail": "earnings 2026-10-13 (in 74d, window 15-45)",
+      "value": 74,
       "criterion": "earnings in 15-45 days"
     },
     {

@@ -1,6 +1,6 @@
 {
   "ticker": "PLTR",
-  "price": 122.26,
+  "price": 123.06,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 122.26",
+      "detail": "USD 123.06",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 122.26 == last close 122.26 (fresh, no override)",
-      "value": 122.26,
+      "detail": "live 123.06 == last close 123.06 (fresh, no override)",
+      "value": 123.06,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 175.73 > 200SMA 154.93",
-      "value": 175.73,
+      "detail": "XLK 175.35 > 200SMA 155.10",
+      "value": 175.35,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (4 touches)] | bounce=True | confirm[RSI-Div] | close 122.26 < EMA21 127.43",
+      "detail": "floor[horizontal support (4 touches)] | bounce=True | confirm[RSI-Div] | close 123.06 < EMA21 127.03",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.76 (< 1.8)",
-      "value": 1.76,
+      "detail": "PEG 1.75 (< 1.8)",
+      "value": 1.75,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-08-03 (in 4d, window 15-45)",
-      "value": 4,
+      "detail": "earnings 2026-08-03 (in 3d, window 15-45)",
+      "value": 3,
       "criterion": "earnings in 15-45 days"
     },
     {

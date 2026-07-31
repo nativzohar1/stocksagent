@@ -1,6 +1,6 @@
 {
   "ticker": "TASE.TA",
-  "price": 11530.0,
+  "price": 11800.0,
   "verdict": "NO_GO",
   "go_count": 7,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "ILA (agorot): yfinance price 11530.0 = ILS 115.30 (divide by 100). Stop/Target are in AGOROT too -> divide by 100 for ILS display. P/L% is currency-agnostic. NEVER read as USD.",
+      "detail": "ILA (agorot): yfinance price 11800.0 = ILS 118.00 (divide by 100). Stop/Target are in AGOROT too -> divide by 100 for ILS display. P/L% is currency-agnostic. NEVER read as USD.",
       "value": "ILA",
       "criterion": "agorot guardrail: .TA price is agorot; show ILS = price/100, not USD"
     },
@@ -26,31 +26,31 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "LIVE OVERRIDE: lagged daily close 11930.00 -> live 11530.00 (fast_info)",
-      "value": 11530.0,
+      "detail": "LIVE OVERRIDE: lagged daily close 11530.00 -> live 11800.00 (fast_info)",
+      "value": 11800.0,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "^TA125.TA 3985.02 > 200SMA 3923.08",
-      "value": 3985.02,
+      "detail": "^TA125.TA 4021.68 > 200SMA 3927.94",
+      "value": 4021.68,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "GO",
-      "detail": "52w range 181.1%",
-      "value": 1.8111,
+      "detail": "52w range 179.0%",
+      "value": 1.7903,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (2 touches)] | bounce=False | confirm[none] | close 11530.00 < EMA21 12671.91",
+      "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[none] | close 11800.00 < EMA21 12625.70",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.45,
+      "value": 1.43,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -98,16 +98,16 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-08-04 (in 5d, window 15-45)",
-      "value": 5,
+      "detail": "earnings 2026-08-04 (in 4d, window 15-45)",
+      "value": 4,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 11530.00 x 0.985",
-      "value": 11357.05,
+      "detail": "10d low 11500.00 x 0.985",
+      "value": 11327.5,
       "criterion": "10d-low * 0.985"
     },
     {
