@@ -1,6 +1,6 @@
 {
   "ticker": "ADBE",
-  "price": 250.41,
+  "price": 251.34,
   "verdict": "NO_GO",
   "go_count": 10,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 250.41",
+      "detail": "USD 251.34",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 250.41 == last close 250.41 (fresh, no override)",
-      "value": 250.41,
+      "detail": "live 251.34 == last close 251.34 (fresh, no override)",
+      "value": 251.34,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 175.35 > 200SMA 155.10",
-      "value": 175.35,
+      "detail": "XLK 178.04 > 200SMA 155.29",
+      "value": 178.04,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@244.75; horizontal support (8 touches)] | bounce=True | confirm[none] | close 250.41 > EMA21 233.02",
+      "detail": "floor[Fib 0.5@244.75; horizontal support (6 touches)] | bounce=True | confirm[none] | close 251.34 > EMA21 234.68",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "GO",
-      "detail": "earnings 2026-09-10 (in 41d, window 15-45)",
-      "value": 41,
+      "detail": "earnings 2026-09-10 (in 38d, window 15-45)",
+      "value": 38,
       "criterion": "earnings in 15-45 days"
     },
     {

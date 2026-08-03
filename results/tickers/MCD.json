@@ -1,8 +1,8 @@
 {
   "ticker": "MCD",
-  "price": 270.64,
+  "price": 265.23,
   "verdict": "NO_GO",
-  "go_count": 8,
+  "go_count": 7,
   "blocked_at": "Volatility (Upside DNA)",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 270.64",
+      "detail": "USD 265.23",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 270.64 == last close 270.64 (fresh, no override)",
-      "value": 270.64,
+      "detail": "live 265.23 == last close 265.23 (fresh, no override)",
+      "value": 265.23,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 747.03 > 200SMA 697.41",
-      "value": 747.03,
+      "detail": "SPY 757.67 > 200SMA 697.91",
+      "value": 757.67,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -49,8 +49,8 @@
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
-      "status": "GO",
-      "detail": "floor[horizontal support (10 touches)] | bounce=True | confirm[RSI-Div] | close 270.64 > EMA21 270.44",
+      "status": "NO_GO",
+      "detail": "floor[horizontal support (8 touches)] | bounce=True | confirm[RSI-Div] | close 265.23 < EMA21 269.97",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.15,
+      "value": 1.3,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -82,8 +82,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "NO_GO",
-      "detail": "PEG 2.58 (>= 1.8)",
-      "value": 2.58,
+      "detail": "PEG 2.60 (>= 1.8)",
+      "value": 2.6,
       "criterion": "PEG < 1.8"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-08-04 (in 4d, window 15-45)",
-      "value": 4,
+      "detail": "earnings 2026-08-04 (in 1d, window 15-45)",
+      "value": 1,
       "criterion": "earnings in 15-45 days"
     },
     {

@@ -1,6 +1,6 @@
 {
   "ticker": "UBER",
-  "price": 70.36,
+  "price": 71.61,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Concrete floor + EMA21 breakout",
@@ -10,7 +10,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 70.36",
+      "detail": "USD 71.61",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +26,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 70.36 == last close 70.36 (fresh, no override)",
-      "value": 70.36,
+      "detail": "live 71.61 == last close 71.61 (fresh, no override)",
+      "value": 71.61,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 175.35 > 200SMA 155.10",
-      "value": 175.35,
+      "detail": "XLK 178.04 > 200SMA 155.29",
+      "value": 178.04,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +50,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.618@71.79; horizontal support (16 touches)] | bounce=True | confirm[none] | close 70.36 < EMA21 71.17",
+      "detail": "floor[Fib 0.5@73.65 / Fib 0.618@71.71; horizontal support (21 touches)] | bounce=True | confirm[none] | close 71.61 > EMA21 71.21",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.28,
+      "value": 1.04,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-08-05 (in 5d, window 15-45)",
-      "value": 5,
+      "detail": "earnings 2026-08-05 (in 2d, window 15-45)",
+      "value": 2,
       "criterion": "earnings in 15-45 days"
     },
     {

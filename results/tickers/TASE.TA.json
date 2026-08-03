@@ -26,7 +26,7 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "LIVE OVERRIDE: lagged daily close 11530.00 -> live 11800.00 (fast_info)",
+      "detail": "live 11800.00 == last close 11800.00 (fresh, no override)",
       "value": 11800.0,
       "criterion": "patch lagged daily bar with live price"
     },
@@ -34,23 +34,23 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "^TA125.TA 4021.68 > 200SMA 3927.94",
-      "value": 4021.68,
+      "detail": "^TA125.TA 4071.76 > 200SMA 3932.91",
+      "value": 4071.76,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "GO",
-      "detail": "52w range 179.0%",
-      "value": 1.7903,
+      "detail": "52w range 178.9%",
+      "value": 1.789,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[none] | close 11800.00 < EMA21 12625.70",
+      "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[none] | close 11800.00 < EMA21 12528.32",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,7 +67,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.43,
+      "value": 1.41,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -98,8 +98,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-08-04 (in 4d, window 15-45)",
-      "value": 4,
+      "detail": "earnings 2026-08-04 (in 1d, window 15-45)",
+      "value": 1,
       "criterion": "earnings in 15-45 days"
     },
     {
