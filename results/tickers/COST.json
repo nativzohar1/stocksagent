@@ -1,16 +1,23 @@
 {
   "ticker": "COST",
-  "price": 954.08,
+  "price": 942.67,
   "verdict": "NO_GO",
-  "go_count": 7,
+  "go_count": 8,
   "blocked_at": "Volatility (Upside DNA)",
+  "entry_path": null,
+  "stop": 901.58,
+  "risk_pct": 0.0436,
+  "target_20pct": 1131.2,
+  "bounce_date": "2026-07-23",
+  "time_stop_sessions": null,
+  "requires_llm_confirmation": false,
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
     {
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 954.08",
+      "detail": "USD 942.67",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -26,16 +33,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 954.08 == last close 954.08 (fresh, no override)",
-      "value": 954.08,
+      "detail": "live 942.67 == last close 942.67 (fresh, no override)",
+      "value": 942.67,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 757.67 > 200SMA 697.91",
-      "value": 757.67,
+      "detail": "SPY 769.93 > 200SMA 698.46",
+      "value": 769.93,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -50,7 +57,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.618@977.96; horizontal support (14 touches)] | bounce=True | confirm[none] | close 954.08 > EMA21 946.44",
+      "detail": "floor[horizontal support (10 touches)] | bounce=True | confirm[none] | close 942.67 < EMA21 946.10 | bounce_date=2026-07-23",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -67,16 +74,24 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.07,
+      "value": 0.94,
       "criterion": ">= 2x avg volume"
+    },
+    {
+      "stage": 3,
+      "name": "Early entry (Path E)",
+      "status": "NO_GO",
+      "detail": "floor[horizontal support (10 touches)] | confirm[none] | price/EMA21 = 0.996 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.94x < 1.5x, no RSI-Div)",
+      "value": 0.996,
+      "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "SPY red day 2026-07-29 -1.54% -> stock 0.77%",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock 0.77% [PASS] | B) 20d stock -0.4% vs SPY +3.0% = excess -3.3% [fail] | passed_via=red-day",
       "value": 0.0077,
-      "criterion": "stock fell <0.3% or green on SPY worst red day"
+      "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
     {
       "stage": 2,
@@ -98,8 +113,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-09-24 (in 52d, window 15-45)",
-      "value": 52,
+      "detail": "earnings 2026-09-24 (in 51d, window 15-45)",
+      "value": 51,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -109,6 +124,14 @@
       "detail": "10d low 915.30 x 0.985",
       "value": 901.58,
       "criterion": "10d-low * 0.985"
+    },
+    {
+      "stage": 5,
+      "name": "Risk geometry (stop distance)",
+      "status": "GO",
+      "detail": "stop 901.58 is 4.4% below price 942.67 (max 12%) | reward/risk vs +20% target = 4.59:1",
+      "value": 0.0436,
+      "criterion": "(price-stop)/price <= 12%"
     },
     {
       "stage": 2,
@@ -133,6 +156,22 @@
       "detail": "AI: direct threat=STRONG SELL | adapting w/ AI=BUY\u26a0\ufe0f | infra/data moat=clean",
       "value": null,
       "criterion": "no direct 5y replacement threat"
+    },
+    {
+      "stage": 1,
+      "name": "Disruption quality (WARN test)",
+      "status": "NEEDS_LLM",
+      "detail": "AI: a \u26a0\ufe0f WARN-level disruption is ONLY acceptable while the fundamentals are ACCELERATING. Active competitive displacement + DECELERATING growth = HARD REJECT (do not log, do not hold). Cite the two most recent quarters of the key growth metric and state accelerating/decelerating. Archetype: ISRG (Hugo + Ottava entering AND procedure growth decelerating) = reject; BMY (Eliquis cliff BUT growth portfolio accelerating) and LMT (drone threat BUT record backlog) = keep.",
+      "value": null,
+      "criterion": "WARN disruption + decelerating fundamentals => reject"
+    },
+    {
+      "stage": 3,
+      "name": "Bounce catalyst anchor (Path E)",
+      "status": "NEEDS_LLM",
+      "detail": "AI: the reversal started on bounce_date=2026-07-23 (pivot low 915.30). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. Informational for a Path C entry.",
+      "value": "2026-07-23",
+      "criterion": "Path E requires a dated, cited event within 3 sessions of bounce_date"
     },
     {
       "stage": 2,

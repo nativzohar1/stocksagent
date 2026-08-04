@@ -4,14 +4,21 @@
   "verdict": "NO_GO",
   "go_count": 0,
   "blocked_at": "data: insufficient history",
+  "entry_path": null,
+  "stop": null,
+  "risk_pct": null,
+  "target_20pct": null,
+  "bounce_date": null,
+  "time_stop_sessions": null,
+  "requires_llm_confirmation": false,
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
     {
       "stage": 0,
       "name": "Data availability",
       "status": "NO_GO",
-      "detail": "only 34 bars",
-      "value": 34,
+      "detail": "only 35 bars",
+      "value": 35,
       "criterion": ">=200 daily bars"
     }
   ]
