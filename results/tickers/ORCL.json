@@ -1,13 +1,13 @@
 {
   "ticker": "ORCL",
-  "price": 147.43,
+  "price": 145.74,
   "verdict": "NO_GO",
   "go_count": 10,
   "blocked_at": "Relative Strength",
   "entry_path": null,
   "stop": 112.78,
-  "risk_pct": 0.235,
-  "target_20pct": 176.92,
+  "risk_pct": 0.2262,
+  "target_20pct": 174.89,
   "bounce_date": "2026-07-28",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -17,7 +17,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 147.43",
+      "detail": "USD 145.74",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,16 +33,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 147.43 == last close 147.43 (fresh, no override)",
-      "value": 147.43,
+      "detail": "live 145.74 == last close 145.74 (fresh, no override)",
+      "value": 145.74,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 186.29 > 200SMA 155.51",
-      "value": 186.29,
+      "detail": "XLK 186.90 > 200SMA 155.52",
+      "value": 186.9,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -57,7 +57,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "GO",
-      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[RSI-Div] | close 147.43 > EMA21 134.45 | bounce_date=2026-07-28",
+      "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[RSI-Div] | close 145.74 > EMA21 134.29 | bounce_date=2026-07-28",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,7 +74,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.46,
+      "value": 1.45,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -89,7 +89,7 @@
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -1.85% [fail] | B) 20d stock +4.5% vs SPY +3.0% = excess +1.5% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -1.85% [fail] | B) 20d stock +3.3% vs SPY +3.2% = excess +0.1% [fail] | passed_via=none",
       "value": -0.0185,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -129,8 +129,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "NO_GO",
-      "detail": "stop 112.78 is 23.5% below price 147.43 (max 12%) | reward/risk vs +20% target = 0.85:1",
-      "value": 0.235,
+      "detail": "stop 112.78 is 22.6% below price 145.74 (max 12%) | reward/risk vs +20% target = 0.88:1",
+      "value": 0.2262,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

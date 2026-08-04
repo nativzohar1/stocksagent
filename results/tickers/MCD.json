@@ -1,13 +1,13 @@
 {
   "ticker": "MCD",
-  "price": 268.03,
+  "price": 268.34,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Volatility (Upside DNA)",
   "entry_path": null,
   "stop": 257.05,
-  "risk_pct": 0.041,
-  "target_20pct": 321.64,
+  "risk_pct": 0.0421,
+  "target_20pct": 322.01,
   "bounce_date": "2026-07-23",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -17,7 +17,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 268.03",
+      "detail": "USD 268.34",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,16 +33,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 268.03 == last close 268.03 (fresh, no override)",
-      "value": 268.03,
+      "detail": "live 268.34 == last close 268.34 (fresh, no override)",
+      "value": 268.34,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 769.93 > 200SMA 698.46",
-      "value": 769.93,
+      "detail": "SPY 771.33 > 200SMA 698.47",
+      "value": 771.33,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -57,7 +57,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (8 touches)] | bounce=True | confirm[RSI-Div] | close 268.03 < EMA21 269.79 | bounce_date=2026-07-23",
+      "detail": "floor[horizontal support (8 touches)] | bounce=True | confirm[RSI-Div] | close 268.34 < EMA21 269.82 | bounce_date=2026-07-23",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,22 +74,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.61,
+      "value": 1.59,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "GO",
-      "detail": "floor[horizontal support (8 touches)] | confirm[RSI-Div,soft climax 1.61x] | price/EMA21 = 0.993 (band 0.85-1.15) | ELIGIBLE \u2014 UNCONFIRMED entry, requires LLM event anchor + 5-session time stop",
-      "value": 0.993,
+      "detail": "floor[horizontal support (8 touches)] | confirm[RSI-Div,soft climax 1.59x] | price/EMA21 = 0.995 (band 0.85-1.15) | ELIGIBLE \u2014 UNCONFIRMED entry, requires LLM event anchor + 5-session time stop",
+      "value": 0.995,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.55% [fail] | B) 20d stock -5.0% vs SPY +3.0% = excess -8.0% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.55% [fail] | B) 20d stock -4.9% vs SPY +3.2% = excess -8.1% [fail] | passed_via=none",
       "value": -0.0055,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -129,8 +129,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 257.05 is 4.1% below price 268.03 (max 12%) | reward/risk vs +20% target = 4.88:1",
-      "value": 0.041,
+      "detail": "stop 257.05 is 4.2% below price 268.34 (max 12%) | reward/risk vs +20% target = 4.75:1",
+      "value": 0.0421,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

@@ -41,8 +41,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SOXX 540.52 > 200SMA 404.93",
-      "value": 540.52,
+      "detail": "SOXX 542.21 > 200SMA 404.94",
+      "value": 542.21,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -74,14 +74,14 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.22,
+      "value": 1.21,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (2 touches)] | confirm[none] | price/EMA21 = 1.018 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.22x < 1.5x, no RSI-Div)",
+      "detail": "floor[horizontal support (2 touches)] | confirm[none] | price/EMA21 = 1.018 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.21x < 1.5x, no RSI-Div)",
       "value": 1.018,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
@@ -89,7 +89,7 @@
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -8.40% [fail] | B) 20d stock -1.4% vs SPY +3.0% = excess -4.4% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -8.40% [fail] | B) 20d stock -1.4% vs SPY +3.2% = excess -4.6% [fail] | passed_via=none",
       "value": -0.084,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
