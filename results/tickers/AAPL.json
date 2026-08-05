@@ -1,13 +1,13 @@
 {
   "ticker": "AAPL",
-  "price": 309.38,
+  "price": 311.0,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Relative Strength",
   "entry_path": null,
   "stop": 295.5,
-  "risk_pct": 0.0449,
-  "target_20pct": 371.26,
+  "risk_pct": 0.0498,
+  "target_20pct": 373.2,
   "bounce_date": "2026-07-31",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -17,7 +17,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 309.38",
+      "detail": "USD 311.0",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,31 +33,31 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 309.38 == last close 309.38 (fresh, no override)",
-      "value": 309.38,
+      "detail": "live 311.00 == last close 311.00 (fresh, no override)",
+      "value": 311.0,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 186.90 > 200SMA 155.52",
-      "value": 186.9,
+      "detail": "XLK 185.91 > 200SMA 155.74",
+      "value": 185.91,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "GO",
-      "detail": "52w range 71.1%",
-      "value": 0.7112,
+      "detail": "52w range 68.3%",
+      "value": 0.6827,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[Vol climax 2.21x] | close 309.38 < EMA21 319.43 | bounce_date=2026-07-31",
+      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[Vol climax 2.21x] | close 311.00 < EMA21 318.66 | bounce_date=2026-07-31",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -81,15 +81,15 @@
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "GO",
-      "detail": "floor[horizontal support (3 touches)] | confirm[soft climax 2.21x] | price/EMA21 = 0.969 (band 0.85-1.15) | ELIGIBLE \u2014 UNCONFIRMED entry, requires LLM event anchor + 5-session time stop",
-      "value": 0.969,
+      "detail": "floor[horizontal support (3 touches)] | confirm[soft climax 2.21x] | price/EMA21 = 0.976 (band 0.85-1.15) | ELIGIBLE \u2014 UNCONFIRMED entry, requires LLM event anchor + 5-session time stop",
+      "value": 0.976,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.56% [fail] | B) 20d stock -0.4% vs SPY +3.2% = excess -3.6% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.56% [fail] | B) 20d stock -0.8% vs SPY +3.3% = excess -4.0% [fail] | passed_via=none",
       "value": -0.0056,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -113,8 +113,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-29 (in 86d, window 15-45)",
-      "value": 86,
+      "detail": "earnings 2026-10-29 (in 85d, window 15-45)",
+      "value": 85,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -129,8 +129,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 295.50 is 4.5% below price 309.38 (max 12%) | reward/risk vs +20% target = 4.46:1",
-      "value": 0.0449,
+      "detail": "stop 295.50 is 5.0% below price 311.00 (max 12%) | reward/risk vs +20% target = 4.01:1",
+      "value": 0.0498,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

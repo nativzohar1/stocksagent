@@ -1,14 +1,14 @@
 {
   "ticker": "BA",
-  "price": 237.16,
+  "price": 240.19,
   "verdict": "NO_GO",
-  "go_count": 6,
+  "go_count": 7,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
-  "stop": 201.81,
-  "risk_pct": 0.1491,
-  "target_20pct": 284.59,
-  "bounce_date": "2026-07-22",
+  "stop": 201.98,
+  "risk_pct": 0.1591,
+  "target_20pct": 288.23,
+  "bounce_date": "2026-07-23",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
@@ -17,7 +17,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 237.16",
+      "detail": "USD 240.19",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,16 +33,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 237.16 == last close 237.16 (fresh, no override)",
-      "value": 237.16,
+      "detail": "live 240.19 == last close 240.19 (fresh, no override)",
+      "value": 240.19,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 771.33 > 200SMA 698.47",
-      "value": 771.33,
+      "detail": "SPY 769.79 > 200SMA 699.04",
+      "value": 769.79,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -57,7 +57,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 237.16 > EMA21 219.49 | bounce_date=2026-07-22",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 240.19 > EMA21 221.37 | bounce_date=2026-07-23",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,22 +74,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.78,
+      "value": 1.76,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | confirm[soft climax 1.78x] | price/EMA21 = 1.081 (band 0.85-1.15) | blocked: not on floor",
-      "value": 1.081,
+      "detail": "floor[no floor near price] | confirm[soft climax 1.76x] | price/EMA21 = 1.085 (band 0.85-1.15) | blocked: not on floor",
+      "value": 1.085,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
-      "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -3.41% [fail] | B) 20d stock +2.4% vs SPY +3.2% = excess -0.8% [fail] | passed_via=none",
+      "status": "GO",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -3.41% [fail] | B) 20d stock +6.8% vs SPY +3.3% = excess +3.5% [PASS] | passed_via=rolling-20d",
       "value": -0.0341,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -97,8 +97,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "NO_GO",
-      "detail": "PEG 25.04 (>= 1.8)",
-      "value": 25.04,
+      "detail": "PEG 89.29 (>= 1.8)",
+      "value": 89.29,
       "criterion": "PEG < 1.8"
     },
     {
@@ -113,24 +113,24 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-28 (in 85d, window 15-45)",
-      "value": 85,
+      "detail": "earnings 2026-10-28 (in 84d, window 15-45)",
+      "value": 84,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 204.88 x 0.985",
-      "value": 201.81,
+      "detail": "10d low 205.06 x 0.985",
+      "value": 201.98,
       "criterion": "10d-low * 0.985"
     },
     {
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "NO_GO",
-      "detail": "stop 201.81 is 14.9% below price 237.16 (max 12%) | reward/risk vs +20% target = 1.34:1",
-      "value": 0.1491,
+      "detail": "stop 201.98 is 15.9% below price 240.19 (max 12%) | reward/risk vs +20% target = 1.26:1",
+      "value": 0.1591,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
@@ -169,8 +169,8 @@
       "stage": 3,
       "name": "Bounce catalyst anchor (Path E)",
       "status": "NEEDS_LLM",
-      "detail": "AI: the reversal started on bounce_date=2026-07-22 (pivot low 204.88). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. Informational for a Path C entry.",
-      "value": "2026-07-22",
+      "detail": "AI: the reversal started on bounce_date=2026-07-23 (pivot low 205.06). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. Informational for a Path C entry.",
+      "value": "2026-07-23",
       "criterion": "Path E requires a dated, cited event within 3 sessions of bounce_date"
     },
     {

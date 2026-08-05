@@ -1,13 +1,13 @@
 {
   "ticker": "LRCX",
-  "price": 317.74,
+  "price": 307.42,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Relative Strength",
   "entry_path": null,
   "stop": 246.74,
-  "risk_pct": 0.2235,
-  "target_20pct": 381.29,
+  "risk_pct": 0.1974,
+  "target_20pct": 368.9,
   "bounce_date": "2026-07-29",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -17,7 +17,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 317.74",
+      "detail": "USD 307.42",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,16 +33,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 317.74 == last close 317.74 (fresh, no override)",
-      "value": 317.74,
+      "detail": "live 307.42 == last close 307.42 (fresh, no override)",
+      "value": 307.42,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SOXX 542.21 > 200SMA 404.94",
-      "value": 542.21,
+      "detail": "SOXX 530.70 > 200SMA 406.15",
+      "value": 530.7,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -57,7 +57,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@316.22; horizontal support (2 touches)] | bounce=True | confirm[none] | close 317.74 > EMA21 313.26 | bounce_date=2026-07-29",
+      "detail": "floor[Fib 0.5@316.22; horizontal support (6 touches)] | bounce=True | confirm[none] | close 307.42 < EMA21 312.73 | bounce_date=2026-07-29",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -81,15 +81,15 @@
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "GO",
-      "detail": "floor[Fib 0.5@316.22; horizontal support (2 touches)] | confirm[soft climax 1.77x] | price/EMA21 = 1.014 (band 0.85-1.15) | ELIGIBLE \u2014 UNCONFIRMED entry, requires LLM event anchor + 5-session time stop",
-      "value": 1.014,
+      "detail": "floor[Fib 0.5@316.22; horizontal support (6 touches)] | confirm[soft climax 1.77x] | price/EMA21 = 0.983 (band 0.85-1.15) | ELIGIBLE \u2014 UNCONFIRMED entry, requires LLM event anchor + 5-session time stop",
+      "value": 0.983,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -6.40% [fail] | B) 20d stock -2.6% vs SPY +3.2% = excess -5.7% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -6.40% [fail] | B) 20d stock -7.7% vs SPY +3.3% = excess -11.0% [fail] | passed_via=none",
       "value": -0.064,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -97,8 +97,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.38 (< 1.8)",
-      "value": 1.38,
+      "detail": "PEG 1.49 (< 1.8)",
+      "value": 1.49,
       "criterion": "PEG < 1.8"
     },
     {
@@ -113,8 +113,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-21 (in 78d, window 15-45)",
-      "value": 78,
+      "detail": "earnings 2026-10-21 (in 77d, window 15-45)",
+      "value": 77,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -129,8 +129,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "NO_GO",
-      "detail": "stop 246.74 is 22.3% below price 317.74 (max 12%) | reward/risk vs +20% target = 0.90:1",
-      "value": 0.2235,
+      "detail": "stop 246.74 is 19.7% below price 307.42 (max 12%) | reward/risk vs +20% target = 1.01:1",
+      "value": 0.1974,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
