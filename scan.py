@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-scan.py  —  Decoupling Hunter / Institutional Swing Scanner v2.9 (Mega-Cap Monster Radar)
+scan.py  —  Decoupling Hunter / Institutional Swing Scanner v3.0 (Mega-Cap Monster Radar)
 Runs on GitHub Actions (has internet). Writes results/out.json + companion files.
 
 UNIVERSE: S&P 100 (OEX) — the ~101 largest, most established US companies, EXCHANGE-AGNOSTIC
@@ -50,6 +50,15 @@ v2.9: CATCH THE BOTTOM, NOT THE CHASE. Five changes, all evidence-driven:
   (5) DISRUPTION QUALITY test (LLM). A WARN-level disruption threat is only acceptable while the
       fundamentals are ACCELERATING. Active competitive displacement + decelerating growth =
       hard reject. This blocks the ISRG archetype without blocking BMY / LMT.
+
+v3.0: TRADING-SESSION CALENDAR. Purely additive — ZERO change to any gate, threshold or
+  survivor. out_summary.json now also carries session_date / session_index / sessions[],
+  the list of real US trading sessions (a closed day has no SPY bar, so holidays are
+  absent by construction). Days Held in the ledger becomes an index subtraction instead
+  of the LLM counting weekdays and recalling holidays from memory — which produced wrong
+  values (T and JNJ read 12 sessions when the true count was 10) and, worse, drifted the
+  Path-E TIME STOP that the whole early-entry model depends on. If the calendar cannot be
+  built the field is empty and the agent is instructed to leave Days Held untouched.
 
   ANTI-OVERFIT NOTE: no rule here is tuned to a single ticker. MAX_RISK_PCT, the EMA21 band and
   the RS threshold are structural risk parameters, and the two decisive filters (event anchor,
@@ -729,6 +738,38 @@ def scan_ticker(symbol, etf_cache, bench_cache, universe_source):
         return item
 
 # ----------------------------------------------------------------------------------
+# v3.0 — TRADING-SESSION CALENDAR
+# ----------------------------------------------------------------------------------
+def build_session_calendar(bars=400):
+    """
+    v3.0 — publish the REAL US trading calendar so the LLM never counts sessions itself.
+
+    Returns (sessions, last_session):
+      sessions      ascending list of ISO dates that had an actual SPY bar, i.e. real
+                    trading sessions. Holidays are not "filtered out" — they simply have
+                    no bar, so they were never there. Nothing to maintain, ever.
+      last_session  sessions[-1], the session the scan's prices belong to.
+
+    Days Held for any ledger row then becomes a pure index subtraction:
+        sessions.index(session_date) - sessions.index(entry_date)
+    No holiday table, no weekend arithmetic, no counting by hand.
+
+    Fully additive: on any failure it returns ([], None) and the scan continues
+    untouched. This function CANNOT change which tickers survive.
+    """
+    try:
+        hist = yf.download("SPY", period="2y", progress=False, auto_adjust=False)
+        if hist is None or hist.empty:
+            print("[session-calendar] empty SPY history; publishing empty calendar.")
+            return [], None
+        sessions = [d.date().isoformat() for d in hist.index][-bars:]
+        return sessions, (sessions[-1] if sessions else None)
+    except Exception as e:
+        print(f"[session-calendar] failed ({e}); publishing empty calendar.")
+        return [], None
+
+
+# ----------------------------------------------------------------------------------
 # MAIN
 # ----------------------------------------------------------------------------------
 def main():
@@ -764,6 +805,10 @@ def main():
     survivors_e  = [r["ticker"] for r in results if r.get("entry_path") == "E"]
     print(f"SURVIVORS {survivors}  (PathC={survivors_c} PathE={survivors_e})")
 
+    # v3.0 — trading-session calendar (additive; never affects survivors)
+    sessions_cal, last_session = build_session_calendar()
+    print(f"SESSION CALENDAR: {len(sessions_cal)} sessions, last={last_session}")
+
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUT_PATH.write_text(json.dumps(results, indent=2, default=str), encoding="utf-8")
     print(f"WROTE {OUT_PATH} ({len(results)} items, {len(survivors)} survivors)")
@@ -774,7 +819,11 @@ def main():
 
     summary = {
         "generated_utc": dt.datetime.utcnow().isoformat() + "Z",
-        "scanner_version": "2.9",
+        "scanner_version": "3.0",
+        # ---- v3.0: trading-session calendar (Days Held = index subtraction) ----
+        "session_date": last_session,
+        "session_index": (len(sessions_cal) - 1) if sessions_cal else None,
+        "sessions": sessions_cal,
         "universe_source": results[0]["universe_source"] if results else None,
         "n": len(results),
         "survivors": survivors,
