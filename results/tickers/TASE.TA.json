@@ -1,13 +1,13 @@
 {
   "ticker": "TASE.TA",
-  "price": 12200.0,
+  "price": 12000.0,
   "verdict": "NO_GO",
-  "go_count": 8,
-  "blocked_at": "Entry trigger (Path C + Path E both failed)",
+  "go_count": 11,
+  "blocked_at": "Relative Strength",
   "entry_path": null,
   "stop": 11258.55,
-  "risk_pct": 0.0772,
-  "target_20pct": 14640.0,
+  "risk_pct": 0.0618,
+  "target_20pct": 14400.0,
   "bounce_date": "2026-08-04",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -17,7 +17,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "ILA (agorot): yfinance price 12200.0 = ILS 122.00 (divide by 100). Stop/Target are in AGOROT too -> divide by 100 for ILS display. P/L% is currency-agnostic. NEVER read as USD.",
+      "detail": "ILA (agorot): yfinance price 12000.0 = ILS 120.00 (divide by 100). Stop/Target are in AGOROT too -> divide by 100 for ILS display. P/L% is currency-agnostic. NEVER read as USD.",
       "value": "ILA",
       "criterion": "agorot guardrail: .TA price is agorot; show ILS = price/100, not USD"
     },
@@ -33,63 +33,63 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "LIVE OVERRIDE: lagged daily close 11660.00 -> live 12200.00 (fast_info)",
-      "value": 12200.0,
+      "detail": "LIVE OVERRIDE: lagged daily close 12320.00 -> live 12000.00 (fast_info)",
+      "value": 12000.0,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "^TA125.TA 4050.62 > 200SMA 3942.03",
-      "value": 4050.62,
+      "detail": "^TA125.TA 4032.47 > 200SMA 3950.30",
+      "value": 4032.47,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "GO",
-      "detail": "52w range 177.2%",
-      "value": 1.7722,
+      "detail": "52w range 150.4%",
+      "value": 1.5039,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (6 touches)] | bounce=True | confirm[none] | close 12200.00 < EMA21 12438.28 | bounce_date=2026-08-04",
+      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[RSI-Div,Vol climax 2.52x] | close 12000.00 < EMA21 12338.18 | bounce_date=2026-08-04",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
     {
       "stage": 3,
       "name": "Bullish RSI divergence",
-      "status": "SKIP",
+      "status": "GO",
       "detail": "informational sub-signal",
-      "value": false,
+      "value": true,
       "criterion": "price LL & RSI HL"
     },
     {
       "stage": 3,
       "name": "Volume climax",
-      "status": "SKIP",
+      "status": "GO",
       "detail": "informational sub-signal",
-      "value": 1.39,
+      "value": 2.52,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
-      "status": "NO_GO",
-      "detail": "floor[horizontal support (6 touches)] | confirm[none] | price/EMA21 = 0.981 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.39x < 1.5x, no RSI-Div)",
-      "value": 0.981,
+      "status": "GO",
+      "detail": "floor[horizontal support (3 touches)] | confirm[RSI-Div,soft climax 2.52x] | price/EMA21 = 0.973 (band 0.85-1.15) | ELIGIBLE \u2014 UNCONFIRMED entry, requires LLM event anchor + 5-session time stop",
+      "value": 0.973,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-07 -1.98% -> stock -1.25% [fail] | B) 20d stock -4.3% vs ^TA125.TA -2.3% = excess -2.0% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-07 -1.98% -> stock -1.25% [fail] | B) 20d stock -2.4% vs ^TA125.TA -0.5% = excess -1.9% [fail] | passed_via=none",
       "value": -0.0125,
       "criterion": "red-day test OR 20d excess return >= +2% vs ^TA125.TA"
     },
@@ -113,8 +113,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-08-04 (in -1d, window 15-45)",
-      "value": -1,
+      "detail": "earnings 2026-08-04 (in -3d, window 15-45)",
+      "value": -3,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -129,8 +129,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 11258.55 is 7.7% below price 12200.00 (max 12%) | reward/risk vs +20% target = 2.59:1",
-      "value": 0.0772,
+      "detail": "stop 11258.55 is 6.2% below price 12000.00 (max 12%) | reward/risk vs +20% target = 3.24:1",
+      "value": 0.0618,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
@@ -169,7 +169,7 @@
       "stage": 3,
       "name": "Bounce catalyst anchor (Path E)",
       "status": "NEEDS_LLM",
-      "detail": "AI: the reversal started on bounce_date=2026-08-04 (pivot low 11430.00). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. Informational for a Path C entry.",
+      "detail": "AI: the reversal started on bounce_date=2026-08-04 (pivot low 11430.00). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. MANDATORY \u2014 this ticker is a PATH E (unconfirmed, pre-EMA21) candidate: NO cited dated event => REFUSE the entry.",
       "value": "2026-08-04",
       "criterion": "Path E requires a dated, cited event within 3 sessions of bounce_date"
     },

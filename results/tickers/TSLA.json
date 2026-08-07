@@ -1,13 +1,13 @@
 {
   "ticker": "TSLA",
-  "price": 321.55,
+  "price": 328.58,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
   "stop": 292.92,
-  "risk_pct": 0.089,
-  "target_20pct": 385.86,
+  "risk_pct": 0.1085,
+  "target_20pct": 394.3,
   "bounce_date": "2026-07-29",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -17,7 +17,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 321.55",
+      "detail": "USD 328.58",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,16 +33,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 321.55 == last close 321.55 (fresh, no override)",
-      "value": 321.55,
+      "detail": "live 328.58 == last close 328.58 (fresh, no override)",
+      "value": 328.58,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 769.79 > 200SMA 699.04",
-      "value": 769.79,
+      "detail": "SPY 773.26 > 200SMA 700.13",
+      "value": 773.26,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -57,7 +57,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 321.55 < EMA21 344.99 | bounce_date=2026-07-29",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 328.58 < EMA21 341.39 | bounce_date=2026-07-29",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,22 +74,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.87,
+      "value": 0.89,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | confirm[none] | price/EMA21 = 0.932 (band 0.85-1.15) | blocked: not on floor; no reversal confirm (vol 0.87x < 1.5x, no RSI-Div)",
-      "value": 0.932,
+      "detail": "floor[no floor near price] | confirm[none] | price/EMA21 = 0.962 (band 0.85-1.15) | blocked: not on floor; no reversal confirm (vol 0.89x < 1.5x, no RSI-Div)",
+      "value": 0.962,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -2.97% [fail] | B) 20d stock -18.4% vs SPY +3.3% = excess -21.7% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -2.97% [fail] | B) 20d stock -19.4% vs SPY +2.4% = excess -21.8% [fail] | passed_via=none",
       "value": -0.0297,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -97,8 +97,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "NO_GO",
-      "detail": "PEG 4.56 (>= 1.8)",
-      "value": 4.56,
+      "detail": "PEG 4.68 (>= 1.8)",
+      "value": 4.68,
       "criterion": "PEG < 1.8"
     },
     {
@@ -113,8 +113,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-21 (in 77d, window 15-45)",
-      "value": 77,
+      "detail": "earnings 2026-10-21 (in 75d, window 15-45)",
+      "value": 75,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -129,8 +129,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 292.92 is 8.9% below price 321.55 (max 12%) | reward/risk vs +20% target = 2.25:1",
-      "value": 0.089,
+      "detail": "stop 292.92 is 10.9% below price 328.58 (max 12%) | reward/risk vs +20% target = 1.84:1",
+      "value": 0.1085,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
