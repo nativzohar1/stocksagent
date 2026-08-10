@@ -1,13 +1,13 @@
 {
   "ticker": "TASE.TA",
-  "price": 12000.0,
+  "price": 11480.0,
   "verdict": "NO_GO",
   "go_count": 11,
   "blocked_at": "Relative Strength",
   "entry_path": null,
   "stop": 11258.55,
-  "risk_pct": 0.0618,
-  "target_20pct": 14400.0,
+  "risk_pct": 0.0193,
+  "target_20pct": 13776.0,
   "bounce_date": "2026-08-04",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -17,7 +17,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "ILA (agorot): yfinance price 12000.0 = ILS 120.00 (divide by 100). Stop/Target are in AGOROT too -> divide by 100 for ILS display. P/L% is currency-agnostic. NEVER read as USD.",
+      "detail": "ILA (agorot): yfinance price 11480.0 = ILS 114.80 (divide by 100). Stop/Target are in AGOROT too -> divide by 100 for ILS display. P/L% is currency-agnostic. NEVER read as USD.",
       "value": "ILA",
       "criterion": "agorot guardrail: .TA price is agorot; show ILS = price/100, not USD"
     },
@@ -33,31 +33,31 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "LIVE OVERRIDE: lagged daily close 12320.00 -> live 12000.00 (fast_info)",
-      "value": 12000.0,
+      "detail": "LIVE OVERRIDE: lagged daily close 12000.00 -> live 11480.00 (fast_info)",
+      "value": 11480.0,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "^TA125.TA 4032.47 > 200SMA 3950.30",
-      "value": 4032.47,
+      "detail": "^TA125.TA 4065.60 > 200SMA 3954.82",
+      "value": 4065.6,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "GO",
-      "detail": "52w range 150.4%",
-      "value": 1.5039,
+      "detail": "52w range 149.3%",
+      "value": 1.4933,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[RSI-Div,Vol climax 2.52x] | close 12000.00 < EMA21 12338.18 | bounce_date=2026-08-04",
+      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[RSI-Div,Vol climax 2.53x] | close 11480.00 < EMA21 12286.61 | bounce_date=2026-08-04",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,22 +74,22 @@
       "name": "Volume climax",
       "status": "GO",
       "detail": "informational sub-signal",
-      "value": 2.52,
+      "value": 2.53,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "GO",
-      "detail": "floor[horizontal support (3 touches)] | confirm[RSI-Div,soft climax 2.52x] | price/EMA21 = 0.973 (band 0.85-1.15) | ELIGIBLE \u2014 UNCONFIRMED entry, requires LLM event anchor + 5-session time stop",
-      "value": 0.973,
+      "detail": "floor[horizontal support (3 touches)] | confirm[RSI-Div,soft climax 2.53x] | price/EMA21 = 0.934 (band 0.85-1.15) | ELIGIBLE \u2014 UNCONFIRMED entry, requires LLM event anchor + 5-session time stop",
+      "value": 0.934,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-07 -1.98% -> stock -1.25% [fail] | B) 20d stock -2.4% vs ^TA125.TA -0.5% = excess -1.9% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-07 -1.98% -> stock -1.25% [fail] | B) 20d stock -5.2% vs ^TA125.TA +1.5% = excess -6.7% [fail] | passed_via=none",
       "value": -0.0125,
       "criterion": "red-day test OR 20d excess return >= +2% vs ^TA125.TA"
     },
@@ -113,8 +113,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-08-04 (in -3d, window 15-45)",
-      "value": -3,
+      "detail": "earnings 2026-08-04 (in -6d, window 15-45)",
+      "value": -6,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -129,8 +129,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 11258.55 is 6.2% below price 12000.00 (max 12%) | reward/risk vs +20% target = 3.24:1",
-      "value": 0.0618,
+      "detail": "stop 11258.55 is 1.9% below price 11480.00 (max 12%) | reward/risk vs +20% target = 10.37:1",
+      "value": 0.0193,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
