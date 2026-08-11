@@ -17,8 +17,8 @@
       "stage": 0,
       "name": "Data availability",
       "status": "NO_GO",
-      "detail": "only 39 bars",
-      "value": 39,
+      "detail": "only 40 bars",
+      "value": 40,
       "criterion": ">=200 daily bars"
     }
   ]

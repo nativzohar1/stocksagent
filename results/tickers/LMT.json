@@ -1,13 +1,13 @@
 {
   "ticker": "LMT",
-  "price": 603.16,
+  "price": 597.77,
   "verdict": "GO_PENDING_THESIS",
   "go_count": 12,
   "blocked_at": null,
   "entry_path": "C",
   "stop": 548.2,
-  "risk_pct": 0.0911,
-  "target_20pct": 723.79,
+  "risk_pct": 0.0829,
+  "target_20pct": 717.32,
   "bounce_date": "2026-07-30",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -17,7 +17,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 603.16",
+      "detail": "USD 597.77",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,31 +33,31 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 603.16 == last close 603.16 (fresh, no override)",
-      "value": 603.16,
+      "detail": "live 597.77 == last close 597.77 (fresh, no override)",
+      "value": 597.77,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 773.03 > 200SMA 700.67",
-      "value": 773.03,
+      "detail": "SPY 770.56 > 200SMA 701.21",
+      "value": 770.56,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "GO",
-      "detail": "52w range 66.5%",
-      "value": 0.6647,
+      "detail": "52w range 66.1%",
+      "value": 0.6613,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "GO",
-      "detail": "floor[Fib 0.5@587.32; horizontal support (5 touches)] | bounce=True | confirm[RSI-Div] | close 603.16 > EMA21 564.68 | bounce_date=2026-07-30",
+      "detail": "floor[Fib 0.5@587.32; horizontal support (4 touches)] | bounce=True | confirm[RSI-Div] | close 597.77 > EMA21 567.69 | bounce_date=2026-07-30",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,7 +74,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.93,
+      "value": 0.95,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -89,7 +89,7 @@
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -2.08% [fail] | B) 20d stock +15.8% vs SPY +3.2% = excess +12.7% [PASS] | passed_via=rolling-20d",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -2.08% [fail] | B) 20d stock +16.1% vs SPY +2.5% = excess +13.6% [PASS] | passed_via=rolling-20d",
       "value": -0.0208,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -97,8 +97,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.22 (< 1.8)",
-      "value": 1.22,
+      "detail": "PEG 1.25 (< 1.8)",
+      "value": 1.25,
       "criterion": "PEG < 1.8"
     },
     {
@@ -113,8 +113,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-20 (in 71d, window 15-45)",
-      "value": 71,
+      "detail": "earnings 2026-10-20 (in 70d, window 15-45)",
+      "value": 70,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -129,8 +129,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 548.20 is 9.1% below price 603.16 (max 12%) | reward/risk vs +20% target = 2.19:1",
-      "value": 0.0911,
+      "detail": "stop 548.20 is 8.3% below price 597.77 (max 12%) | reward/risk vs +20% target = 2.41:1",
+      "value": 0.0829,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
