@@ -1,13 +1,13 @@
 {
   "ticker": "MCD",
-  "price": 275.7,
+  "price": 272.25,
   "verdict": "NO_GO",
-  "go_count": 7,
+  "go_count": 9,
   "blocked_at": "Volatility (Upside DNA)",
   "entry_path": null,
   "stop": 260.35,
-  "risk_pct": 0.0557,
-  "target_20pct": 330.84,
+  "risk_pct": 0.0437,
+  "target_20pct": 326.7,
   "bounce_date": "2026-08-04",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -17,7 +17,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 275.7",
+      "detail": "USD 272.25",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,16 +33,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 275.70 == last close 275.70 (fresh, no override)",
-      "value": 275.7,
+      "detail": "live 272.25 == last close 272.25 (fresh, no override)",
+      "value": 272.25,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 772.49 > 200SMA 701.74",
-      "value": 772.49,
+      "detail": "SPY 777.88 > 200SMA 702.27",
+      "value": 777.88,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -56,17 +56,17 @@
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
-      "status": "NO_GO",
-      "detail": "floor[horizontal support (10 touches)] | bounce=True | confirm[none] | close 275.70 > EMA21 271.96 | bounce_date=2026-08-04",
+      "status": "GO",
+      "detail": "floor[horizontal support (10 touches)] | bounce=True | confirm[RSI-Div] | close 272.25 > EMA21 271.99 | bounce_date=2026-08-04",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
     {
       "stage": 3,
       "name": "Bullish RSI divergence",
-      "status": "SKIP",
+      "status": "GO",
       "detail": "informational sub-signal",
-      "value": false,
+      "value": true,
       "criterion": "price LL & RSI HL"
     },
     {
@@ -80,16 +80,16 @@
     {
       "stage": 3,
       "name": "Early entry (Path E)",
-      "status": "NO_GO",
-      "detail": "floor[horizontal support (10 touches)] | confirm[none] | price/EMA21 = 1.014 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.04x < 1.5x, no RSI-Div)",
-      "value": 1.014,
-      "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
+      "status": "SKIP",
+      "detail": "Path C already satisfied (confirmed entry) \u2014 Path E not needed",
+      "value": null,
+      "criterion": "floor + bounce + soft confirm + EMA21 band, WITHOUT the EMA21 reclaim"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.55% [fail] | B) 20d stock +4.1% vs SPY +2.3% = excess +1.7% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.55% [fail] | B) 20d stock -0.4% vs SPY +3.6% = excess -4.1% [fail] | passed_via=none",
       "value": -0.0055,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -113,8 +113,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-11-05 (in 85d, window 15-45)",
-      "value": 85,
+      "detail": "earnings 2026-11-05 (in 84d, window 15-45)",
+      "value": 84,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -129,8 +129,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 260.35 is 5.6% below price 275.70 (max 12%) | reward/risk vs +20% target = 3.59:1",
-      "value": 0.0557,
+      "detail": "stop 260.35 is 4.4% below price 272.25 (max 12%) | reward/risk vs +20% target = 4.58:1",
+      "value": 0.0437,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
