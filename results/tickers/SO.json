@@ -1,13 +1,13 @@
 {
   "ticker": "SO",
-  "price": 92.79,
+  "price": 92.8,
   "verdict": "NO_GO",
   "go_count": 6,
   "blocked_at": "Volatility (Upside DNA)",
   "entry_path": null,
   "stop": 89.66,
-  "risk_pct": 0.0337,
-  "target_20pct": 111.35,
+  "risk_pct": 0.0338,
+  "target_20pct": 111.36,
   "bounce_date": "2026-08-11",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -17,7 +17,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 92.79",
+      "detail": "USD 92.8",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,16 +33,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 92.79 == last close 92.79 (fresh, no override)",
-      "value": 92.79,
+      "detail": "live 92.80 == last close 92.80 (fresh, no override)",
+      "value": 92.8,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 777.88 > 200SMA 702.27",
-      "value": 777.88,
+      "detail": "SPY 776.34 > 200SMA 702.75",
+      "value": 776.34,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -57,7 +57,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@94.14 / Fib 0.618@92.93; horizontal support (25 touches)] | bounce=True | confirm[none] | close 92.79 < EMA21 93.81 | bounce_date=2026-08-11",
+      "detail": "floor[Fib 0.5@94.14 / Fib 0.618@92.93; horizontal support (26 touches)] | bounce=True | confirm[none] | close 92.80 < EMA21 93.71 | bounce_date=2026-08-11",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,22 +74,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.31,
+      "value": 0.86,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@94.14 / Fib 0.618@92.93; horizontal support (25 touches)] | confirm[none] | price/EMA21 = 0.989 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.31x < 1.5x, no RSI-Div)",
-      "value": 0.989,
+      "detail": "floor[Fib 0.5@94.14 / Fib 0.618@92.93; horizontal support (26 touches)] | confirm[none] | price/EMA21 = 0.990 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.86x < 1.5x, no RSI-Div)",
+      "value": 0.99,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.75% [fail] | B) 20d stock -3.4% vs SPY +3.6% = excess -7.0% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.75% [fail] | B) 20d stock -2.6% vs SPY +4.4% = excess -7.1% [fail] | passed_via=none",
       "value": -0.0075,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -113,8 +113,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-29 (in 77d, window 15-45)",
-      "value": 77,
+      "detail": "earnings 2026-10-29 (in 76d, window 15-45)",
+      "value": 76,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -129,8 +129,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 89.66 is 3.4% below price 92.79 (max 12%) | reward/risk vs +20% target = 5.93:1",
-      "value": 0.0337,
+      "detail": "stop 89.66 is 3.4% below price 92.80 (max 12%) | reward/risk vs +20% target = 5.91:1",
+      "value": 0.0338,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

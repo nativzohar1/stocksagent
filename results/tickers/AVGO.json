@@ -1,13 +1,13 @@
 {
   "ticker": "AVGO",
-  "price": 417.82,
+  "price": 392.99,
   "verdict": "NO_GO",
-  "go_count": 11,
+  "go_count": 10,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
   "stop": 368.99,
-  "risk_pct": 0.1169,
-  "target_20pct": 501.38,
+  "risk_pct": 0.0611,
+  "target_20pct": 471.59,
   "bounce_date": "2026-08-03",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -17,7 +17,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 417.82",
+      "detail": "USD 392.99",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,16 +33,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 417.82 == last close 417.82 (fresh, no override)",
-      "value": 417.82,
+      "detail": "live 392.99 == last close 392.99 (fresh, no override)",
+      "value": 392.99,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SOXX 550.74 > 200SMA 413.64",
-      "value": 550.74,
+      "detail": "SOXX 550.42 > 200SMA 414.87",
+      "value": 550.42,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -57,7 +57,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (6 touches)] | bounce=True | confirm[none] | close 417.82 > EMA21 403.59 | bounce_date=2026-08-03",
+      "detail": "floor[Fib 0.5@391.86; horizontal support (4 touches)] | bounce=True | confirm[none] | close 392.99 < EMA21 402.62 | bounce_date=2026-08-03",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,22 +74,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.6,
+      "value": 1.13,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (6 touches)] | confirm[none] | price/EMA21 = 1.035 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.6x < 1.5x, no RSI-Div)",
-      "value": 1.035,
+      "detail": "floor[Fib 0.5@391.86; horizontal support (4 touches)] | confirm[none] | price/EMA21 = 0.976 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.13x < 1.5x, no RSI-Div)",
+      "value": 0.976,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
-      "status": "GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -2.78% [fail] | B) 20d stock +11.6% vs SPY +3.6% = excess +8.0% [PASS] | passed_via=rolling-20d",
+      "status": "NO_GO",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -2.78% [fail] | B) 20d stock +6.0% vs SPY +4.4% = excess +1.5% [fail] | passed_via=none",
       "value": -0.0278,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -113,8 +113,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "GO",
-      "detail": "earnings 2026-09-02 (in 20d, window 15-45)",
-      "value": 20,
+      "detail": "earnings 2026-09-02 (in 19d, window 15-45)",
+      "value": 19,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -129,8 +129,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 368.99 is 11.7% below price 417.82 (max 12%) | reward/risk vs +20% target = 1.71:1",
-      "value": 0.1169,
+      "detail": "stop 368.99 is 6.1% below price 392.99 (max 12%) | reward/risk vs +20% target = 3.27:1",
+      "value": 0.0611,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

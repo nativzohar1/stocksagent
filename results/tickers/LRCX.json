@@ -1,13 +1,13 @@
 {
   "ticker": "LRCX",
-  "price": 337.01,
+  "price": 332.36,
   "verdict": "NO_GO",
   "go_count": 7,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
   "stop": 272.69,
-  "risk_pct": 0.1909,
-  "target_20pct": 404.41,
+  "risk_pct": 0.1795,
+  "target_20pct": 398.83,
   "bounce_date": "2026-08-03",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -17,7 +17,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 337.01",
+      "detail": "USD 332.36",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,16 +33,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 337.01 == last close 337.01 (fresh, no override)",
-      "value": 337.01,
+      "detail": "live 332.36 == last close 332.36 (fresh, no override)",
+      "value": 332.36,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SOXX 550.74 > 200SMA 413.64",
-      "value": 550.74,
+      "detail": "SOXX 550.42 > 200SMA 414.87",
+      "value": 550.42,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -57,7 +57,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 337.01 > EMA21 315.03 | bounce_date=2026-08-03",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 332.36 > EMA21 316.61 | bounce_date=2026-08-03",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -81,15 +81,15 @@
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | confirm[none] | price/EMA21 = 1.070 (band 0.85-1.15) | blocked: not on floor; no reversal confirm (vol 0.72x < 1.5x, no RSI-Div)",
-      "value": 1.07,
+      "detail": "floor[no floor near price] | confirm[none] | price/EMA21 = 1.050 (band 0.85-1.15) | blocked: not on floor; no reversal confirm (vol 0.72x < 1.5x, no RSI-Div)",
+      "value": 1.05,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -6.40% [fail] | B) 20d stock +5.0% vs SPY +3.6% = excess +1.4% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -6.40% [fail] | B) 20d stock +6.1% vs SPY +4.4% = excess +1.6% [fail] | passed_via=none",
       "value": -0.064,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -113,8 +113,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-21 (in 69d, window 15-45)",
-      "value": 69,
+      "detail": "earnings 2026-10-21 (in 68d, window 15-45)",
+      "value": 68,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -129,8 +129,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "NO_GO",
-      "detail": "stop 272.69 is 19.1% below price 337.01 (max 12%) | reward/risk vs +20% target = 1.05:1",
-      "value": 0.1909,
+      "detail": "stop 272.69 is 18.0% below price 332.36 (max 12%) | reward/risk vs +20% target = 1.11:1",
+      "value": 0.1795,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
