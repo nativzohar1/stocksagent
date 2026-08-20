@@ -41,8 +41,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 769.06 > 200SMA 704.11",
-      "value": 769.06,
+      "detail": "SPY 762.60 > 200SMA 704.54",
+      "value": 762.6,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -57,7 +57,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (6 touches)] | bounce=True | confirm[none] | close 93.65 < EMA21 98.67 | bounce_date=2026-08-11",
+      "detail": "floor[horizontal support (6 touches)] | bounce=True | confirm[none] | close 93.65 < EMA21 98.22 | bounce_date=2026-08-11",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -81,15 +81,15 @@
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (6 touches)] | confirm[none] | price/EMA21 = 0.949 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.14x < 1.5x, no RSI-Div)",
-      "value": 0.949,
+      "detail": "floor[horizontal support (6 touches)] | confirm[none] | price/EMA21 = 0.953 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.14x < 1.5x, no RSI-Div)",
+      "value": 0.953,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -3.13% [fail] | B) 20d stock -12.8% vs SPY +2.9% = excess -15.7% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -3.13% [fail] | B) 20d stock -12.4% vs SPY +3.3% = excess -15.7% [fail] | passed_via=none",
       "value": -0.0313,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -97,8 +97,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 0.26 (< 1.8)",
-      "value": 0.26,
+      "detail": "PEG 0.25 (< 1.8)",
+      "value": 0.25,
       "criterion": "PEG < 1.8"
     },
     {
@@ -113,8 +113,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-28 (in 70d, window 15-45)",
-      "value": 70,
+      "detail": "earnings 2026-10-28 (in 69d, window 15-45)",
+      "value": 69,
       "criterion": "earnings in 15-45 days"
     },
     {

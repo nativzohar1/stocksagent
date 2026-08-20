@@ -1,13 +1,13 @@
 {
   "ticker": "CL",
-  "price": 90.87,
+  "price": 89.7,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Volatility (Upside DNA)",
   "entry_path": null,
   "stop": 88.13,
-  "risk_pct": 0.0302,
-  "target_20pct": 109.04,
+  "risk_pct": 0.0175,
+  "target_20pct": 107.64,
   "bounce_date": "2026-08-17",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -17,7 +17,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 90.87",
+      "detail": "USD 89.7",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,16 +33,16 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 90.87 == last close 90.87 (fresh, no override)",
-      "value": 90.87,
+      "detail": "live 89.70 == last close 89.70 (fresh, no override)",
+      "value": 89.7,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 769.06 > 200SMA 704.11",
-      "value": 769.06,
+      "detail": "SPY 762.60 > 200SMA 704.54",
+      "value": 762.6,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -57,7 +57,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@89.74; horizontal support (15 touches)] | bounce=True | confirm[none] | close 90.87 < EMA21 91.84 | bounce_date=2026-08-17",
+      "detail": "floor[Fib 0.5@89.74 / Fib 0.618@87.75; horizontal support (17 touches)] | bounce=True | confirm[none] | close 89.70 < EMA21 91.64 | bounce_date=2026-08-17",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -81,15 +81,15 @@
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@89.74; horizontal support (15 touches)] | confirm[none] | price/EMA21 = 0.989 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.09x < 1.5x, no RSI-Div)",
-      "value": 0.989,
+      "detail": "floor[Fib 0.5@89.74 / Fib 0.618@87.75; horizontal support (17 touches)] | confirm[none] | price/EMA21 = 0.979 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.09x < 1.5x, no RSI-Div)",
+      "value": 0.979,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock 0.82% [PASS] | B) 20d stock -0.8% vs SPY +2.9% = excess -3.7% [fail] | passed_via=red-day",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock 0.82% [PASS] | B) 20d stock -0.4% vs SPY +3.3% = excess -3.7% [fail] | passed_via=red-day",
       "value": 0.0082,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -97,8 +97,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.76 (< 1.8)",
-      "value": 1.76,
+      "detail": "PEG 1.75 (< 1.8)",
+      "value": 1.75,
       "criterion": "PEG < 1.8"
     },
     {
@@ -113,8 +113,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-30 (in 72d, window 15-45)",
-      "value": 72,
+      "detail": "earnings 2026-10-30 (in 71d, window 15-45)",
+      "value": 71,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -129,8 +129,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 88.13 is 3.0% below price 90.87 (max 12%) | reward/risk vs +20% target = 6.63:1",
-      "value": 0.0302,
+      "detail": "stop 88.13 is 1.8% below price 89.70 (max 12%) | reward/risk vs +20% target = 11.43:1",
+      "value": 0.0175,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
