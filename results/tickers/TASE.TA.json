@@ -33,7 +33,7 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "LIVE OVERRIDE: lagged daily close 11330.00 -> live 11500.00 (fast_info)",
+      "detail": "live 11490.00 == last close 11500.00 (fresh, no override)",
       "value": 11500.0,
       "criterion": "patch lagged daily bar with live price"
     },
@@ -41,8 +41,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "^TA125.TA 4039.99 > 200SMA 3991.49",
-      "value": 4039.99,
+      "detail": "^TA125.TA 4040.89 > 200SMA 3994.94",
+      "value": 4040.89,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -57,7 +57,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (4 touches)] | bounce=True | confirm[none] | close 11500.00 < EMA21 11927.49 | bounce_date=2026-08-13",
+      "detail": "floor[horizontal support (4 touches)] | bounce=True | confirm[none] | close 11500.00 < EMA21 11874.58 | bounce_date=2026-08-13",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,22 +74,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.29,
+      "value": 1.11,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (4 touches)] | confirm[none] | price/EMA21 = 0.964 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.29x < 1.5x, no RSI-Div)",
-      "value": 0.964,
+      "detail": "floor[horizontal support (4 touches)] | confirm[none] | price/EMA21 = 0.968 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.11x < 1.5x, no RSI-Div)",
+      "value": 0.968,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "A) red day 2026-07-27 -1.87% -> stock 0.39% [PASS] | B) 20d stock -8.3% vs ^TA125.TA -2.2% = excess -6.1% [fail] | passed_via=red-day",
+      "detail": "A) red day 2026-07-27 -1.87% -> stock 0.39% [PASS] | B) 20d stock -10.9% vs ^TA125.TA -2.8% = excess -8.1% [fail] | passed_via=red-day",
       "value": 0.0039,
       "criterion": "red-day test OR 20d excess return >= +2% vs ^TA125.TA"
     },
@@ -113,8 +113,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-08-04 (in -16d, window 15-45)",
-      "value": -16,
+      "detail": "earnings 2026-08-04 (in -17d, window 15-45)",
+      "value": -17,
       "criterion": "earnings in 15-45 days"
     },
     {
