@@ -88,6 +88,14 @@ v3.5 RELIABILITY HARDENING. **ZERO changes to any gate, threshold, formula or ve
   out_summary.json additionally publishes run_health{} (coverage_pct, n_data_failures, n_errors,
   degraded_run, yfinance_version, universe_kind, abort threshold) for the Data-Health block.
 
+v3.6 BENCHMARK BASELINE. **ZERO changes to any gate, threshold, formula or verdict rule.**
+  out_summary.json now publishes benchmark{} — SPY's dividend-adjusted close on the first real
+  trading session on/after BENCHMARK_BASE_DATE (the ledger's capital start date), today's close,
+  and the total return between them. Absolute book return in a rising market is not evidence of
+  skill; without this field "+4.9%" cannot be read as beat or miss. Everything is derived from
+  history the scanner already had, so no number enters the system from outside the JSON.
+  Fully additive: on any failure the key is null and the scan is untouched.
+
   ANTI-OVERFIT NOTE: no rule here is tuned to a single ticker. MAX_RISK_PCT, the EMA21 band and
   the RS threshold are structural risk parameters, and the two decisive filters (event anchor,
   disruption quality) are qualitative and must be evidenced with a dated, cited source by the
@@ -105,7 +113,7 @@ import yfinance as yf
 # ----------------------------------------------------------------------------------
 # CONFIG
 # ----------------------------------------------------------------------------------
-SCANNER_VERSION  = "3.5"
+SCANNER_VERSION  = "3.6"
 
 # ---- v3.5 TEST-RUN SWITCH (opt-in, default = exactly the v3.0 behaviour) ------------
 # SCAN_FORCE_RUN=1  -> bypass the weekend/holiday guard so the FULL pipeline can be smoke
@@ -173,6 +181,12 @@ ETF_BROAD  = "SPY"     # everything else
 
 # Market benchmark for Relative Strength — US default
 RS_BENCHMARK = "SPY"
+
+# v3.6 — benchmark baseline for the book's alpha comparison.
+# This is the ledger's capital start date. The scanner resolves the first REAL trading
+# session on/after it and publishes SPY's dividend-adjusted close there, so the agent can
+# state buy-and-hold return without sourcing a single number from outside the JSON.
+BENCHMARK_BASE_DATE = "2026-06-28"
 
 # v2.7 — Israeli market: TA-125 index proxy (used for both RS and Regime of ".TA" tickers)
 ISRAELI_SUFFIX = ".TA"
@@ -1086,6 +1100,53 @@ def build_session_calendar(bars=400):
 
 
 # ----------------------------------------------------------------------------------
+# v3.6 — BENCHMARK BASELINE (book alpha)
+# ----------------------------------------------------------------------------------
+def build_benchmark_block():
+    """
+    v3.6 — publish the book's benchmark so "did we beat the market" is a FACT in the JSON
+    rather than a number someone has to look up. Absolute return in a rising market is not
+    evidence of skill; this is the field that turns +4.9% into beat-or-miss.
+
+    Uses SPY's DIVIDEND-ADJUSTED closes (auto_adjust=True), i.e. TOTAL return. A price-only
+    comparison silently flatters the book by the benchmark's dividend yield for the period.
+
+    base_session is the first REAL trading session on/after BENCHMARK_BASE_DATE — the same
+    "first session >= date" rule the ledger uses for Days Held, so a capital start date that
+    landed on a weekend resolves identically on both sides.
+
+    Fully additive: on ANY failure it returns None, the key is published as null, and the
+    scan is untouched. This function CANNOT change which tickers survive.
+    """
+    try:
+        h = retry_call(lambda: yf.Ticker(RS_BENCHMARK).history(period="2y", auto_adjust=True),
+                       what=f"benchmark baseline {RS_BENCHMARK}")
+        close = h["Close"].dropna()
+        if close.empty:
+            raise ValueError("empty benchmark history")
+        dates = [d.date().isoformat() for d in close.index]
+        base_i = next((i for i, d in enumerate(dates) if d >= BENCHMARK_BASE_DATE), None)
+        if base_i is None:
+            raise ValueError(f"no session on/after {BENCHMARK_BASE_DATE}")
+        base_close, last_close = float(close.iloc[base_i]), float(close.iloc[-1])
+        if base_close <= 0:
+            raise ValueError("non-positive base close")
+        return {
+            "ticker": RS_BENCHMARK,
+            "base_date_requested": BENCHMARK_BASE_DATE,
+            "base_session": dates[base_i],
+            "base_close": round(base_close, 2),
+            "last_session": dates[-1],
+            "last_close": round(last_close, 2),
+            "return_pct": round(last_close / base_close - 1.0, 4),
+            "basis": "dividend-adjusted closes (total return)",
+        }
+    except Exception as e:
+        _log_error(f"[benchmark] baseline unavailable ({e}); publishing null.")
+        return None
+
+
+# ----------------------------------------------------------------------------------
 # MAIN
 # ----------------------------------------------------------------------------------
 def _write_run_status(payload):
@@ -1124,6 +1185,16 @@ def main():
 
     tickers, universe_source, universe_kind = fetch_universe()
     print(f"UNIVERSE {{count: {len(tickers)}, kind: {universe_kind}, source: {universe_source}}}")
+
+    # v3.6 — benchmark baseline for the book's alpha line (additive, cannot affect survivors).
+    bench_block = build_benchmark_block()
+    if bench_block:
+        print(f"BENCHMARK {bench_block['ticker']}: {bench_block['base_session']} "
+              f"{bench_block['base_close']} -> {bench_block['last_session']} "
+              f"{bench_block['last_close']} = {bench_block['return_pct']*100:+.2f}% "
+              f"({bench_block['basis']})")
+    else:
+        print("BENCHMARK: unavailable — published as null")
 
     etf_cache = {}
     bench_cache = {}
@@ -1213,6 +1284,8 @@ def main():
         "params": {"MAX_RISK_PCT": MAX_RISK_PCT, "EMA_BAND": [EMA_BAND_BELOW, EMA_BAND_ABOVE],
                    "RS_ROLL_WINDOW": RS_ROLL_WINDOW, "RS_ROLL_MIN_EXCESS": RS_ROLL_MIN_EXCESS,
                    "PATH_E_TIME_STOP": PATH_E_TIME_STOP},
+        # ---- v3.6: benchmark baseline, so the agent can state alpha, not just return ----
+        "benchmark": bench_block,
         # ---- v3.5: run health, for the agent's Data-Health block ----
         "run_health": run_health,
         "stocks": [
