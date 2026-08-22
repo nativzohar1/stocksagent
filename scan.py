@@ -162,6 +162,10 @@ MIN_BARS            = 200    # unchanged v3.0 requirement
 STALE_HARD_SESSIONS = 3      # last bar >= 3 sessions behind the session date = HARD data fault
 ABORT_MAX_FAIL_PCT  = 0.10   # >10% of the universe failing => DO NOT overwrite results/
 
+# v3.6 — max share of the universe allowed to FAIL BENCHMARK INDEX ALIGNMENT before the run is
+# treated as degraded. Above this it is a plumbing fault, not a hard market.
+RS_ALIGN_MAX_PCT    = 0.05
+
 UNIVERSE_CACHE   = RESULTS_DIR / "universe_last_good.json"
 RUN_STATUS_PATH  = RESULTS_DIR / "run_status.json"
 USER_AGENT       = f"Mozilla/5.0 (stocksagent/{SCANNER_VERSION})"
@@ -277,6 +281,38 @@ def safe_call(fn, what="call", default=None, allow_empty=True):
 #   3. results/universe_last_good.json (self-healing cache, written on every live success)
 #   4. SP100_PARTIAL_FALLBACK          (45 names, "everything burned" only)
 # ----------------------------------------------------------------------------------
+def _naive_index(obj):
+    """
+    v3.6 FIX — force a tz-NAIVE, midnight-normalised DatetimeIndex.
+
+    yfinance is INCONSISTENT about timezones: Ticker.history() returns a tz-AWARE index
+    (America/New_York) while yf.download() returns a tz-NAIVE one. Mixing the two breaks
+    every date alignment SILENTLY:
+        ts in df.index               -> always False
+        series.reindex(other.index)  -> all NaN
+        pd.concat(..., join="inner") -> EMPTY frame (or raises)
+
+    That is exactly what v3.5's batch path did to Relative Strength: BOTH legs of the dual-mode
+    test compare the stock frame (batch, naive) against the benchmark series (Ticker.history,
+    aware), so RS returned NO_GO for the ENTIRE universe. The scan still reported 100% coverage,
+    exit code 0 and a green Action — it just produced zero survivors, every single day, and the
+    LLM is instructed to treat a zero-survivor run as CORRECT. A silent, self-consistent,
+    permanently wrong scan is the worst failure mode this system can have.
+
+    Values were never the problem (auto_adjust=True was already passed explicitly). The INDEX
+    was. Normalising at every entry point is the only durable fix.
+    """
+    try:
+        idx = pd.DatetimeIndex(obj.index)
+        if idx.tz is not None:
+            idx = idx.tz_localize(None)
+        obj = obj.copy()
+        obj.index = idx.normalize()
+        return obj
+    except Exception:
+        return obj
+
+
 def _norm_symbols(raw):
     """v3.0 normalisation, verbatim: alpha-only, <=6 chars, BRK.B -> BRK-B, order preserved."""
     out = []
@@ -415,7 +451,7 @@ def download_history_batch(symbols):
                     df = raw
                 df = df.dropna(how="all").dropna()
                 if not df.empty:
-                    out[sym] = df
+                    out[sym] = _naive_index(df)   # v3.6 FIX: yf.download() is tz-naive
             except Exception:
                 continue
         print(f"[{what}] ok for {sum(1 for s in chunk if s in out)}/{len(chunk)}")
@@ -543,7 +579,7 @@ def check_data_integrity(symbol, df, expected_session, sessions, hist_src):
 def get_benchmark_close(symbol, bench_cache):
     if symbol not in bench_cache:
         bench_cache[symbol] = safe_call(
-            lambda: yf.Ticker(symbol).history(period="6mo")["Close"].dropna(),
+            lambda: _naive_index(yf.Ticker(symbol).history(period="6mo")["Close"].dropna()),
             what=f"benchmark history {symbol}", default=None)
     return bench_cache[symbol]
 
@@ -944,7 +980,7 @@ def scan_ticker(symbol, etf_cache, bench_cache, universe_source,
         if hist_cache is not None and symbol in hist_cache:
             df, hist_src = hist_cache[symbol].copy(), "batch"
         if df is None or len(df) < MIN_BARS:
-            single = safe_call(lambda: tk.history(period=HISTORY_PERIOD).dropna(),
+            single = safe_call(lambda: _naive_index(tk.history(period=HISTORY_PERIOD).dropna()),
                                what=f"history {symbol}", default=None, allow_empty=False)
             if single is not None and (df is None or len(single) > len(df)):
                 df, hist_src = single, ("single" if hist_src == "none" else "single(after batch)")
@@ -1220,7 +1256,29 @@ def main():
     fail_reasons = {r["ticker"]: r["blocked_at"] for r in results if _is_data_failure(r)}
     fail_pct = (len(failed) / n) if n else 1.0
     coverage_pct = round(1.0 - fail_pct, 4)
-    degraded = fail_pct > ABORT_MAX_FAIL_PCT
+
+    # ---- v3.6 GUARD: Relative-Strength INDEX ALIGNMENT ----
+    # "no aligned red-day bar" can only mean the benchmark's worst-red-day timestamp was not
+    # found in the stock's index AT ALL — a structural alignment fault, never a market outcome.
+    # A legitimate market failure reads "red day <date> ... [fail]". If this fires across the
+    # universe, every survivor list from the run is meaningless, so it must abort rather than
+    # publish a confident zero. This is the guard the v3.5 timezone bug had no way to trip.
+    def _rs_unaligned(r):
+        for g in r.get("gates", []):
+            if g.get("name") == "Relative Strength":
+                d = g.get("detail") or ""
+                return ("no aligned red-day bar" in d) and ("passed_via=none" in d)
+        return False
+
+    rs_unaligned = [r["ticker"] for r in results if _rs_unaligned(r)]
+    rs_align_pct = (len(rs_unaligned) / n) if n else 0.0
+    rs_align_fault = rs_align_pct > RS_ALIGN_MAX_PCT
+    if rs_align_fault:
+        _log_error(f"[rs-alignment] {len(rs_unaligned)}/{n} tickers could not align to the "
+                   f"benchmark index ({rs_align_pct*100:.1f}% > {RS_ALIGN_MAX_PCT*100:.0f}%) "
+                   f"— index/timezone mismatch, NOT market conditions.")
+
+    degraded = (fail_pct > ABORT_MAX_FAIL_PCT) or rs_align_fault
 
     run_health = {
         "scanner_version": SCANNER_VERSION,
@@ -1233,6 +1291,10 @@ def main():
         "coverage_pct": coverage_pct,
         "abort_max_fail_pct": ABORT_MAX_FAIL_PCT,
         "degraded_run": bool(degraded),
+        "degradation_reason": ("rs_index_alignment" if rs_align_fault
+                              else ("data_failures" if fail_pct > ABORT_MAX_FAIL_PCT else None)),
+        "rs_unaligned": len(rs_unaligned),
+        "rs_alignment_fault": bool(rs_align_fault),
         "batch_history_hits": len(hist_cache),
         "n_errors": len(RUN_ERRORS),
         "failures": fail_reasons,
