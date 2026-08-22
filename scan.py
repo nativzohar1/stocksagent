@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-scan.py  —  Decoupling Hunter / Institutional Swing Scanner v3.0 (Mega-Cap Monster Radar)
+scan.py  —  Decoupling Hunter / Institutional Swing Scanner v3.5 (Mega-Cap Monster Radar)
 Runs on GitHub Actions (has internet). Writes results/out.json + companion files.
 
 UNIVERSE: S&P 100 (OEX) — the ~101 largest, most established US companies, EXCHANGE-AGNOSTIC
@@ -60,13 +60,41 @@ v3.0: TRADING-SESSION CALENDAR. Purely additive — ZERO change to any gate, thr
   Path-E TIME STOP that the whole early-entry model depends on. If the calendar cannot be
   built the field is empty and the agent is instructed to leave Days Held untouched.
 
+v3.5 RELIABILITY HARDENING. **ZERO changes to any gate, threshold, formula or verdict rule.**
+  Every survivor v3.0 produces on healthy data, v3.5 produces identically. What changed is only
+  HOW the data is obtained — and what happens when it cannot be obtained:
+  (1) BATCH HISTORY — yf.download() in chunks of BATCH_SIZE with group_by="ticker": ~5 requests
+      instead of ~106. auto_adjust=True is passed EXPLICITLY so values match Ticker.history()'s
+      default exactly. A symbol missing/short in a batch falls back to a per-ticker history()
+      call, so batching can never shrink the universe.
+  (2) RETRY + EXPONENTIAL BACKOFF + JITTER — one wrapper (retry_call / safe_call) around every
+      network call. Retries fire ONLY on transient faults (429 / timeout / connection / 5xx /
+      empty payload); a real data fault is never retried into silence. Waits 1s -> 3s -> 9s with
+      jitter, because a fixed 3s retry lands inside the same rate-limit window three times.
+  (3) FOUR-LAYER UNIVERSE — iShares OEF holdings CSV -> Wikipedia table (the v3.0 path, parsing
+      unchanged) -> results/universe_last_good.json (self-healing cache written after every
+      successful live fetch) -> the 45-name static partial. NOTE: universe_source now has THREE
+      prefixes: "live:", "CACHE:", "FALLBACK:".
+  (4) DATA-INTEGRITY GATE — bar count, NaN in the last closes, non-positive price, and staleness
+      of the last bar against the session calendar. A HARD fault becomes blocked_at="data: ..."
+      with a stage-0 "Data availability" NO_GO (a data fault, never a thesis judgement). A 1-2
+      session lag is a soft flag only, and a .TA lag is expected (TASE trades Sun-Thu).
+  (5) ABORT-ON-DEGRADATION — if more than ABORT_MAX_FAIL_PCT (10%) of the universe returns a
+      data/pipeline failure, results/ is NOT overwritten: yesterday's committed scan stays
+      authoritative, results/run_status.json is written, and the process exits 1 so the Action
+      goes red. A crippled scan does not fail loudly — it silently shrinks the survivor set, or
+      worse produces a survivor from incomplete history. With real money downstream that is a
+      buy order.
+  out_summary.json additionally publishes run_health{} (coverage_pct, n_data_failures, n_errors,
+  degraded_run, yfinance_version, universe_kind, abort threshold) for the Data-Health block.
+
   ANTI-OVERFIT NOTE: no rule here is tuned to a single ticker. MAX_RISK_PCT, the EMA21 band and
   the RS threshold are structural risk parameters, and the two decisive filters (event anchor,
   disruption quality) are qualitative and must be evidenced with a dated, cited source by the
   LLM. If the LLM cannot cite the event, Path E MUST be refused.
 """
 
-import json, time, math, datetime as dt
+import io, json, math, random, sys, time, datetime as dt
 from pathlib import Path
 
 import numpy as np
@@ -77,6 +105,7 @@ import yfinance as yf
 # ----------------------------------------------------------------------------------
 # CONFIG
 # ----------------------------------------------------------------------------------
+SCANNER_VERSION  = "3.5"
 OUT_PATH         = Path("results/out.json")
 HISTORY_PERIOD   = "1y"
 PEG_MAX          = 1.8
@@ -99,6 +128,30 @@ EMA_BAND_BELOW      = 0.85   # Path E: price must be >= EMA21 * 0.85  (anti-free
 RS_ROLL_WINDOW      = 20     # sessions for the rolling relative-strength test
 RS_ROLL_MIN_EXCESS  = 0.02   # must beat the benchmark by >= +2% over the window
 PATH_E_TIME_STOP    = 5      # sessions: a Path-E entry that has not reclaimed EMA21 is cut
+
+# ---- v3.5 reliability parameters (NOT gate thresholds — they cannot change a verdict) -------
+TICKER_SLEEP        = 0.5    # was 0.3 — politeness delay between per-ticker metadata calls
+BATCH_SIZE          = 25     # symbols per yf.download() history batch
+BATCH_SLEEP         = 1.0    # pause between history batches
+USE_BATCH_HISTORY   = True   # False falls back to the v3.0 per-ticker history() path
+RETRY_MAX           = 3      # attempts per network call
+RETRY_BASE          = 1.0    # backoff base: 1s -> 3s -> 9s
+RETRY_JITTER        = 0.40   # up to +40% random jitter, so parallel runners de-sync
+MIN_BARS            = 200    # unchanged v3.0 requirement
+STALE_HARD_SESSIONS = 3      # last bar >= 3 sessions behind the session date = HARD data fault
+ABORT_MAX_FAIL_PCT  = 0.10   # >10% of the universe failing => DO NOT overwrite results/
+
+UNIVERSE_CACHE   = Path("results/universe_last_good.json")
+RUN_STATUS_PATH  = Path("results/run_status.json")
+USER_AGENT       = f"Mozilla/5.0 (stocksagent/{SCANNER_VERSION})"
+
+# iShares S&P 100 ETF (OEF) holdings CSV — the actual index constituents, machine readable.
+OEF_HOLDINGS_URL = ("https://www.ishares.com/us/products/239723/ishares-sp-100-etf/"
+                    "1467271812596.ajax?fileType=csv&fileName=OEF_holdings&dataType=fund")
+WIKI_SP100_URL   = "https://en.wikipedia.org/wiki/S%26P_100"
+
+# Non-equity / cash placeholder rows that appear in ETF holdings files.
+HOLDINGS_BLACKLIST = {"CASH", "USD", "XTSLA", "MVRXX", "BLK", "WEUSD", "NA"}
 
 # Regime ETF proxies (US)
 ETF_TECH   = "XLK"     # Technology sector
@@ -125,56 +178,229 @@ SP100_PARTIAL_FALLBACK = [
 ]
 
 # ----------------------------------------------------------------------------------
-# UNIVERSE  (live S&P 100 / OEX constituents TABLE via pandas.read_html)  [unchanged]
+# v3.5 (2) — RETRY / BACKOFF WRAPPER
+# Retries ONLY transient faults. A genuine data fault is raised immediately, so it is reported
+# as a data fault instead of being retried into silence.
 # ----------------------------------------------------------------------------------
-def fetch_universe():
-    """Returns (tickers:list, source:str). Live S&P 100 (OEX) constituents table + sentinels."""
-    try:
-        import io
-        url = "https://en.wikipedia.org/wiki/S%26P_100"
-        r = requests.get(url, timeout=20,
-                         headers={"User-Agent": "Mozilla/5.0 (stocksagent/2.9)"})
-        r.raise_for_status()
-        tables = pd.read_html(io.StringIO(r.text))
+RUN_ERRORS = []   # transient/soft failures, published in run_health for post-mortems
 
-        tickers = []
-        for t in tables:
-            cols = [str(c).strip().lower() for c in t.columns]
-            tcol = None
-            for cand in ("symbol", "ticker"):
-                for i, c in enumerate(cols):
-                    if cand in c:
-                        tcol = t.columns[i]; break
-                if tcol is not None: break
-            if tcol is None:
-                continue
-            raw = [str(s).strip().upper() for s in t[tcol].dropna().tolist()]
-            syms = []
-            for s in raw:
-                if 1 <= len(s) <= 6 and s.replace(".", "").replace("-", "").isalpha():
-                    syms.append(s.replace(".", "-"))   # BRK.B -> BRK-B for yfinance
-            syms = list(dict.fromkeys(syms))
-            if 95 <= len(syms) <= 110:
-                tickers = syms
+def _log_error(msg):
+    RUN_ERRORS.append(str(msg)[:300])
+    print(f"[error] {msg}")
+
+_TRANSIENT_TOKENS = (
+    "429", "too many requests", "rate limit", "rate-limit", "timed out", "timeout",
+    "temporarily", "connection reset", "connection aborted", "connection error",
+    "max retries", "502", "503", "504", "bad gateway", "service unavailable",
+    "remote end closed", "expecting value", "jsondecode", "ssl", "read timed out",
+    "empty payload", "no data found", "unable to retrieve",
+)
+
+def _is_transient(exc):
+    if isinstance(exc, (requests.exceptions.Timeout,
+                        requests.exceptions.ConnectionError,
+                        requests.exceptions.ChunkedEncodingError)):
+        return True
+    if isinstance(exc, requests.exceptions.HTTPError):
+        code = getattr(getattr(exc, "response", None), "status_code", None)
+        if code in (429, 500, 502, 503, 504):
+            return True
+    msg = f"{type(exc).__name__}: {exc}".lower()
+    return any(t in msg for t in _TRANSIENT_TOKENS)
+
+def _is_empty(res):
+    if res is None:
+        return True
+    if isinstance(res, (pd.DataFrame, pd.Series)):
+        return res.empty
+    if isinstance(res, (dict, list, tuple, set, str)):
+        return len(res) == 0
+    return False
+
+def retry_call(fn, what="call", retries=RETRY_MAX, base=RETRY_BASE, allow_empty=False):
+    """Run fn() with exponential backoff + jitter. Raises the last exception on failure."""
+    last = None
+    for attempt in range(1, retries + 1):
+        try:
+            res = fn()
+            if not allow_empty and _is_empty(res):
+                raise RuntimeError("empty payload")
+            return res
+        except Exception as e:
+            last = e
+            if attempt == retries or not _is_transient(e):
                 break
+            wait = base * (3 ** (attempt - 1)) * (1.0 + random.uniform(0.0, RETRY_JITTER))
+            print(f"[retry] {what}: attempt {attempt}/{retries} failed ({e}); sleeping {wait:.1f}s")
+            time.sleep(wait)
+    raise last if isinstance(last, BaseException) else RuntimeError(f"{what} failed")
 
-        if not tickers:
-            raise ValueError("no S&P 100 constituents table with 95-110 tickers found")
-
-        src = f"live: Wikipedia S&P 100 (OEX) constituents table ({len(tickers)} tickers)"
-        added = [s for s in SENTINELS if s not in tickers]
-        if added:
-            tickers += added
-            src += f" + sentinel backfill ({','.join(added)})"
-        return sorted(set(tickers)), src
+def safe_call(fn, what="call", default=None, allow_empty=True):
+    """retry_call that never raises — for optional metadata (info / cashflow / calendar)."""
+    try:
+        return retry_call(fn, what=what, allow_empty=allow_empty)
     except Exception as e:
-        return list(dict.fromkeys(SP100_PARTIAL_FALLBACK)), \
-               (f"FALLBACK: SP100_PARTIAL_FALLBACK ({len(set(SP100_PARTIAL_FALLBACK))} tickers, "
-                f"PARTIAL — not full S&P 100) — live fetch failed ({e})")
+        _log_error(f"{what}: {e}")
+        return default
+
+# ----------------------------------------------------------------------------------
+# v3.5 (3) — FOUR-LAYER UNIVERSE
+#   1. iShares OEF holdings CSV        (live, the actual index constituents)
+#   2. Wikipedia S&P 100 table         (live, the v3.0 path — parsing + 95-110 guard unchanged)
+#   3. results/universe_last_good.json (self-healing cache, written on every live success)
+#   4. SP100_PARTIAL_FALLBACK          (45 names, "everything burned" only)
+# ----------------------------------------------------------------------------------
+def _norm_symbols(raw):
+    """v3.0 normalisation, verbatim: alpha-only, <=6 chars, BRK.B -> BRK-B, order preserved."""
+    out = []
+    for s in raw:
+        s = str(s).strip().upper()
+        if 1 <= len(s) <= 6 and s.replace(".", "").replace("-", "").isalpha():
+            out.append(s.replace(".", "-"))
+    return list(dict.fromkeys(out))
+
+def _fetch_universe_oef():
+    r = retry_call(lambda: requests.get(OEF_HOLDINGS_URL, timeout=25,
+                                        headers={"User-Agent": USER_AGENT}),
+                   what="OEF holdings CSV")
+    r.raise_for_status()
+    lines = r.text.splitlines()
+    start = None
+    for i, line in enumerate(lines):
+        if line.lstrip('"\ufeff ').lower().startswith("ticker"):
+            start = i
+            break
+    if start is None:
+        raise ValueError("OEF holdings CSV: no 'Ticker' header row found")
+    tbl = pd.read_csv(io.StringIO("\n".join(lines[start:])))
+    tcol = next((c for c in tbl.columns if str(c).strip().lower() == "ticker"), None)
+    if tcol is None:
+        raise ValueError("OEF holdings CSV: no ticker column")
+    acol = next((c for c in tbl.columns if "asset class" in str(c).strip().lower()), None)
+    if acol is not None:
+        tbl = tbl[tbl[acol].astype(str).str.strip().str.lower() == "equity"]
+    syms = [s for s in _norm_symbols(tbl[tcol].dropna().tolist()) if s not in HOLDINGS_BLACKLIST]
+    if not (90 <= len(syms) <= 115):
+        raise ValueError(f"OEF holdings CSV: implausible constituent count ({len(syms)})")
+    return syms
+
+def _fetch_universe_wikipedia():
+    r = retry_call(lambda: requests.get(WIKI_SP100_URL, timeout=20,
+                                        headers={"User-Agent": USER_AGENT}),
+                   what="Wikipedia S&P 100")
+    r.raise_for_status()
+    tables = pd.read_html(io.StringIO(r.text))
+    for t in tables:
+        cols = [str(c).strip().lower() for c in t.columns]
+        tcol = None
+        for cand in ("symbol", "ticker"):
+            for i, c in enumerate(cols):
+                if cand in c:
+                    tcol = t.columns[i]; break
+            if tcol is not None: break
+        if tcol is None:
+            continue
+        syms = _norm_symbols(t[tcol].dropna().tolist())
+        if 95 <= len(syms) <= 110:
+            return syms
+    raise ValueError("no S&P 100 constituents table with 95-110 tickers found")
+
+def _save_universe_cache(symbols, source):
+    try:
+        UNIVERSE_CACHE.parent.mkdir(parents=True, exist_ok=True)
+        UNIVERSE_CACHE.write_text(json.dumps(
+            {"saved_utc": _utc_now_str(), "source": source,
+             "n": len(symbols), "tickers": symbols}, indent=2), encoding="utf-8")
+        print(f"[universe] cached {len(symbols)} tickers -> {UNIVERSE_CACHE}")
+    except Exception as e:
+        _log_error(f"universe cache write failed: {e}")
+
+def _load_universe_cache():
+    try:
+        if not UNIVERSE_CACHE.exists():
+            return None
+        blob = json.loads(UNIVERSE_CACHE.read_text(encoding="utf-8"))
+        syms = _norm_symbols(blob.get("tickers") or [])
+        if len(syms) < 60:
+            return None
+        return {"tickers": syms, "saved_utc": blob.get("saved_utc"), "source": blob.get("source")}
+    except Exception as e:
+        _log_error(f"universe cache read failed: {e}")
+        return None
+
+def _with_sentinels(symbols, src):
+    added = [s for s in SENTINELS if s not in symbols]
+    if added:
+        symbols = list(symbols) + added
+        src += f" + sentinel backfill ({','.join(added)})"
+    return sorted(set(symbols)), src
+
+def fetch_universe():
+    """Returns (tickers:list, source:str, kind:str) with kind in {'live','cache','fallback'}."""
+    for label, fn in (("iShares OEF holdings", _fetch_universe_oef),
+                      ("Wikipedia S&P 100 (OEX) constituents table", _fetch_universe_wikipedia)):
+        try:
+            syms = fn()
+            src = f"live: {label} ({len(syms)} tickers)"
+            _save_universe_cache(syms, src)
+            tickers, src = _with_sentinels(syms, src)
+            return tickers, src, "live"
+        except Exception as e:
+            _log_error(f"universe layer '{label}' failed: {e}")
+
+    cached = _load_universe_cache()
+    if cached:
+        src = (f"CACHE: universe_last_good.json ({len(cached['tickers'])} tickers, "
+               f"saved {cached['saved_utc']}, origin: {cached['source']}) — live fetch failed")
+        tickers, src = _with_sentinels(cached["tickers"], src)
+        return tickers, src, "cache"
+
+    src = (f"FALLBACK: SP100_PARTIAL_FALLBACK ({len(set(SP100_PARTIAL_FALLBACK))} tickers, "
+           f"PARTIAL — not full S&P 100) — live fetch AND cache both failed")
+    return sorted(set(SP100_PARTIAL_FALLBACK)), src, "fallback"
+
+# ----------------------------------------------------------------------------------
+# v3.5 (1) — BATCH HISTORY DOWNLOAD
+# auto_adjust=True is EXPLICIT so batch values match Ticker.history()'s default exactly.
+# A symbol missing or short in a batch is simply absent from the cache and is refetched
+# individually by scan_ticker — batching can never remove a ticker from the scan.
+# ----------------------------------------------------------------------------------
+def download_history_batch(symbols):
+    out = {}
+    chunks = [symbols[i:i + BATCH_SIZE] for i in range(0, len(symbols), BATCH_SIZE)]
+    for n, chunk in enumerate(chunks, 1):
+        what = f"batch history {n}/{len(chunks)} ({len(chunk)} symbols)"
+        try:
+            raw = retry_call(lambda c=chunk: yf.download(
+                c, period=HISTORY_PERIOD, interval="1d", group_by="ticker",
+                auto_adjust=True, actions=False, progress=False, threads=True), what=what)
+        except Exception as e:
+            _log_error(f"{what} failed: {e} -> per-ticker fallback for this chunk")
+            time.sleep(BATCH_SLEEP)
+            continue
+        for sym in chunk:
+            try:
+                if isinstance(raw.columns, pd.MultiIndex):
+                    if sym not in set(raw.columns.get_level_values(0)):
+                        continue
+                    df = raw[sym]
+                else:
+                    df = raw
+                df = df.dropna(how="all").dropna()
+                if not df.empty:
+                    out[sym] = df
+            except Exception:
+                continue
+        print(f"[{what}] ok for {sum(1 for s in chunk if s in out)}/{len(chunk)}")
+        time.sleep(BATCH_SLEEP)
+    return out
 
 # ----------------------------------------------------------------------------------
 # TECHNICAL HELPERS
 # ----------------------------------------------------------------------------------
+def _utc_now_str():
+    return dt.datetime.now(dt.timezone.utc).replace(tzinfo=None).isoformat() + "Z"
+
 def rsi(series, period=14):
     delta = series.diff()
     up = delta.clip(lower=0).ewm(alpha=1/period, adjust=False).mean()
@@ -223,7 +449,7 @@ def get_live_price(tk):
 
 def apply_live_last_price(df, tk):
     """CURE LATENCY BLINDNESS: patch the last bar's Close with the live fast_info price."""
-    live = get_live_price(tk)
+    live = safe_call(lambda: get_live_price(tk), what="fast_info live price", default=None)
     if live is None:
         return df, "SKIP", "fast_info live price unavailable -> using last daily close"
     last_close = float(df["Close"].iloc[-1])
@@ -238,14 +464,60 @@ def apply_live_last_price(df, tk):
     return df, "GO", f"LIVE OVERRIDE: lagged daily close {last_close:.2f} -> live {live:.2f} (fast_info)"
 
 # ----------------------------------------------------------------------------------
+# v3.5 (4) — DATA-INTEGRITY GATE
+# A HARD fault -> stage-0 "Data availability" NO_GO + blocked_at="data: ..." (the gate name the
+# agent prompt already classifies as a data fault, never a thesis judgement).
+# A SOFT flag -> a stage-0 informational gate only; soft flags NEVER change a verdict.
+# ----------------------------------------------------------------------------------
+def check_data_integrity(symbol, df, expected_session, sessions, hist_src):
+    flags, hard = [], None
+    bars = len(df)
+    if bars < MIN_BARS:
+        hard = f"only {bars} daily bars (< {MIN_BARS})"
+    else:
+        close = df["Close"]
+        if bool(close.iloc[-5:].isna().any()):
+            hard = "NaN in the last 5 closes"
+        elif not np.isfinite(float(close.iloc[-1])) or float(close.iloc[-1]) <= 0:
+            hard = f"non-positive/invalid last close ({close.iloc[-1]})"
+
+    last_bar = None
+    try:
+        last_bar = str(pd.to_datetime(df.index[-1]).date())
+    except Exception:
+        flags.append("last bar date unreadable")
+
+    lag = None
+    if hard is None and last_bar and expected_session:
+        if sessions and last_bar in sessions and expected_session in sessions:
+            lag = sessions.index(expected_session) - sessions.index(last_bar)
+        elif last_bar < expected_session:
+            lag = -1                      # a gap exists but its size is unknown
+    if lag is not None and lag != 0:
+        if is_israeli(symbol):
+            flags.append(f"TASE calendar lag (last bar {last_bar} vs session {expected_session}) "
+                         f"— expected for .TA, not stale")
+        elif lag >= STALE_HARD_SESSIONS:
+            hard = (f"stale bars: last bar {last_bar} is {lag} sessions behind "
+                    f"session {expected_session}")
+        else:
+            flags.append(f"last bar {last_bar} lags session {expected_session} "
+                         f"({'unknown gap' if lag < 0 else str(lag) + ' session(s)'})")
+
+    info_gate = gate(0, "Data integrity (info only)", "GO" if not flags else "SKIP",
+                     f"bars={bars} | last_bar={last_bar} | session={expected_session} | "
+                     f"history={hist_src} | " + ("; ".join(flags) if flags else "clean"),
+                     bars, "bar count / NaN / positive price / bar freshness (informational)")
+    return hard, info_gate
+
+# ----------------------------------------------------------------------------------
 # BENCHMARK / REGIME RESOLUTION  [unchanged]
 # ----------------------------------------------------------------------------------
 def get_benchmark_close(symbol, bench_cache):
     if symbol not in bench_cache:
-        try:
-            bench_cache[symbol] = yf.Ticker(symbol).history(period="6mo")["Close"].dropna()
-        except Exception:
-            bench_cache[symbol] = None
+        bench_cache[symbol] = safe_call(
+            lambda: yf.Ticker(symbol).history(period="6mo")["Close"].dropna(),
+            what=f"benchmark history {symbol}", default=None)
     return bench_cache[symbol]
 
 def classify_regime_etf(symbol, info):
@@ -262,10 +534,9 @@ def classify_regime_etf(symbol, info):
 
 def gate_regime(etf_symbol, etf_cache):
     if etf_symbol not in etf_cache:
-        try:
-            etf_cache[etf_symbol] = yf.Ticker(etf_symbol).history(period="2y")["Close"].dropna()
-        except Exception:
-            etf_cache[etf_symbol] = pd.Series(dtype=float)
+        etf_cache[etf_symbol] = safe_call(
+            lambda: yf.Ticker(etf_symbol).history(period="2y")["Close"].dropna(),
+            what=f"regime history {etf_symbol}", default=pd.Series(dtype=float))
     h = etf_cache[etf_symbol]
     if h is None or len(h) < 200:
         return gate(1, "Sector trend (Regime, rank-only)", "SKIP",
@@ -528,7 +799,7 @@ def gate_peg(info):
 
 def gate_fcf(tk):
     try:
-        cf = tk.cashflow
+        cf = safe_call(lambda: tk.cashflow, what="cashflow", default=None)
         if cf is None or cf.empty:
             return gate(2, "FCF", "SKIP", "cashflow unavailable -> AI heals", None, "FCF positive & growing YoY")
         idx = {str(i): i for i in cf.index}
@@ -555,7 +826,7 @@ def gate_fcf(tk):
 
 def gate_catalyst(tk):
     try:
-        cal = tk.calendar
+        cal = safe_call(lambda: tk.calendar, what="calendar", default=None)
         ed = None
         if isinstance(cal, dict):
             ev = cal.get("Earnings Date")
@@ -629,7 +900,8 @@ def ai_gates(bounce_date=None, bounce_low=None, path_e=False):
 # ----------------------------------------------------------------------------------
 # PER-TICKER PIPELINE
 # ----------------------------------------------------------------------------------
-def scan_ticker(symbol, etf_cache, bench_cache, universe_source):
+def scan_ticker(symbol, etf_cache, bench_cache, universe_source,
+                hist_cache=None, expected_session=None, sessions=None):
     item = {"ticker": symbol, "price": None, "verdict": "NO_GO",
             "go_count": 0, "blocked_at": None,
             # ---- v2.9 convenience fields (static values, no formulas) ----
@@ -639,19 +911,36 @@ def scan_ticker(symbol, etf_cache, bench_cache, universe_source):
             "universe_source": universe_source, "gates": []}
     try:
         tk = yf.Ticker(symbol)
-        df = tk.history(period=HISTORY_PERIOD).dropna()
-        if df.empty or len(df) < 200:
-            item["blocked_at"] = "data: insufficient history"
+
+        # ----- v3.5 (1): batch first, per-ticker fallback (batching cannot drop a ticker) -----
+        df, hist_src = None, "none"
+        if hist_cache is not None and symbol in hist_cache:
+            df, hist_src = hist_cache[symbol].copy(), "batch"
+        if df is None or len(df) < MIN_BARS:
+            single = safe_call(lambda: tk.history(period=HISTORY_PERIOD).dropna(),
+                               what=f"history {symbol}", default=None, allow_empty=False)
+            if single is not None and (df is None or len(single) > len(df)):
+                df, hist_src = single, ("single" if hist_src == "none" else "single(after batch)")
+        if df is None or df.empty:
+            item["blocked_at"] = "data: history unavailable after retries"
             item["gates"].append(gate(0, "Data availability", "NO_GO",
-                                       f"only {len(df)} bars", len(df), ">=200 daily bars"))
+                                      "no daily bars returned (batch + per-ticker retries failed)",
+                                      0, f">={MIN_BARS} daily bars"))
+            return item
+
+        # ----- v3.5 (4): data integrity BEFORE any gate math -----
+        hard, g_integrity = check_data_integrity(symbol, df, expected_session, sessions, hist_src)
+        if hard:
+            item["blocked_at"] = f"data: {hard}"
+            item["gates"].append(gate(0, "Data availability", "NO_GO", hard, len(df),
+                                      f">={MIN_BARS} clean, fresh daily bars"))
+            item["gates"].append(g_integrity)
             return item
 
         # ----- v2.5: CURE LATENCY BLINDNESS -----
         df, live_status, live_note = apply_live_last_price(df, tk)
 
-        info = {}
-        try: info = tk.info or {}
-        except Exception: info = {}
+        info = safe_call(lambda: tk.info or {}, what=f"info {symbol}", default={}) or {}
         item["price"] = round(float(df["Close"].iloc[-1]), 2)   # native units (USD, or AGOROT for .TA)
 
         gates = []
@@ -691,6 +980,7 @@ def scan_ticker(symbol, etf_cache, bench_cache, universe_source):
                           f"{sector} -> regime ETF {etf}", sector, "informational, not a filter"))
         gates.append(gate(0, "Live price (fast_info)", live_status, live_note,
                           item["price"], "patch lagged daily bar with live price"))
+        gates.append(g_integrity)
 
         gates += [g_regime, g_vol, g_floor] + g_subs + [g_early, g_rs, g_peg, g_fcf, g_cat,
                                                         g_stop, g_risk]
@@ -730,7 +1020,10 @@ def scan_ticker(symbol, etf_cache, bench_cache, universe_source):
                 item["time_stop_sessions"] = PATH_E_TIME_STOP
                 item["requires_llm_confirmation"] = True
 
-        item["go_count"] = sum(1 for g in gates if g["status"] == "GO")
+        # v3.5: the new informational integrity gate is EXCLUDED from go_count, so the score
+        # stays on the v3.0 scale (x/13) and remains comparable with every historical run.
+        item["go_count"] = sum(1 for g in gates
+                               if g["status"] == "GO" and g["name"] != "Data integrity (info only)")
         return item
     except Exception as e:
         item["blocked_at"] = f"error: {e}"
@@ -758,45 +1051,105 @@ def build_session_calendar(bars=400):
     untouched. This function CANNOT change which tickers survive.
     """
     try:
-        hist = yf.download("SPY", period="2y", progress=False, auto_adjust=False)
-        if hist is None or hist.empty:
-            print("[session-calendar] empty SPY history; publishing empty calendar.")
-            return [], None
+        hist = retry_call(lambda: yf.download("SPY", period="2y", progress=False,
+                                              auto_adjust=False),
+                          what="SPY session calendar")
         sessions = [d.date().isoformat() for d in hist.index][-bars:]
         return sessions, (sessions[-1] if sessions else None)
     except Exception as e:
-        print(f"[session-calendar] failed ({e}); publishing empty calendar.")
+        _log_error(f"[session-calendar] failed ({e}); publishing empty calendar.")
         return [], None
 
 
 # ----------------------------------------------------------------------------------
 # MAIN
 # ----------------------------------------------------------------------------------
-def main():
-    # v2.6 — ZERO-DEPENDENCY HOLIDAY / WEEKEND GUARD
+def _write_run_status(payload):
     try:
-        last_valid_session = yf.download("SPY", period="5d", progress=False).index[-1].date()
-        if last_valid_session != dt.date.today():
-            print(f"[!] NYSE Closed Today (last valid session: {last_valid_session}). "
-                  f"Skipping out.json overwrite.")
-            return
+        RUN_STATUS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        RUN_STATUS_PATH.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
     except Exception as e:
-        print(f"[holiday-guard] SPY session check failed ({e}); proceeding with scan.")
+        print(f"[run-status] write failed: {e}")
 
-    tickers, universe_source = fetch_universe()
-    print(f"UNIVERSE {{count: {len(tickers)}, source: {universe_source}}}")
+def _is_data_failure(item):
+    b = item.get("blocked_at") or ""
+    return b.startswith("data:") or b.startswith("error:")
+
+
+def main():
+    yf_version = getattr(yf, "__version__", "unknown")
+    print(f"scan.py v{SCANNER_VERSION} | yfinance {yf_version} | pandas {pd.__version__}")
+    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+    # v3.0 calendar + v2.6 HOLIDAY / WEEKEND GUARD, now from ONE SPY download instead of two.
+    sessions_cal, last_session = build_session_calendar()
+    print(f"SESSION CALENDAR: {len(sessions_cal)} sessions, last={last_session}")
+    if last_session is None:
+        print("[holiday-guard] SPY session check unavailable; proceeding with scan.")
+    elif last_session != dt.date.today().isoformat():
+        print(f"[!] NYSE Closed Today (last valid session: {last_session}). "
+              f"Skipping out.json overwrite.")
+        return 0
+
+    tickers, universe_source, universe_kind = fetch_universe()
+    print(f"UNIVERSE {{count: {len(tickers)}, kind: {universe_kind}, source: {universe_source}}}")
 
     etf_cache = {}
     bench_cache = {}
     get_benchmark_close(RS_BENCHMARK, bench_cache)
 
+    # v3.5 (1): one batched history pass for the whole universe.
+    hist_cache = {}
+    if USE_BATCH_HISTORY:
+        hist_cache = download_history_batch(tickers)
+        print(f"BATCH HISTORY: {len(hist_cache)}/{len(tickers)} symbols pre-loaded")
+
     results = []
     for i, sym in enumerate(tickers, 1):
         print(f"[{i}/{len(tickers)}] {sym}")
-        results.append(scan_ticker(sym, etf_cache, bench_cache, universe_source))
-        time.sleep(0.3)
+        results.append(scan_ticker(sym, etf_cache, bench_cache, universe_source,
+                                   hist_cache=hist_cache, expected_session=last_session,
+                                   sessions=sessions_cal))
+        time.sleep(TICKER_SLEEP)
 
-    # rank: survivors first, Path C before Path E, then by go_count
+    # ---- v3.5 (5): ABORT-ON-DEGRADATION, evaluated BEFORE anything is written ----
+    n = len(results)
+    failed = [r["ticker"] for r in results if _is_data_failure(r)]
+    fail_reasons = {r["ticker"]: r["blocked_at"] for r in results if _is_data_failure(r)}
+    fail_pct = (len(failed) / n) if n else 1.0
+    coverage_pct = round(1.0 - fail_pct, 4)
+    degraded = fail_pct > ABORT_MAX_FAIL_PCT
+
+    run_health = {
+        "scanner_version": SCANNER_VERSION,
+        "generated_utc": _utc_now_str(),
+        "session_date": last_session,
+        "universe_kind": universe_kind,
+        "universe_source": universe_source,
+        "n": n,
+        "n_data_failures": len(failed),
+        "coverage_pct": coverage_pct,
+        "abort_max_fail_pct": ABORT_MAX_FAIL_PCT,
+        "degraded_run": bool(degraded),
+        "batch_history_hits": len(hist_cache),
+        "n_errors": len(RUN_ERRORS),
+        "failures": fail_reasons,
+        "errors": RUN_ERRORS[:40],
+        "yfinance_version": yf_version,
+    }
+
+    if degraded:
+        run_health["action"] = ("ABORTED — results/ NOT overwritten; the previous committed scan "
+                                "remains authoritative. Do not trade on this run.")
+        _write_run_status(run_health)
+        print("=" * 78)
+        print(f"[ABORT] {len(failed)}/{n} tickers failed ({fail_pct*100:.1f}% > "
+              f"{ABORT_MAX_FAIL_PCT*100:.0f}%). results/ was NOT overwritten.")
+        print(f"[ABORT] failures: {', '.join(failed[:25])}{' ...' if len(failed) > 25 else ''}")
+        print("=" * 78)
+        return 1
+
+    # rank: survivors first, Path C before Path E, then by go_count   [unchanged]
     results.sort(key=lambda x: (x["verdict"] != "GO_PENDING_THESIS",
                                 {"C": 0, "E": 1}.get(x.get("entry_path"), 2),
                                 -x["go_count"]))
@@ -805,21 +1158,16 @@ def main():
     survivors_e  = [r["ticker"] for r in results if r.get("entry_path") == "E"]
     print(f"SURVIVORS {survivors}  (PathC={survivors_c} PathE={survivors_e})")
 
-    # v3.0 — trading-session calendar (additive; never affects survivors)
-    sessions_cal, last_session = build_session_calendar()
-    print(f"SESSION CALENDAR: {len(sessions_cal)} sessions, last={last_session}")
-
-    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUT_PATH.write_text(json.dumps(results, indent=2, default=str), encoding="utf-8")
     print(f"WROTE {OUT_PATH} ({len(results)} items, {len(survivors)} survivors)")
 
-    # -------- v2.8 COMPANION FILES (browse-friendly), extended for v2.9 --------
+    # -------- v2.8 COMPANION FILES (browse-friendly), extended for v2.9 / v3.0 / v3.5 --------
     results_dir = OUT_PATH.parent
     (results_dir / "tickers").mkdir(parents=True, exist_ok=True)
 
     summary = {
-        "generated_utc": dt.datetime.utcnow().isoformat() + "Z",
-        "scanner_version": "3.0",
+        "generated_utc": run_health["generated_utc"],
+        "scanner_version": SCANNER_VERSION,
         # ---- v3.0: trading-session calendar (Days Held = index subtraction) ----
         "session_date": last_session,
         "session_index": (len(sessions_cal) - 1) if sessions_cal else None,
@@ -832,6 +1180,8 @@ def main():
         "params": {"MAX_RISK_PCT": MAX_RISK_PCT, "EMA_BAND": [EMA_BAND_BELOW, EMA_BAND_ABOVE],
                    "RS_ROLL_WINDOW": RS_ROLL_WINDOW, "RS_ROLL_MIN_EXCESS": RS_ROLL_MIN_EXCESS,
                    "PATH_E_TIME_STOP": PATH_E_TIME_STOP},
+        # ---- v3.5: run health, for the agent's Data-Health block ----
+        "run_health": run_health,
         "stocks": [
             {"ticker": r["ticker"], "price": r["price"], "verdict": r["verdict"],
              "go_count": r["go_count"], "blocked_at": r["blocked_at"],
@@ -852,9 +1202,15 @@ def main():
         (results_dir / "tickers" / f"{safe}.json").write_text(
             json.dumps(r, indent=2, default=str), encoding="utf-8")
 
-    print(f"WROTE companion files: out_summary.json, out_survivors.json, "
+    run_health["action"] = "OK — results/ overwritten."
+    _write_run_status(run_health)
+
+    print(f"WROTE companion files: out_summary.json, out_survivors.json, run_status.json, "
           f"tickers/*.json ({len(results)} ticker files)")
+    print(f"RUN HEALTH: coverage {coverage_pct*100:.1f}% | data failures {len(failed)}/{n} | "
+          f"soft errors {len(RUN_ERRORS)} | universe {universe_kind}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
