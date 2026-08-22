@@ -5,14 +5,29 @@ name: Decoupling Hunter Scan
 # 21:30 UTC falls AFTER 16:00 ET year-round (17:30 EDT in summer / 16:30 EST
 # in winter), so it is DST-safe. On US holidays scan.py's zero-dependency guard
 # detects the closed session and exits without rewriting out.json (no commit).
+#
+# Manual runs expose a "test_run" checkbox in the Actions tab:
+#   test_run = false (default) -> identical to a scheduled run: writes results/,
+#                                 commits and pushes.
+#   test_run = true            -> bypasses the closed-market guard, writes to
+#                                 results_test/, uploads an artifact, and NEVER
+#                                 commits. Safe to run on a weekend or holiday.
+# On a scheduled run the `inputs` context does not exist, so every expression
+# below falls through to its empty/false branch and behaviour is unchanged.
 # ---------------------------------------------------------------------------
+
 on:
   schedule:
     - cron: '30 21 * * 1-5'
-  workflow_dispatch: {}          # allow manual "Run workflow" from the Actions tab
+  workflow_dispatch:
+    inputs:
+      test_run:
+        description: 'Test run (market closed) - writes results_test/, never commits'
+        type: boolean
+        default: false
 
 permissions:
-  contents: write                # needed to commit results/out.json back to the repo
+  contents: write                # needed to commit results/ back to the repo
 
 concurrency:
   group: decoupling-hunter-scan
@@ -21,7 +36,8 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -37,10 +53,27 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Record environment
+        run: |
+          python -c "import sys; print('python', sys.version)"
+          pip freeze
+
       - name: Run scanner
+        env:
+          SCAN_FORCE_RUN: ${{ inputs.test_run && '1' || '' }}
+          SCAN_OUT_DIR:   ${{ inputs.test_run && 'results_test' || '' }}
         run: python scan.py
 
-      - name: Commit & push out.json (skips automatically on holidays / no-change)
+      - name: Upload test results
+        if: ${{ inputs.test_run }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: results_test-${{ github.run_id }}
+          path: results_test/
+          if-no-files-found: error
+
+      - name: Commit & push results (skips on holidays / no-change / test runs)
+        if: ${{ !inputs.test_run }}
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -48,6 +81,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes (holiday/weekend guard fired or identical output) - nothing to commit."
           else
-            git commit -m "scan: update out.json ($(date -u '+%Y-%m-%d %H:%M UTC'))"
+            git commit -m "scan: update results ($(date -u '+%Y-%m-%d %H:%M UTC'))"
             git push
           fi
