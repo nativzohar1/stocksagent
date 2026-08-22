@@ -94,7 +94,7 @@ v3.5 RELIABILITY HARDENING. **ZERO changes to any gate, threshold, formula or ve
   LLM. If the LLM cannot cite the event, Path E MUST be refused.
 """
 
-import io, json, math, random, sys, time, datetime as dt
+import io, json, math, os, random, sys, time, datetime as dt
 from pathlib import Path
 
 import numpy as np
@@ -106,7 +106,19 @@ import yfinance as yf
 # CONFIG
 # ----------------------------------------------------------------------------------
 SCANNER_VERSION  = "3.5"
-OUT_PATH         = Path("results/out.json")
+
+# ---- v3.5 TEST-RUN SWITCH (opt-in, default = exactly the v3.0 behaviour) ------------
+# SCAN_FORCE_RUN=1  -> bypass the weekend/holiday guard so the FULL pipeline can be smoke
+#                      tested while the market is closed. Prices are the last session's
+#                      closes, so such a run is a PLUMBING test, never a trading signal.
+# SCAN_OUT_DIR=...  -> write everything to another directory (e.g. results_test) so a test
+#                      run can never touch the results/ the agent reads.
+# Both default to OFF: with no env vars set, this file behaves identically to v3.0. There is
+# nothing to "put back afterwards" — which is exactly the point, because a temporary edit that
+# someone forgets to revert is how a closed-market run ends up in the ledger.
+FORCE_RUN        = os.getenv("SCAN_FORCE_RUN", "") == "1"
+RESULTS_DIR      = Path(os.getenv("SCAN_OUT_DIR", "results"))
+OUT_PATH         = RESULTS_DIR / "out.json"
 HISTORY_PERIOD   = "1y"
 PEG_MAX          = 1.8
 VOL_MIN          = 0.40          # the ONLY sector-replacement filter
@@ -131,6 +143,7 @@ PATH_E_TIME_STOP    = 5      # sessions: a Path-E entry that has not reclaimed E
 
 # ---- v3.5 reliability parameters (NOT gate thresholds — they cannot change a verdict) -------
 TICKER_SLEEP        = 0.5    # was 0.3 — politeness delay between per-ticker metadata calls
+RECENT_BARS         = 15     # sessions of OHLC published per ticker for exit simulation
 BATCH_SIZE          = 25     # symbols per yf.download() history batch
 BATCH_SLEEP         = 1.0    # pause between history batches
 USE_BATCH_HISTORY   = True   # False falls back to the v3.0 per-ticker history() path
@@ -141,8 +154,8 @@ MIN_BARS            = 200    # unchanged v3.0 requirement
 STALE_HARD_SESSIONS = 3      # last bar >= 3 sessions behind the session date = HARD data fault
 ABORT_MAX_FAIL_PCT  = 0.10   # >10% of the universe failing => DO NOT overwrite results/
 
-UNIVERSE_CACHE   = Path("results/universe_last_good.json")
-RUN_STATUS_PATH  = Path("results/run_status.json")
+UNIVERSE_CACHE   = RESULTS_DIR / "universe_last_good.json"
+RUN_STATUS_PATH  = RESULTS_DIR / "run_status.json"
 USER_AGENT       = f"Mozilla/5.0 (stocksagent/{SCANNER_VERSION})"
 
 # iShares S&P 100 ETF (OEF) holdings CSV — the actual index constituents, machine readable.
@@ -907,7 +920,7 @@ def scan_ticker(symbol, etf_cache, bench_cache, universe_source,
             # ---- v2.9 convenience fields (static values, no formulas) ----
             "entry_path": None, "stop": None, "risk_pct": None, "target_20pct": None,
             "bounce_date": None, "time_stop_sessions": None,
-            "requires_llm_confirmation": False,
+            "requires_llm_confirmation": False, "recent_bars": None, "bars_window": RECENT_BARS,
             "universe_source": universe_source, "gates": []}
     try:
         tk = yf.Ticker(symbol)
@@ -942,6 +955,17 @@ def scan_ticker(symbol, etf_cache, bench_cache, universe_source,
 
         info = safe_call(lambda: tk.info or {}, what=f"info {symbol}", default={}) or {}
         item["price"] = round(float(df["Close"].iloc[-1]), 2)   # native units (USD, or AGOROT for .TA)
+
+        # ----- v3.5: publish the recent daily bars so the ledger can simulate an INTRADAY stop.
+        # The close-only exit model silently deleted every intraday stop breach that recovered by
+        # the bell. High/Low are already in hand — the ledger just never got to see them.
+        # Same units as `price` (AGOROT for .TA). Oldest first.
+        item["recent_bars"] = [
+            [str(pd.to_datetime(i).date()),
+             round(float(r["Open"]), 2), round(float(r["High"]), 2),
+             round(float(r["Low"]), 2),  round(float(r["Close"]), 2)]
+            for i, r in df.iloc[-RECENT_BARS:].iterrows()
+        ]
 
         gates = []
 
@@ -1087,9 +1111,16 @@ def main():
     if last_session is None:
         print("[holiday-guard] SPY session check unavailable; proceeding with scan.")
     elif last_session != dt.date.today().isoformat():
-        print(f"[!] NYSE Closed Today (last valid session: {last_session}). "
-              f"Skipping out.json overwrite.")
-        return 0
+        if not FORCE_RUN:
+            print(f"[!] NYSE Closed Today (last valid session: {last_session}). "
+                  f"Skipping out.json overwrite.")
+            return 0
+        print("=" * 78)
+        print(f"[TEST RUN] market closed, guard BYPASSED via SCAN_FORCE_RUN=1.")
+        print(f"[TEST RUN] prices are the {last_session} closes — plumbing test only, "
+              f"NOT a trading signal.")
+        print(f"[TEST RUN] writing to {RESULTS_DIR}/ — do not commit this to results/.")
+        print("=" * 78)
 
     tickers, universe_source, universe_kind = fetch_universe()
     print(f"UNIVERSE {{count: {len(tickers)}, kind: {universe_kind}, source: {universe_source}}}")
@@ -1136,6 +1167,8 @@ def main():
         "failures": fail_reasons,
         "errors": RUN_ERRORS[:40],
         "yfinance_version": yf_version,
+        "test_run": bool(FORCE_RUN),
+        "output_dir": str(RESULTS_DIR),
     }
 
     if degraded:
