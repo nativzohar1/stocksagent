@@ -125,7 +125,7 @@ SCANNER_VERSION  = "3.6"
 # nothing to "put back afterwards" — which is exactly the point, because a temporary edit that
 # someone forgets to revert is how a closed-market run ends up in the ledger.
 FORCE_RUN        = os.getenv("SCAN_FORCE_RUN", "") == "1"
-RESULTS_DIR      = Path(os.getenv("SCAN_OUT_DIR", "results"))
+SCAN_OUT_DIR: ${{ inputs.test_run && 'results_test' || '' }}
 OUT_PATH         = RESULTS_DIR / "out.json"
 HISTORY_PERIOD   = "1y"
 PEG_MAX          = 1.8
