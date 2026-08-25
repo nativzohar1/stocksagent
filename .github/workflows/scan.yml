@@ -12,8 +12,13 @@ name: Decoupling Hunter Scan
 #   test_run = true            -> bypasses the closed-market guard, writes to
 #                                 results_test/, uploads an artifact, and NEVER
 #                                 commits. Safe to run on a weekend or holiday.
-# On a scheduled run the `inputs` context does not exist, so every expression
-# below falls through to its empty/false branch and behaviour is unchanged.
+#
+# v3.6.1 FIX (2026-08-25): SCAN_OUT_DIR must NEVER be the empty string.
+# scan.py reads it as os.getenv("SCAN_OUT_DIR", "results") — an env var that is
+# SET BUT EMPTY defeats that default and yields Path("") == "." , so the whole
+# scan was written to the repo ROOT while `git add results/` found nothing to
+# commit. Green run, no error, stale results/. The scheduled branch of every
+# expression below is therefore explicit.
 # ---------------------------------------------------------------------------
 
 on:
@@ -60,9 +65,32 @@ jobs:
 
       - name: Run scanner
         env:
-          SCAN_FORCE_RUN: ${{ inputs.test_run && '1' || '' }}
-          SCAN_OUT_DIR:   ${{ inputs.test_run && 'results_test' || '' }}
-        run: python scan.py
+          SCAN_FORCE_RUN: ${{ inputs.test_run && '1' || '0' }}
+          SCAN_OUT_DIR:   ${{ inputs.test_run && 'results_test' || 'results' }}
+        run: |
+          set -o pipefail
+          python scan.py 2>&1 | tee /tmp/scan.log
+
+      - name: Verify results/ was actually refreshed
+        if: ${{ !inputs.test_run }}
+        run: |
+          if grep -q "NYSE Closed Today" /tmp/scan.log; then
+            echo "Holiday/weekend guard fired - results/ intentionally untouched. OK."
+            exit 0
+          fi
+          if [ ! -f results/out_summary.json ]; then
+            echo "::error::results/out_summary.json does not exist after a full scan."
+            exit 1
+          fi
+          sess=$(jq -r '.session_date' results/out_summary.json)
+          gen=$(jq -r '.generated_utc'  results/out_summary.json)
+          today=$(date -u '+%Y-%m-%d')
+          echo "session_date=$sess | generated_utc=$gen | today(UTC)=$today"
+          if [ "$sess" != "$today" ]; then
+            echo "::error::Scanner reported success but results/ still holds session $sess (expected $today). Nothing was written where the agent reads."
+            exit 1
+          fi
+          echo "results/ is fresh for session $sess."
 
       - name: Upload test results
         if: ${{ inputs.test_run }}
