@@ -1,0 +1,27 @@
+{
+  "scanner_version": "3.6",
+  "generated_utc": "2026-08-25T21:51:06.753861Z",
+  "session_date": "2026-08-25",
+  "universe_kind": "live",
+  "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
+  "n": 106,
+  "n_data_failures": 1,
+  "coverage_pct": 0.9906,
+  "abort_max_fail_pct": 0.1,
+  "degraded_run": false,
+  "degradation_reason": null,
+  "rs_unaligned": 0,
+  "rs_alignment_fault": false,
+  "batch_history_hits": 106,
+  "n_errors": 1,
+  "failures": {
+    "HONA": "data: only 50 daily bars (< 200)"
+  },
+  "errors": [
+    "universe layer 'iShares OEF holdings' failed: OEF holdings CSV: no 'Ticker' header row found"
+  ],
+  "yfinance_version": "0.2.65",
+  "test_run": false,
+  "output_dir": "results",
+  "action": "OK \u2014 results/ overwritten."
+}

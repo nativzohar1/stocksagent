@@ -1,23 +1,131 @@
 {
   "ticker": "ACN",
-  "price": 185.28,
+  "price": 186.93,
   "verdict": "NO_GO",
   "go_count": 11,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
   "stop": 167.2,
-  "risk_pct": 0.0976,
-  "target_20pct": 222.34,
+  "risk_pct": 0.1055,
+  "target_20pct": 224.32,
   "bounce_date": "2026-08-17",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
+  "recent_bars": [
+    [
+      "2026-08-05",
+      172.25,
+      173.27,
+      167.44,
+      170.73
+    ],
+    [
+      "2026-08-06",
+      160.21,
+      171.47,
+      157.76,
+      171.11
+    ],
+    [
+      "2026-08-07",
+      171.13,
+      176.33,
+      170.57,
+      175.72
+    ],
+    [
+      "2026-08-10",
+      174.46,
+      179.66,
+      172.55,
+      178.25
+    ],
+    [
+      "2026-08-11",
+      176.83,
+      180.3,
+      175.55,
+      179.82
+    ],
+    [
+      "2026-08-12",
+      176.03,
+      180.15,
+      173.82,
+      180.14
+    ],
+    [
+      "2026-08-13",
+      181.68,
+      185.8,
+      177.0,
+      178.49
+    ],
+    [
+      "2026-08-14",
+      180.04,
+      180.5,
+      173.91,
+      176.89
+    ],
+    [
+      "2026-08-17",
+      173.0,
+      175.52,
+      169.75,
+      169.98
+    ],
+    [
+      "2026-08-18",
+      172.86,
+      176.93,
+      170.43,
+      172.93
+    ],
+    [
+      "2026-08-19",
+      172.35,
+      185.77,
+      172.35,
+      183.17
+    ],
+    [
+      "2026-08-20",
+      182.21,
+      187.14,
+      181.17,
+      181.35
+    ],
+    [
+      "2026-08-21",
+      180.98,
+      188.45,
+      180.02,
+      185.28
+    ],
+    [
+      "2026-08-24",
+      184.64,
+      188.08,
+      183.43,
+      186.53
+    ],
+    [
+      "2026-08-25",
+      183.78,
+      188.0,
+      182.33,
+      186.93
+    ]
+  ],
+  "bars_window": 15,
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
     {
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 185.28",
+      "detail": "USD 186.93",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,16 +141,24 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 185.28 == last close 185.28 (fresh, no override)",
-      "value": 185.28,
+      "detail": "live 186.93 == last close 186.93 (fresh, no override)",
+      "value": 186.93,
       "criterion": "patch lagged daily bar with live price"
+    },
+    {
+      "stage": 0,
+      "name": "Data integrity (info only)",
+      "status": "GO",
+      "detail": "bars=251 | last_bar=2026-08-25 | session=2026-08-25 | history=batch | clean",
+      "value": 251,
+      "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 183.31 > 200SMA 158.13",
-      "value": 183.31,
+      "detail": "XLK 181.74 > 200SMA 158.48",
+      "value": 181.74,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -57,7 +173,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (6 touches)] | bounce=True | confirm[none] | close 185.28 > EMA21 170.98 | bounce_date=2026-08-17",
+      "detail": "floor[horizontal support (6 touches)] | bounce=True | confirm[none] | close 186.93 > EMA21 173.72 | bounce_date=2026-08-17",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,22 +190,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.64,
+      "value": 0.78,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (6 touches)] | confirm[none] | price/EMA21 = 1.084 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.64x < 1.5x, no RSI-Div)",
-      "value": 1.084,
+      "detail": "floor[horizontal support (6 touches)] | confirm[none] | price/EMA21 = 1.076 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.78x < 1.5x, no RSI-Div)",
+      "value": 1.076,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock 5.17% [PASS] | B) 20d stock +26.0% vs SPY +3.6% = excess +22.4% [PASS] | passed_via=red-day",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock 5.17% [PASS] | B) 20d stock +13.5% vs SPY +3.4% = excess +10.1% [PASS] | passed_via=red-day",
       "value": 0.0517,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -97,8 +213,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.32 (< 1.8)",
-      "value": 1.32,
+      "detail": "PEG 1.36 (< 1.8)",
+      "value": 1.36,
       "criterion": "PEG < 1.8"
     },
     {
@@ -113,8 +229,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "GO",
-      "detail": "earnings 2026-10-01 (in 41d, window 15-45)",
-      "value": 41,
+      "detail": "earnings 2026-10-01 (in 37d, window 15-45)",
+      "value": 37,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -129,8 +245,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 167.20 is 9.8% below price 185.28 (max 12%) | reward/risk vs +20% target = 2.05:1",
-      "value": 0.0976,
+      "detail": "stop 167.20 is 10.6% below price 186.93 (max 12%) | reward/risk vs +20% target = 1.89:1",
+      "value": 0.1055,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

@@ -1,23 +1,131 @@
 {
   "ticker": "UPS",
-  "price": 102.01,
+  "price": 105.14,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
   "stop": 99.72,
-  "risk_pct": 0.0224,
-  "target_20pct": 122.41,
+  "risk_pct": 0.0516,
+  "target_20pct": 126.17,
   "bounce_date": "2026-08-12",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
+  "recent_bars": [
+    [
+      "2026-08-05",
+      107.31,
+      107.58,
+      105.24,
+      106.01
+    ],
+    [
+      "2026-08-06",
+      105.49,
+      105.49,
+      101.48,
+      101.58
+    ],
+    [
+      "2026-08-07",
+      101.58,
+      103.6,
+      100.83,
+      102.86
+    ],
+    [
+      "2026-08-10",
+      102.86,
+      103.22,
+      102.09,
+      103.08
+    ],
+    [
+      "2026-08-11",
+      103.29,
+      104.09,
+      102.18,
+      102.79
+    ],
+    [
+      "2026-08-12",
+      102.99,
+      102.99,
+      101.24,
+      102.28
+    ],
+    [
+      "2026-08-13",
+      102.86,
+      104.09,
+      102.68,
+      103.88
+    ],
+    [
+      "2026-08-14",
+      103.98,
+      104.24,
+      102.82,
+      102.86
+    ],
+    [
+      "2026-08-17",
+      103.22,
+      103.24,
+      101.97,
+      102.02
+    ],
+    [
+      "2026-08-18",
+      102.01,
+      102.8,
+      101.34,
+      101.93
+    ],
+    [
+      "2026-08-19",
+      102.63,
+      104.13,
+      102.43,
+      102.86
+    ],
+    [
+      "2026-08-20",
+      102.25,
+      103.4,
+      101.57,
+      102.58
+    ],
+    [
+      "2026-08-21",
+      103.22,
+      103.4,
+      101.77,
+      102.01
+    ],
+    [
+      "2026-08-24",
+      102.3,
+      102.85,
+      101.85,
+      102.72
+    ],
+    [
+      "2026-08-25",
+      103.08,
+      106.17,
+      103.06,
+      105.14
+    ]
+  ],
+  "bars_window": 15,
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
     {
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 102.01",
+      "detail": "USD 105.14",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,16 +141,24 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 102.01 == last close 102.01 (fresh, no override)",
-      "value": 102.01,
+      "detail": "live 105.14 == last close 105.14 (fresh, no override)",
+      "value": 105.14,
       "criterion": "patch lagged daily bar with live price"
+    },
+    {
+      "stage": 0,
+      "name": "Data integrity (info only)",
+      "status": "GO",
+      "detail": "bars=251 | last_bar=2026-08-25 | session=2026-08-25 | history=batch | clean",
+      "value": 251,
+      "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 765.72 > 200SMA 704.98",
-      "value": 765.72,
+      "detail": "SPY 765.91 > 200SMA 705.92",
+      "value": 765.91,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -57,7 +173,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@103.81 / Fib 0.618@100.79; horizontal support (13 touches)] | bounce=True | confirm[none] | close 102.01 < EMA21 104.23 | bounce_date=2026-08-12",
+      "detail": "floor[Fib 0.5@103.81; horizontal support (5 touches)] | bounce=True | confirm[none] | close 105.14 > EMA21 104.19 | bounce_date=2026-08-12",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,22 +190,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.9,
+      "value": 1.42,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@103.81 / Fib 0.618@100.79; horizontal support (13 touches)] | confirm[none] | price/EMA21 = 0.979 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.9x < 1.5x, no RSI-Div)",
-      "value": 0.979,
+      "detail": "floor[Fib 0.5@103.81; horizontal support (5 touches)] | confirm[none] | price/EMA21 = 1.009 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.42x < 1.5x, no RSI-Div)",
+      "value": 1.009,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.92% [fail] | B) 20d stock -9.7% vs SPY +3.6% = excess -13.3% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.92% [fail] | B) 20d stock +1.2% vs SPY +3.4% = excess -2.2% [fail] | passed_via=none",
       "value": -0.0092,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -113,8 +229,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-27 (in 67d, window 15-45)",
-      "value": 67,
+      "detail": "earnings 2026-10-27 (in 63d, window 15-45)",
+      "value": 63,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -129,8 +245,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 99.72 is 2.2% below price 102.01 (max 12%) | reward/risk vs +20% target = 8.91:1",
-      "value": 0.0224,
+      "detail": "stop 99.72 is 5.2% below price 105.14 (max 12%) | reward/risk vs +20% target = 3.88:1",
+      "value": 0.0516,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

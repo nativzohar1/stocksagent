@@ -1,23 +1,131 @@
 {
   "ticker": "LLY",
-  "price": 1255.4,
+  "price": 1233.66,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
   "stop": 1146.05,
-  "risk_pct": 0.0871,
-  "target_20pct": 1506.48,
+  "risk_pct": 0.071,
+  "target_20pct": 1480.39,
   "bounce_date": "2026-08-17",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
+  "recent_bars": [
+    [
+      "2026-08-05",
+      1172.32,
+      1215.2,
+      1136.8,
+      1168.19
+    ],
+    [
+      "2026-08-06",
+      1194.84,
+      1229.12,
+      1171.82,
+      1190.23
+    ],
+    [
+      "2026-08-07",
+      1186.3,
+      1195.09,
+      1159.54,
+      1184.01
+    ],
+    [
+      "2026-08-10",
+      1183.31,
+      1230.18,
+      1182.72,
+      1230.18
+    ],
+    [
+      "2026-08-11",
+      1228.89,
+      1236.23,
+      1207.8,
+      1213.28
+    ],
+    [
+      "2026-08-12",
+      1200.01,
+      1224.75,
+      1189.38,
+      1218.53
+    ],
+    [
+      "2026-08-13",
+      1236.53,
+      1238.33,
+      1204.27,
+      1207.27
+    ],
+    [
+      "2026-08-14",
+      1194.01,
+      1199.0,
+      1171.2,
+      1180.16
+    ],
+    [
+      "2026-08-17",
+      1175.2,
+      1198.52,
+      1163.5,
+      1183.16
+    ],
+    [
+      "2026-08-18",
+      1200.0,
+      1228.47,
+      1194.01,
+      1225.73
+    ],
+    [
+      "2026-08-19",
+      1245.81,
+      1292.65,
+      1240.54,
+      1280.34
+    ],
+    [
+      "2026-08-20",
+      1274.13,
+      1280.28,
+      1243.23,
+      1244.4
+    ],
+    [
+      "2026-08-21",
+      1232.0,
+      1271.22,
+      1230.0,
+      1255.4
+    ],
+    [
+      "2026-08-24",
+      1262.14,
+      1262.14,
+      1230.95,
+      1246.93
+    ],
+    [
+      "2026-08-25",
+      1249.0,
+      1264.73,
+      1229.79,
+      1233.66
+    ]
+  ],
+  "bars_window": 15,
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
     {
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 1255.4",
+      "detail": "USD 1233.66",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,31 +141,39 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 1255.40 == last close 1255.40 (fresh, no override)",
-      "value": 1255.4,
+      "detail": "live 1233.66 == last close 1233.66 (fresh, no override)",
+      "value": 1233.66,
       "criterion": "patch lagged daily bar with live price"
+    },
+    {
+      "stage": 0,
+      "name": "Data integrity (info only)",
+      "status": "GO",
+      "detail": "bars=251 | last_bar=2026-08-25 | session=2026-08-25 | history=batch | clean",
+      "value": 251,
+      "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 765.72 > 200SMA 704.98",
-      "value": 765.72,
+      "detail": "SPY 765.91 > 200SMA 705.92",
+      "value": 765.91,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "GO",
-      "detail": "52w range 87.4%",
-      "value": 0.8737,
+      "detail": "52w range 82.7%",
+      "value": 0.8268,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 1255.40 > EMA21 1205.06 | bounce_date=2026-08-17",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 1233.66 > EMA21 1211.12 | bounce_date=2026-08-17",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,22 +190,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.6,
+      "value": 1.61,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | confirm[soft climax 1.6x] | price/EMA21 = 1.042 (band 0.85-1.15) | blocked: not on floor",
-      "value": 1.042,
+      "detail": "floor[no floor near price] | confirm[soft climax 1.61x] | price/EMA21 = 1.019 (band 0.85-1.15) | blocked: not on floor",
+      "value": 1.019,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.87% [fail] | B) 20d stock +5.1% vs SPY +3.6% = excess +1.5% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.87% [fail] | B) 20d stock +1.2% vs SPY +3.4% = excess -2.2% [fail] | passed_via=none",
       "value": -0.0087,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -113,8 +229,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-29 (in 69d, window 15-45)",
-      "value": 69,
+      "detail": "earnings 2026-10-29 (in 65d, window 15-45)",
+      "value": 65,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -129,8 +245,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 1146.05 is 8.7% below price 1255.40 (max 12%) | reward/risk vs +20% target = 2.30:1",
-      "value": 0.0871,
+      "detail": "stop 1146.05 is 7.1% below price 1233.66 (max 12%) | reward/risk vs +20% target = 2.82:1",
+      "value": 0.071,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

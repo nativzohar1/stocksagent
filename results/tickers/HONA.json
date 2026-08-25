@@ -3,7 +3,7 @@
   "price": null,
   "verdict": "NO_GO",
   "go_count": 0,
-  "blocked_at": "data: insufficient history",
+  "blocked_at": "data: only 50 daily bars (< 200)",
   "entry_path": null,
   "stop": null,
   "risk_pct": null,
@@ -11,15 +11,25 @@
   "bounce_date": null,
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
+  "recent_bars": null,
+  "bars_window": 15,
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
     {
       "stage": 0,
       "name": "Data availability",
       "status": "NO_GO",
-      "detail": "only 48 bars",
-      "value": 48,
-      "criterion": ">=200 daily bars"
+      "detail": "only 50 daily bars (< 200)",
+      "value": 50,
+      "criterion": ">=200 clean, fresh daily bars"
+    },
+    {
+      "stage": 0,
+      "name": "Data integrity (info only)",
+      "status": "GO",
+      "detail": "bars=50 | last_bar=2026-08-25 | session=2026-08-25 | history=batch | clean",
+      "value": 50,
+      "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     }
   ]
 }

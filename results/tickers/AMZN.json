@@ -1,23 +1,131 @@
 {
   "ticker": "AMZN",
-  "price": 258.63,
+  "price": 261.06,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
   "stop": 253.18,
-  "risk_pct": 0.0211,
-  "target_20pct": 310.36,
+  "risk_pct": 0.0302,
+  "target_20pct": 313.27,
   "bounce_date": "2026-08-21",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
+  "recent_bars": [
+    [
+      "2026-08-05",
+      281.59,
+      282.79,
+      270.73,
+      272.65
+    ],
+    [
+      "2026-08-06",
+      272.77,
+      275.48,
+      271.06,
+      272.26
+    ],
+    [
+      "2026-08-07",
+      272.87,
+      278.31,
+      272.75,
+      274.48
+    ],
+    [
+      "2026-08-10",
+      274.01,
+      280.14,
+      273.6,
+      278.09
+    ],
+    [
+      "2026-08-11",
+      278.69,
+      278.84,
+      271.36,
+      272.27
+    ],
+    [
+      "2026-08-12",
+      273.18,
+      273.46,
+      267.1,
+      267.28
+    ],
+    [
+      "2026-08-13",
+      267.24,
+      269.58,
+      264.71,
+      265.13
+    ],
+    [
+      "2026-08-14",
+      264.88,
+      265.81,
+      262.42,
+      262.65
+    ],
+    [
+      "2026-08-17",
+      265.44,
+      265.75,
+      258.34,
+      261.31
+    ],
+    [
+      "2026-08-18",
+      260.63,
+      262.18,
+      257.73,
+      259.45
+    ],
+    [
+      "2026-08-19",
+      260.85,
+      266.4,
+      258.58,
+      265.84
+    ],
+    [
+      "2026-08-20",
+      263.16,
+      263.84,
+      259.52,
+      260.11
+    ],
+    [
+      "2026-08-21",
+      260.74,
+      261.09,
+      257.04,
+      258.63
+    ],
+    [
+      "2026-08-24",
+      259.6,
+      263.32,
+      259.05,
+      262.07
+    ],
+    [
+      "2026-08-25",
+      262.6,
+      263.87,
+      259.83,
+      261.06
+    ]
+  ],
+  "bars_window": 15,
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "gates": [
     {
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 258.63",
+      "detail": "USD 261.06",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -33,16 +141,24 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 258.63 == last close 258.63 (fresh, no override)",
-      "value": 258.63,
+      "detail": "live 261.06 == last close 261.06 (fresh, no override)",
+      "value": 261.06,
       "criterion": "patch lagged daily bar with live price"
+    },
+    {
+      "stage": 0,
+      "name": "Data integrity (info only)",
+      "status": "GO",
+      "detail": "bars=251 | last_bar=2026-08-25 | session=2026-08-25 | history=batch | clean",
+      "value": 251,
+      "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
     {
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 765.72 > 200SMA 704.98",
-      "value": 765.72,
+      "detail": "SPY 765.91 > 200SMA 705.92",
+      "value": 765.91,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -57,7 +173,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (7 touches)] | bounce=True | confirm[none] | close 258.63 < EMA21 260.50 | bounce_date=2026-08-21",
+      "detail": "floor[horizontal support (8 touches)] | bounce=True | confirm[none] | close 261.06 > EMA21 260.68 | bounce_date=2026-08-21",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -74,22 +190,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.85,
+      "value": 0.7,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (7 touches)] | confirm[none] | price/EMA21 = 0.993 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.85x < 1.5x, no RSI-Div)",
-      "value": 0.993,
+      "detail": "floor[horizontal support (8 touches)] | confirm[none] | price/EMA21 = 1.001 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.7x < 1.5x, no RSI-Div)",
+      "value": 1.001,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -1.82% [fail] | B) 20d stock +11.4% vs SPY +3.6% = excess +7.8% [PASS] | passed_via=rolling-20d",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -1.82% [fail] | B) 20d stock +13.1% vs SPY +3.4% = excess +9.7% [PASS] | passed_via=rolling-20d",
       "value": -0.0182,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -97,8 +213,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.38 (< 1.8)",
-      "value": 1.38,
+      "detail": "PEG 1.40 (< 1.8)",
+      "value": 1.4,
       "criterion": "PEG < 1.8"
     },
     {
@@ -113,8 +229,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-29 (in 69d, window 15-45)",
-      "value": 69,
+      "detail": "earnings 2026-10-29 (in 65d, window 15-45)",
+      "value": 65,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -129,8 +245,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 253.18 is 2.1% below price 258.63 (max 12%) | reward/risk vs +20% target = 9.49:1",
-      "value": 0.0211,
+      "detail": "stop 253.18 is 3.0% below price 261.06 (max 12%) | reward/risk vs +20% target = 6.63:1",
+      "value": 0.0302,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
