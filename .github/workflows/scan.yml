@@ -1,10 +1,25 @@
 name: Decoupling Hunter Scan
 
 # ---------------------------------------------------------------------------
-# Schedule: 21:30 UTC, Mon-Fri  (~30 min after the US market close).
-# 21:30 UTC falls AFTER 16:00 ET year-round (17:30 EDT in summer / 16:30 EST
-# in winter), so it is DST-safe. On US holidays scan.py's zero-dependency guard
-# detects the closed session and exits without rewriting out.json (no commit).
+# Schedule: 21:30 UTC, Mon-Fri  (~30 min after the US market close), plus a
+# 23:15 UTC backup run because GitHub delays — and sometimes silently DROPS —
+# scheduled workflows. scan.py is idempotent: the backup run exits immediately
+# if results/ already holds the current session, so it can never overwrite a
+# clean close with an after-hours quote.
+#
+# v3.6.2 (2026-08-27): every date comparison here is US/EASTERN, not UTC.
+# The 21:30 UTC cron leaves only 2h30m before the UTC date rolls over; on
+# 2026-08-26 the queue delayed the run past midnight UTC and scan.py compared
+# the 08-26 session against the 08-27 UTC date, fired its closed-market guard
+# and skipped the scan (23-second green run, no commit). Eastern keeps the
+# whole post-close window on one date.
+#
+# v3.6.1 (2026-08-25): SCAN_OUT_DIR must NEVER be the empty string. scan.py
+# read it with os.getenv("SCAN_OUT_DIR", "results"); an env var that is SET BUT
+# EMPTY defeats that default and yields Path("") == "." , so a whole scan was
+# written to the repo ROOT while `git add results/` found nothing to commit.
+# Both sides are now hardened: the scheduled branch is explicit here, and
+# scan.py uses `or "results"`.
 #
 # Manual runs expose a "test_run" checkbox in the Actions tab:
 #   test_run = false (default) -> identical to a scheduled run: writes results/,
@@ -12,18 +27,12 @@ name: Decoupling Hunter Scan
 #   test_run = true            -> bypasses the closed-market guard, writes to
 #                                 results_test/, uploads an artifact, and NEVER
 #                                 commits. Safe to run on a weekend or holiday.
-#
-# v3.6.1 FIX (2026-08-25): SCAN_OUT_DIR must NEVER be the empty string.
-# scan.py reads it as os.getenv("SCAN_OUT_DIR", "results") — an env var that is
-# SET BUT EMPTY defeats that default and yields Path("") == "." , so the whole
-# scan was written to the repo ROOT while `git add results/` found nothing to
-# commit. Green run, no error, stale results/. The scheduled branch of every
-# expression below is therefore explicit.
 # ---------------------------------------------------------------------------
 
 on:
   schedule:
     - cron: '30 21 * * 1-5'
+    - cron: '15 23 * * 1-5'   # backup: GitHub delays or silently drops scheduled runs
   workflow_dispatch:
     inputs:
       test_run:
@@ -61,6 +70,8 @@ jobs:
       - name: Record environment
         run: |
           python -c "import sys; print('python', sys.version)"
+          date -u '+UTC now: %Y-%m-%d %H:%M'
+          TZ=America/New_York date '+ET  now: %Y-%m-%d %H:%M'
           pip freeze
 
       - name: Run scanner
@@ -74,8 +85,8 @@ jobs:
       - name: Verify results/ was actually refreshed
         if: ${{ !inputs.test_run }}
         run: |
-          if grep -q "NYSE Closed Today" /tmp/scan.log; then
-            echo "Holiday/weekend guard fired - results/ intentionally untouched. OK."
+          if grep -qE "NYSE Closed Today|already holds session" /tmp/scan.log; then
+            echo "Guard fired (market closed, or session already scanned) - results/ intentionally untouched. OK."
             exit 0
           fi
           if [ ! -f results/out_summary.json ]; then
@@ -84,8 +95,8 @@ jobs:
           fi
           sess=$(jq -r '.session_date' results/out_summary.json)
           gen=$(jq -r '.generated_utc'  results/out_summary.json)
-          today=$(date -u '+%Y-%m-%d')
-          echo "session_date=$sess | generated_utc=$gen | today(UTC)=$today"
+          today=$(TZ=America/New_York date '+%Y-%m-%d')
+          echo "session_date=$sess | generated_utc=$gen | today(ET)=$today"
           if [ "$sess" != "$today" ]; then
             echo "::error::Scanner reported success but results/ still holds session $sess (expected $today). Nothing was written where the agent reads."
             exit 1
@@ -107,7 +118,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add results/
           if git diff --cached --quiet; then
-            echo "No changes (holiday/weekend guard fired or identical output) - nothing to commit."
+            echo "No changes (guard fired or identical output) - nothing to commit."
           else
             git commit -m "scan: update results ($(date -u '+%Y-%m-%d %H:%M UTC'))"
             git push
