@@ -1202,12 +1202,23 @@ def main():
     print(f"scan.py v{SCANNER_VERSION} | yfinance {yf_version} | pandas {pd.__version__}")
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
-    # v3.0 calendar + v2.6 HOLIDAY / WEEKEND GUARD, now from ONE SPY download instead of two.
+   # v3.0 calendar + v2.6 HOLIDAY / WEEKEND GUARD, now from ONE SPY download instead of two.
     sessions_cal, last_session = build_session_calendar()
     print(f"SESSION CALENDAR: {len(sessions_cal)} sessions, last={last_session}")
+    # v3.6.2: the trading session is defined in US/EASTERN, NOT in UTC. A scheduled run
+    # that GitHub delays past 00:00 UTC would compare the 2026-08-26 session against the
+    # 2026-08-27 UTC date, conclude the market was closed, and silently skip the scan
+    # (23-second green run, no commit). Eastern keeps the whole post-close window
+    # (16:00 ET -> 23:59 ET) on ONE date, turning 2h30m of slack into 6h30m.
+    try:
+        from zoneinfo import ZoneInfo
+        today_ref = dt.datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+    except Exception:
+        today_ref = dt.date.today().isoformat()
+    print(f"GUARD: last_session={last_session} vs today(ET)={today_ref}")
     if last_session is None:
         print("[holiday-guard] SPY session check unavailable; proceeding with scan.")
-    elif last_session != dt.date.today().isoformat():
+    elif last_session != today_ref:
         if not FORCE_RUN:
             print(f"[!] NYSE Closed Today (last valid session: {last_session}). "
                   f"Skipping out.json overwrite.")
@@ -1219,6 +1230,18 @@ def main():
         print(f"[TEST RUN] writing to {RESULTS_DIR}/ — do not commit this to results/.")
         print("=" * 78)
 
+    # v3.6.2: idempotency. The 23:15 UTC backup cron must never overwrite a good scan
+    # with an after-hours quote, so if results/ already holds this session, stop here.
+    if not FORCE_RUN:
+        _sum = RESULTS_DIR / "out_summary.json"
+        if _sum.exists():
+            try:
+                if json.loads(_sum.read_text()).get("session_date") == last_session:
+                    print(f"[guard] results/ already holds session {last_session}; "
+                          f"nothing to do.")
+                    return 0
+            except Exception:
+                pass
     tickers, universe_source, universe_kind = fetch_universe()
     print(f"UNIVERSE {{count: {len(tickers)}, kind: {universe_kind}, source: {universe_source}}}")
 
