@@ -1,38 +1,17 @@
 {
   "ticker": "TMO",
-  "price": 628.15,
+  "price": 622.18,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
   "stop": 571.3,
-  "risk_pct": 0.0905,
-  "target_20pct": 753.78,
+  "risk_pct": 0.0818,
+  "target_20pct": 746.62,
   "bounce_date": "2026-08-17",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
   "recent_bars": [
-    [
-      "2026-08-05",
-      567.93,
-      578.0,
-      564.4,
-      577.83
-    ],
-    [
-      "2026-08-06",
-      576.8,
-      580.31,
-      569.63,
-      580.02
-    ],
-    [
-      "2026-08-07",
-      578.0,
-      594.26,
-      574.77,
-      594.0
-    ],
     [
       "2026-08-10",
       588.53,
@@ -113,9 +92,30 @@
     [
       "2026-08-25",
       631.01,
-      637.01,
+      647.0,
       618.03,
       628.15
+    ],
+    [
+      "2026-08-26",
+      622.23,
+      636.06,
+      622.23,
+      633.71
+    ],
+    [
+      "2026-08-27",
+      629.47,
+      637.13,
+      626.33,
+      630.7
+    ],
+    [
+      "2026-08-28",
+      626.58,
+      630.0,
+      617.45,
+      622.18
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 628.15",
+      "detail": "USD 622.18",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 628.15 == last close 628.15 (fresh, no override)",
-      "value": 628.15,
+      "detail": "live 622.18 == last close 622.18 (fresh, no override)",
+      "value": 622.18,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=251 | last_bar=2026-08-25 | session=2026-08-25 | history=batch | clean",
+      "detail": "bars=251 | last_bar=2026-08-28 | session=2026-08-28 | history=batch | clean",
       "value": 251,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,23 +157,23 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 765.91 > 200SMA 705.92",
-      "value": 765.91,
+      "detail": "SPY 769.35 > 200SMA 707.42",
+      "value": 769.35,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "GO",
-      "detail": "52w range 47.8%",
-      "value": 0.4781,
+      "detail": "52w range 48.8%",
+      "value": 0.4879,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 628.15 > EMA21 594.44 | bounce_date=2026-08-17",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 622.18 > EMA21 602.91 | bounce_date=2026-08-17",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -190,22 +190,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.31,
+      "value": 0.89,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | confirm[none] | price/EMA21 = 1.057 (band 0.85-1.15) | blocked: not on floor; no reversal confirm (vol 1.31x < 1.5x, no RSI-Div)",
-      "value": 1.057,
+      "detail": "floor[no floor near price] | confirm[none] | price/EMA21 = 1.032 (band 0.85-1.15) | blocked: not on floor; no reversal confirm (vol 0.89x < 1.5x, no RSI-Div)",
+      "value": 1.032,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock 0.01% [PASS] | B) 20d stock +9.0% vs SPY +3.4% = excess +5.6% [PASS] | passed_via=red-day",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock 0.01% [PASS] | B) 20d stock +8.3% vs SPY +3.0% = excess +5.3% [PASS] | passed_via=red-day",
       "value": 0.0001,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -213,8 +213,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "NO_GO",
-      "detail": "PEG 2.05 (>= 1.8)",
-      "value": 2.05,
+      "detail": "PEG 2.06 (>= 1.8)",
+      "value": 2.06,
       "criterion": "PEG < 1.8"
     },
     {
@@ -229,8 +229,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-21 (in 57d, window 15-45)",
-      "value": 57,
+      "detail": "earnings 2026-10-21 (in 53d, window 15-45)",
+      "value": 53,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -245,8 +245,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 571.30 is 9.1% below price 628.15 (max 12%) | reward/risk vs +20% target = 2.21:1",
-      "value": 0.0905,
+      "detail": "stop 571.30 is 8.2% below price 622.18 (max 12%) | reward/risk vs +20% target = 2.45:1",
+      "value": 0.0818,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

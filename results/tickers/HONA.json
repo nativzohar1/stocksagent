@@ -3,7 +3,7 @@
   "price": null,
   "verdict": "NO_GO",
   "go_count": 0,
-  "blocked_at": "data: only 50 daily bars (< 200)",
+  "blocked_at": "data: only 53 daily bars (< 200)",
   "entry_path": null,
   "stop": null,
   "risk_pct": null,
@@ -19,16 +19,16 @@
       "stage": 0,
       "name": "Data availability",
       "status": "NO_GO",
-      "detail": "only 50 daily bars (< 200)",
-      "value": 50,
+      "detail": "only 53 daily bars (< 200)",
+      "value": 53,
       "criterion": ">=200 clean, fresh daily bars"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=50 | last_bar=2026-08-25 | session=2026-08-25 | history=batch | clean",
-      "value": 50,
+      "detail": "bars=53 | last_bar=2026-08-28 | session=2026-08-28 | history=batch | clean",
+      "value": 53,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     }
   ]
