@@ -510,8 +510,18 @@ def get_live_price(tk):
         return None
     return None
 
+# v3.6.3 — RECOVERY-RUN SAFETY. On a recovery run (the session being scanned is NOT
+# today in ET), the fast_info quote belongs to a LATER moment than the last bar.
+# Stamping it onto that bar's Close would fabricate a price that never printed on
+# that date, and every gate downstream - floor, EMA21, stop - would be computed off
+# a number that does not exist. main() sets this to False on a recovery run; on a
+# normal same-day post-close run it stays True and behaviour is unchanged.
+LIVE_OVERRIDE_OK = True
+
 def apply_live_last_price(df, tk):
     """CURE LATENCY BLINDNESS: patch the last bar's Close with the live fast_info price."""
+    if not LIVE_OVERRIDE_OK:
+        return df, "SKIP", "recovery run (session != today ET) -> live override disabled"
     live = safe_call(lambda: get_live_price(tk), what="fast_info live price", default=None)
     if live is None:
         return df, "SKIP", "fast_info live price unavailable -> using last daily close"
@@ -1202,29 +1212,49 @@ def main():
     print(f"scan.py v{SCANNER_VERSION} | yfinance {yf_version} | pandas {pd.__version__}")
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
-   # v3.0 calendar + v2.6 HOLIDAY / WEEKEND GUARD, now from ONE SPY download instead of two.
+# v3.0 session calendar + v3.6.3 SESSION-COMPLETENESS GUARD.
     sessions_cal, last_session = build_session_calendar()
     print(f"SESSION CALENDAR: {len(sessions_cal)} sessions, last={last_session}")
-    # v3.6.2: the trading session is defined in US/EASTERN, NOT in UTC. A scheduled run
-    # that GitHub delays past 00:00 UTC would compare the 2026-08-26 session against the
-    # 2026-08-27 UTC date, conclude the market was closed, and silently skip the scan
-    # (23-second green run, no commit). Eastern keeps the whole post-close window
-    # (16:00 ET -> 23:59 ET) on ONE date, turning 2h30m of slack into 6h30m.
+    # v3.6.3 — the guard NO LONGER asks "is the last session TODAY?".
+    # That question made every DELAYED run fatal. GitHub routinely starts a free
+    # scheduled run 5-8 hours late, so a run that landed after midnight ET compared
+    # a perfectly good 08-27 session against the 08-28 date, declared the market
+    # closed, and exited in 23 seconds: green run, no commit, session lost forever.
+    # Tolerance was ~6h30m from the close; it is now ~17h.
+    # The guard asks the two questions that actually matter:
+    #   1. Has the session CLOSED?  Skip ONLY if it is a weekday before 16:15 ET
+    #      AND the last session is today - i.e. today's bar is still forming.
+    #   2. Have I ALREADY saved this session?  -> the idempotency check below.
+    # Anything else is a RECOVERY RUN and IS allowed to scan, with the live-price
+    # override switched OFF so a quote from a later moment can never be stamped
+    # onto a past close.
     try:
         from zoneinfo import ZoneInfo
-        today_ref = dt.datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+        now_et = dt.datetime.now(ZoneInfo("America/New_York"))
     except Exception:
-        today_ref = dt.date.today().isoformat()
-    print(f"GUARD: last_session={last_session} vs today(ET)={today_ref}")
+        now_et = dt.datetime.now()
+    today_ref = now_et.date().isoformat()
+    mins_et   = now_et.hour * 60 + now_et.minute
+    session_incomplete = (now_et.weekday() < 5 and mins_et < (16 * 60 + 15)
+                          and last_session == today_ref)
+    globals()["LIVE_OVERRIDE_OK"] = (last_session == today_ref)
+    print(f"GUARD: now(ET)={now_et:%Y-%m-%d %H:%M} | last_session={last_session} | "
+          f"today(ET)={today_ref} | session_incomplete={session_incomplete} | "
+          f"live_override={LIVE_OVERRIDE_OK}")
+
     if last_session is None:
         print("[holiday-guard] SPY session check unavailable; proceeding with scan.")
-    elif last_session != today_ref:
-        if not FORCE_RUN:
-            print(f"[!] NYSE Closed Today (last valid session: {last_session}). "
-                  f"Skipping out.json overwrite.")
-            return 0
+    elif session_incomplete and not FORCE_RUN:
+        print(f"[!] Session {last_session} has not closed yet (now {now_et:%H:%M} ET; "
+              f"the scanner waits until 16:15 ET). Skipping out.json overwrite.")
+        return 0
+    elif not LIVE_OVERRIDE_OK:
+        print(f"[guard] RECOVERY RUN: scanning session {last_session} while today(ET) "
+              f"is {today_ref} — live price override DISABLED, daily closes only.")
+
+    if FORCE_RUN:
         print("=" * 78)
-        print(f"[TEST RUN] market closed, guard BYPASSED via SCAN_FORCE_RUN=1.")
+        print("[TEST RUN] guard BYPASSED via SCAN_FORCE_RUN=1.")
         print(f"[TEST RUN] prices are the {last_session} closes — plumbing test only, "
               f"NOT a trading signal.")
         print(f"[TEST RUN] writing to {RESULTS_DIR}/ — do not commit this to results/.")
