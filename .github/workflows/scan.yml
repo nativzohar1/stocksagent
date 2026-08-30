@@ -7,6 +7,16 @@ name: Decoupling Hunter Scan
 # if results/ already holds the current session, so it can never overwrite a
 # clean close with an after-hours quote.
 #
+# v3.6.3 (2026-08-30): the Verify step no longer requires session_date == today.
+# scan.py now has a RECOVERY path: a run that GitHub starts hours late, even
+# after midnight ET, scans and commits the last CLOSED session instead of
+# declaring the market shut and exiting. On such a run results/ legitimately
+# holds YESTERDAY's session, and the old check turned that success into a red
+# X. What must actually be true is that THIS run wrote the file, so the step
+# now tests the write's AGE (generated_utc vs now) rather than its label. That
+# still catches the v3.6.1 failure mode — a green run whose output landed
+# somewhere the agent never reads — which is the only thing this step is for.
+#
 # v3.6.2 (2026-08-27): every date comparison here is US/EASTERN, not UTC.
 # The 21:30 UTC cron leaves only 2h30m before the UTC date rolls over; on
 # 2026-08-26 the queue delayed the run past midnight UTC and scan.py compared
@@ -24,7 +34,7 @@ name: Decoupling Hunter Scan
 # Manual runs expose a "test_run" checkbox in the Actions tab:
 #   test_run = false (default) -> identical to a scheduled run: writes results/,
 #                                 commits and pushes.
-#   test_run = true            -> bypasses the closed-market guard, writes to
+#   test_run = true            -> bypasses the session guard, writes to
 #                                 results_test/, uploads an artifact, and NEVER
 #                                 commits. Safe to run on a weekend or holiday.
 # ---------------------------------------------------------------------------
@@ -85,23 +95,40 @@ jobs:
       - name: Verify results/ was actually refreshed
         if: ${{ !inputs.test_run }}
         run: |
-          if grep -qE "NYSE Closed Today|already holds session" /tmp/scan.log; then
-            echo "Guard fired (market closed, or session already scanned) - results/ intentionally untouched. OK."
+          # Guard fired on purpose -> results/ was intentionally left alone.
+          # Three legitimate exits: the session has not closed yet, the session
+          # was already scanned (idempotency), or the legacy closed-market
+          # message from a scan.py older than v3.6.3.
+          if grep -qE "already holds session|has not closed yet|NYSE Closed Today" /tmp/scan.log; then
+            echo "Guard fired (session not closed yet, or already scanned) - results/ intentionally untouched. OK."
             exit 0
           fi
+
           if [ ! -f results/out_summary.json ]; then
             echo "::error::results/out_summary.json does not exist after a full scan."
             exit 1
           fi
-          sess=$(jq -r '.session_date' results/out_summary.json)
-          gen=$(jq -r '.generated_utc'  results/out_summary.json)
+
+          sess=$(jq -r '.session_date'  results/out_summary.json)
+          gen=$(jq  -r '.generated_utc' results/out_summary.json)
           today=$(TZ=America/New_York date '+%Y-%m-%d')
           echo "session_date=$sess | generated_utc=$gen | today(ET)=$today"
-          if [ "$sess" != "$today" ]; then
-            echo "::error::Scanner reported success but results/ still holds session $sess (expected $today). Nothing was written where the agent reads."
+
+          # v3.6.3: test the write's AGE, not its label. A recovery run writes a
+          # PAST session on purpose, so comparing session_date to today produces a
+          # false red. An OLD file after a "successful" scan is the real fault.
+          gen_epoch=$(date -u -d "$gen" '+%s' 2>/dev/null || echo 0)
+          now_epoch=$(date -u '+%s')
+          if [ "$gen_epoch" = "0" ]; then
+            echo "::error::generated_utc is unparseable ($gen)."
             exit 1
           fi
-          echo "results/ is fresh for session $sess."
+          age=$(( now_epoch - gen_epoch ))
+          if [ "$age" -gt 1800 ]; then
+            echo "::error::Scanner reported success but results/out_summary.json was written ${age}s ago (session $sess). Nothing was written where the agent reads."
+            exit 1
+          fi
+          echo "results/ is fresh for session $sess (written ${age}s ago)."
 
       - name: Upload test results
         if: ${{ inputs.test_run }}
