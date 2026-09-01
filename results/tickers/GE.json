@@ -1,14 +1,14 @@
 {
   "ticker": "GE",
-  "price": 335.71,
+  "price": 331.09,
   "verdict": "NO_GO",
-  "go_count": 10,
-  "blocked_at": "Relative Strength",
+  "go_count": 8,
+  "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
-  "stop": 328.72,
-  "risk_pct": 0.0208,
-  "target_20pct": 402.85,
-  "bounce_date": "2026-08-31",
+  "stop": 324.57,
+  "risk_pct": 0.0197,
+  "target_20pct": 397.31,
+  "bounce_date": "2026-09-01",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
   "recent_bars": [
@@ -104,18 +104,18 @@
       342.73
     ],
     [
-      "2026-08-28",
-      345.09,
-      345.63,
-      341.27,
-      342.58
-    ],
-    [
       "2026-08-31",
       338.83,
       339.75,
-      333.73,
+      333.72,
       335.71
+    ],
+    [
+      "2026-09-01",
+      333.71,
+      336.25,
+      329.51,
+      331.09
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 335.71",
+      "detail": "USD 331.09",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 335.71 == last close 335.71 (fresh, no override)",
-      "value": 335.71,
+      "detail": "live 331.09 == last close 331.09 (fresh, no override)",
+      "value": 331.09,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=251 | last_bar=2026-08-31 | session=2026-08-31 | history=batch | clean",
+      "detail": "bars=251 | last_bar=2026-09-01 | session=2026-09-01 | history=batch | clean",
       "value": 251,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,8 +157,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 767.05 > 200SMA 707.87",
-      "value": 767.05,
+      "detail": "SPY 761.78 > 200SMA 708.29",
+      "value": 761.78,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -173,16 +173,16 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@328.71; horizontal support (6 touches)] | bounce=True | confirm[RSI-Div] | close 335.71 < EMA21 353.56 | bounce_date=2026-08-31",
+      "detail": "floor[Fib 0.5@328.71; horizontal support (2 touches)] | bounce=True | confirm[none] | close 331.09 < EMA21 352.57 | bounce_date=2026-09-01",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
     {
       "stage": 3,
       "name": "Bullish RSI divergence",
-      "status": "GO",
+      "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": true,
+      "value": false,
       "criterion": "price LL & RSI HL"
     },
     {
@@ -190,22 +190,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.24,
+      "value": 1.23,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
-      "status": "GO",
-      "detail": "floor[Fib 0.5@328.71; horizontal support (6 touches)] | confirm[RSI-Div] | price/EMA21 = 0.950 (band 0.85-1.15) | ELIGIBLE \u2014 UNCONFIRMED entry, requires LLM event anchor + 5-session time stop",
-      "value": 0.95,
+      "status": "NO_GO",
+      "detail": "floor[Fib 0.5@328.71; horizontal support (2 touches)] | confirm[none] | price/EMA21 = 0.939 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.23x < 1.5x, no RSI-Div)",
+      "value": 0.939,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -3.56% [fail] | B) 20d stock -9.0% vs SPY +1.2% = excess -10.2% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -3.56% [fail] | B) 20d stock -10.3% vs SPY +0.5% = excess -10.8% [fail] | passed_via=none",
       "value": -0.0356,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -237,16 +237,16 @@
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 333.73 x 0.985",
-      "value": 328.72,
+      "detail": "10d low 329.51 x 0.985",
+      "value": 324.57,
       "criterion": "10d-low * 0.985"
     },
     {
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 328.72 is 2.1% below price 335.71 (max 12%) | reward/risk vs +20% target = 9.61:1",
-      "value": 0.0208,
+      "detail": "stop 324.57 is 2.0% below price 331.09 (max 12%) | reward/risk vs +20% target = 10.16:1",
+      "value": 0.0197,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
@@ -285,8 +285,8 @@
       "stage": 3,
       "name": "Bounce catalyst anchor (Path E)",
       "status": "NEEDS_LLM",
-      "detail": "AI: the reversal started on bounce_date=2026-08-31 (pivot low 333.73). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. MANDATORY \u2014 this ticker is a PATH E (unconfirmed, pre-EMA21) candidate: NO cited dated event => REFUSE the entry.",
-      "value": "2026-08-31",
+      "detail": "AI: the reversal started on bounce_date=2026-09-01 (pivot low 329.51). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. Informational for a Path C entry.",
+      "value": "2026-09-01",
       "criterion": "Path E requires a dated, cited event within 3 sessions of bounce_date"
     },
     {

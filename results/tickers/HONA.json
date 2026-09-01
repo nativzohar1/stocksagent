@@ -27,7 +27,7 @@
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=54 | last_bar=2026-08-31 | session=2026-08-31 | history=batch | clean",
+      "detail": "bars=54 | last_bar=2026-09-01 | session=2026-09-01 | history=batch | clean",
       "value": 54,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     }

@@ -1,13 +1,13 @@
 {
   "ticker": "DIS",
-  "price": 107.55,
+  "price": 106.22,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Volatility (Upside DNA)",
   "entry_path": null,
   "stop": 102.08,
-  "risk_pct": 0.0509,
-  "target_20pct": 129.06,
+  "risk_pct": 0.039,
+  "target_20pct": 127.46,
   "bounce_date": "2026-08-18",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -104,18 +104,18 @@
       106.82
     ],
     [
-      "2026-08-28",
-      107.25,
-      108.2,
-      107.03,
-      108.1
-    ],
-    [
       "2026-08-31",
       107.78,
-      108.04,
+      108.09,
       106.97,
       107.55
+    ],
+    [
+      "2026-09-01",
+      107.24,
+      108.95,
+      106.15,
+      106.22
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 107.55",
+      "detail": "USD 106.22",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 107.55 == last close 107.55 (fresh, no override)",
-      "value": 107.55,
+      "detail": "live 106.22 == last close 106.22 (fresh, no override)",
+      "value": 106.22,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=251 | last_bar=2026-08-31 | session=2026-08-31 | history=batch | clean",
+      "detail": "bars=251 | last_bar=2026-09-01 | session=2026-09-01 | history=batch | clean",
       "value": 251,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,8 +157,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 767.05 > 200SMA 707.87",
-      "value": 767.05,
+      "detail": "SPY 761.78 > 200SMA 708.29",
+      "value": 761.78,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -173,7 +173,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 107.55 > EMA21 105.48 | bounce_date=2026-08-18",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 106.22 > EMA21 105.32 | bounce_date=2026-08-18",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -197,15 +197,15 @@
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | confirm[none] | price/EMA21 = 1.020 (band 0.85-1.15) | blocked: not on floor; no reversal confirm (vol 0.82x < 1.5x, no RSI-Div)",
-      "value": 1.02,
+      "detail": "floor[no floor near price] | confirm[none] | price/EMA21 = 1.009 (band 0.85-1.15) | blocked: not on floor; no reversal confirm (vol 0.82x < 1.5x, no RSI-Div)",
+      "value": 1.009,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.41% [fail] | B) 20d stock +9.6% vs SPY +1.2% = excess +8.4% [PASS] | passed_via=rolling-20d",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.41% [fail] | B) 20d stock +8.2% vs SPY +0.5% = excess +7.7% [PASS] | passed_via=rolling-20d",
       "value": -0.0041,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -245,8 +245,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 102.08 is 5.1% below price 107.55 (max 12%) | reward/risk vs +20% target = 3.93:1",
-      "value": 0.0509,
+      "detail": "stop 102.08 is 3.9% below price 106.22 (max 12%) | reward/risk vs +20% target = 5.13:1",
+      "value": 0.039,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

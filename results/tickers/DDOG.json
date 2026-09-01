@@ -1,13 +1,13 @@
 {
   "ticker": "DDOG",
-  "price": 237.04,
+  "price": 223.84,
   "verdict": "NO_GO",
   "go_count": 10,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
   "stop": 215.72,
-  "risk_pct": 0.0899,
-  "target_20pct": 284.45,
+  "risk_pct": 0.0363,
+  "target_20pct": 268.61,
   "bounce_date": "2026-08-26",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -104,18 +104,18 @@
       242.93
     ],
     [
-      "2026-08-28",
-      240.22,
-      247.88,
-      235.73,
-      236.98
+      "2026-08-31",
+      233.96,
+      239.7,
+      232.3,
+      237.04
     ],
     [
-      "2026-08-31",
-      233.32,
-      239.7,
-      232.35,
-      237.04
+      "2026-09-01",
+      232.62,
+      237.38,
+      223.02,
+      223.84
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 237.04",
+      "detail": "USD 223.84",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 237.04 == last close 237.04 (fresh, no override)",
-      "value": 237.04,
+      "detail": "live 223.84 == last close 223.84 (fresh, no override)",
+      "value": 223.84,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=251 | last_bar=2026-08-31 | session=2026-08-31 | history=batch | clean",
+      "detail": "bars=251 | last_bar=2026-09-01 | session=2026-09-01 | history=batch | clean",
       "value": 251,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,8 +157,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 186.50 > 200SMA 159.29",
-      "value": 186.5,
+      "detail": "XLK 183.64 > 200SMA 159.28",
+      "value": 183.64,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -173,7 +173,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[none] | close 237.04 < EMA21 241.74 | bounce_date=2026-08-26",
+      "detail": "floor[horizontal support (6 touches)] | bounce=True | confirm[none] | close 223.84 < EMA21 240.55 | bounce_date=2026-08-26",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -197,15 +197,15 @@
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (3 touches)] | confirm[none] | price/EMA21 = 0.981 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.99x < 1.5x, no RSI-Div)",
-      "value": 0.981,
+      "detail": "floor[horizontal support (6 touches)] | confirm[none] | price/EMA21 = 0.931 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.99x < 1.5x, no RSI-Div)",
+      "value": 0.931,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock 5.31% [PASS] | B) 20d stock -13.4% vs SPY +1.2% = excess -14.6% [fail] | passed_via=red-day",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock 5.31% [PASS] | B) 20d stock -18.2% vs SPY +0.5% = excess -18.7% [fail] | passed_via=red-day",
       "value": 0.0531,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -245,8 +245,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 215.72 is 9.0% below price 237.04 (max 12%) | reward/risk vs +20% target = 2.22:1",
-      "value": 0.0899,
+      "detail": "stop 215.72 is 3.6% below price 223.84 (max 12%) | reward/risk vs +20% target = 5.51:1",
+      "value": 0.0363,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

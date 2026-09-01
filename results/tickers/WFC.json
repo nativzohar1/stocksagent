@@ -1,13 +1,13 @@
 {
   "ticker": "WFC",
-  "price": 86.39,
+  "price": 87.04,
   "verdict": "NO_GO",
   "go_count": 10,
   "blocked_at": "Volatility (Upside DNA)",
   "entry_path": null,
   "stop": 82.23,
-  "risk_pct": 0.0482,
-  "target_20pct": 103.67,
+  "risk_pct": 0.0553,
+  "target_20pct": 104.45,
   "bounce_date": "2026-08-21",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -104,18 +104,18 @@
       84.97
     ],
     [
-      "2026-08-28",
-      85.41,
-      86.72,
-      85.2,
-      86.69
-    ],
-    [
       "2026-08-31",
       86.29,
       87.09,
       85.88,
       86.39
+    ],
+    [
+      "2026-09-01",
+      86.44,
+      87.94,
+      86.01,
+      87.04
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 86.39",
+      "detail": "USD 87.04",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 86.39 == last close 86.39 (fresh, no override)",
-      "value": 86.39,
+      "detail": "live 87.04 == last close 87.04 (fresh, no override)",
+      "value": 87.04,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=251 | last_bar=2026-08-31 | session=2026-08-31 | history=batch | clean",
+      "detail": "bars=251 | last_bar=2026-09-01 | session=2026-09-01 | history=batch | clean",
       "value": 251,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,8 +157,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 767.05 > 200SMA 707.87",
-      "value": 767.05,
+      "detail": "SPY 761.78 > 200SMA 708.29",
+      "value": 761.78,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -173,7 +173,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "GO",
-      "detail": "floor[horizontal support (4 touches)] | bounce=True | confirm[RSI-Div] | close 86.39 > EMA21 86.05 | bounce_date=2026-08-21",
+      "detail": "floor[horizontal support (2 touches)] | bounce=True | confirm[RSI-Div] | close 87.04 > EMA21 86.09 | bounce_date=2026-08-21",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -205,7 +205,7 @@
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -3.45% [fail] | B) 20d stock -1.1% vs SPY +1.2% = excess -2.4% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -3.45% [fail] | B) 20d stock -0.4% vs SPY +0.5% = excess -0.9% [fail] | passed_via=none",
       "value": -0.0345,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -245,8 +245,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 82.23 is 4.8% below price 86.39 (max 12%) | reward/risk vs +20% target = 4.15:1",
-      "value": 0.0482,
+      "detail": "stop 82.23 is 5.5% below price 87.04 (max 12%) | reward/risk vs +20% target = 3.62:1",
+      "value": 0.0553,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

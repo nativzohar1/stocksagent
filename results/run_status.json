@@ -1,7 +1,7 @@
 {
   "scanner_version": "3.6",
-  "generated_utc": "2026-09-01T00:43:19.302419Z",
-  "session_date": "2026-08-31",
+  "generated_utc": "2026-09-01T23:26:51.622468Z",
+  "session_date": "2026-09-01",
   "universe_kind": "live",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "n": 106,

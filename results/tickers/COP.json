@@ -1,13 +1,13 @@
 {
   "ticker": "COP",
-  "price": 132.49,
+  "price": 136.19,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
   "stop": 126.08,
-  "risk_pct": 0.0484,
-  "target_20pct": 158.99,
+  "risk_pct": 0.0742,
+  "target_20pct": 163.43,
   "bounce_date": "2026-08-27",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
@@ -104,18 +104,18 @@
       129.52
     ],
     [
-      "2026-08-28",
-      129.95,
-      130.84,
-      129.37,
-      130.35
-    ],
-    [
       "2026-08-31",
       132.78,
       134.29,
-      131.11,
+      131.1,
       132.49
+    ],
+    [
+      "2026-09-01",
+      135.0,
+      136.3,
+      133.64,
+      136.19
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 132.49",
+      "detail": "USD 136.19",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 132.49 == last close 132.49 (fresh, no override)",
-      "value": 132.49,
+      "detail": "live 136.19 == last close 136.19 (fresh, no override)",
+      "value": 136.19,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=251 | last_bar=2026-08-31 | session=2026-08-31 | history=batch | clean",
+      "detail": "bars=251 | last_bar=2026-09-01 | session=2026-09-01 | history=batch | clean",
       "value": 251,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,23 +157,23 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 767.05 > 200SMA 707.87",
-      "value": 767.05,
+      "detail": "SPY 761.78 > 200SMA 708.29",
+      "value": 761.78,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "GO",
-      "detail": "52w range 63.8%",
-      "value": 0.638,
+      "detail": "52w range 64.3%",
+      "value": 0.6431,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 132.49 > EMA21 127.06 | bounce_date=2026-08-27",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 136.19 > EMA21 127.57 | bounce_date=2026-08-27",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -190,22 +190,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.28,
+      "value": 1.29,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | confirm[none] | price/EMA21 = 1.043 (band 0.85-1.15) | blocked: not on floor; no reversal confirm (vol 1.28x < 1.5x, no RSI-Div)",
-      "value": 1.043,
+      "detail": "floor[no floor near price] | confirm[none] | price/EMA21 = 1.068 (band 0.85-1.15) | blocked: not on floor; no reversal confirm (vol 1.29x < 1.5x, no RSI-Div)",
+      "value": 1.068,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock 3.47% [PASS] | B) 20d stock +11.9% vs SPY +1.2% = excess +10.7% [PASS] | passed_via=red-day",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock 3.47% [PASS] | B) 20d stock +15.1% vs SPY +0.5% = excess +14.5% [PASS] | passed_via=red-day",
       "value": 0.0347,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -213,8 +213,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.01 (< 1.8)",
-      "value": 1.01,
+      "detail": "PEG 1.03 (< 1.8)",
+      "value": 1.03,
       "criterion": "PEG < 1.8"
     },
     {
@@ -245,8 +245,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 126.08 is 4.8% below price 132.49 (max 12%) | reward/risk vs +20% target = 4.13:1",
-      "value": 0.0484,
+      "detail": "stop 126.08 is 7.4% below price 136.19 (max 12%) | reward/risk vs +20% target = 2.69:1",
+      "value": 0.0742,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
