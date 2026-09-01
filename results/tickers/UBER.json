@@ -1,24 +1,17 @@
 {
   "ticker": "UBER",
-  "price": 78.82,
+  "price": 75.65,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
   "stop": 72.86,
-  "risk_pct": 0.0756,
-  "target_20pct": 94.58,
+  "risk_pct": 0.0369,
+  "target_20pct": 90.78,
   "bounce_date": "2026-08-19",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
   "recent_bars": [
-    [
-      "2026-08-10",
-      75.43,
-      78.1,
-      75.39,
-      78.03
-    ],
     [
       "2026-08-11",
       78.0,
@@ -113,9 +106,16 @@
     [
       "2026-08-28",
       77.0,
-      78.99,
+      79.0,
       76.72,
       78.82
+    ],
+    [
+      "2026-08-31",
+      78.17,
+      78.29,
+      75.35,
+      75.65
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 78.82",
+      "detail": "USD 75.65",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 78.82 == last close 78.82 (fresh, no override)",
-      "value": 78.82,
+      "detail": "live 75.65 == last close 75.65 (fresh, no override)",
+      "value": 75.65,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=251 | last_bar=2026-08-28 | session=2026-08-28 | history=batch | clean",
+      "detail": "bars=251 | last_bar=2026-08-31 | session=2026-08-31 | history=batch | clean",
       "value": 251,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,8 +157,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 185.69 > 200SMA 159.09",
-      "value": 185.69,
+      "detail": "XLK 186.50 > 200SMA 159.29",
+      "value": 186.5,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -173,7 +173,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 78.82 > EMA21 76.28 | bounce_date=2026-08-19",
+      "detail": "floor[Fib 0.5@73.89; horizontal support (5 touches)] | bounce=True | confirm[none] | close 75.65 < EMA21 76.23 | bounce_date=2026-08-19",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -190,22 +190,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.75,
+      "value": 0.94,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | confirm[none] | price/EMA21 = 1.033 (band 0.85-1.15) | blocked: not on floor; no reversal confirm (vol 0.75x < 1.5x, no RSI-Div)",
-      "value": 1.033,
+      "detail": "floor[Fib 0.5@73.89; horizontal support (5 touches)] | confirm[none] | price/EMA21 = 0.992 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.94x < 1.5x, no RSI-Div)",
+      "value": 0.992,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock 0.65% [PASS] | B) 20d stock +12.0% vs SPY +3.0% = excess +9.0% [PASS] | passed_via=red-day",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock 0.65% [PASS] | B) 20d stock +5.6% vs SPY +1.2% = excess +4.4% [PASS] | passed_via=red-day",
       "value": 0.0065,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -229,8 +229,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-11-03 (in 66d, window 15-45)",
-      "value": 66,
+      "detail": "earnings 2026-11-03 (in 63d, window 15-45)",
+      "value": 63,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -245,8 +245,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 72.86 is 7.6% below price 78.82 (max 12%) | reward/risk vs +20% target = 2.64:1",
-      "value": 0.0756,
+      "detail": "stop 72.86 is 3.7% below price 75.65 (max 12%) | reward/risk vs +20% target = 5.42:1",
+      "value": 0.0369,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

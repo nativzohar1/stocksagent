@@ -1,24 +1,17 @@
 {
   "ticker": "WFC",
-  "price": 86.69,
+  "price": 86.39,
   "verdict": "NO_GO",
   "go_count": 10,
   "blocked_at": "Volatility (Upside DNA)",
   "entry_path": null,
   "stop": 82.23,
-  "risk_pct": 0.0514,
-  "target_20pct": 104.03,
+  "risk_pct": 0.0482,
+  "target_20pct": 103.67,
   "bounce_date": "2026-08-21",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
   "recent_bars": [
-    [
-      "2026-08-10",
-      86.91,
-      87.81,
-      86.57,
-      87.52
-    ],
     [
       "2026-08-11",
       87.62,
@@ -114,8 +107,15 @@
       "2026-08-28",
       85.41,
       86.72,
-      85.22,
+      85.2,
       86.69
+    ],
+    [
+      "2026-08-31",
+      86.29,
+      87.09,
+      85.88,
+      86.39
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 86.69",
+      "detail": "USD 86.39",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 86.69 == last close 86.69 (fresh, no override)",
-      "value": 86.69,
+      "detail": "live 86.39 == last close 86.39 (fresh, no override)",
+      "value": 86.39,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=251 | last_bar=2026-08-28 | session=2026-08-28 | history=batch | clean",
+      "detail": "bars=251 | last_bar=2026-08-31 | session=2026-08-31 | history=batch | clean",
       "value": 251,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,8 +157,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 769.35 > 200SMA 707.42",
-      "value": 769.35,
+      "detail": "SPY 767.05 > 200SMA 707.87",
+      "value": 767.05,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -173,7 +173,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "GO",
-      "detail": "floor[horizontal support (4 touches)] | bounce=True | confirm[RSI-Div] | close 86.69 > EMA21 86.02 | bounce_date=2026-08-21",
+      "detail": "floor[horizontal support (4 touches)] | bounce=True | confirm[RSI-Div] | close 86.39 > EMA21 86.05 | bounce_date=2026-08-21",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -190,7 +190,7 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.83,
+      "value": 1.34,
       "criterion": ">= 2x avg volume"
     },
     {
@@ -205,7 +205,7 @@
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -3.45% [fail] | B) 20d stock +0.9% vs SPY +3.0% = excess -2.1% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -3.45% [fail] | B) 20d stock -1.1% vs SPY +1.2% = excess -2.4% [fail] | passed_via=none",
       "value": -0.0345,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -229,8 +229,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "GO",
-      "detail": "earnings 2026-10-13 (in 45d, window 15-45)",
-      "value": 45,
+      "detail": "earnings 2026-10-13 (in 42d, window 15-45)",
+      "value": 42,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -245,8 +245,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 82.23 is 5.1% below price 86.69 (max 12%) | reward/risk vs +20% target = 3.89:1",
-      "value": 0.0514,
+      "detail": "stop 82.23 is 4.8% below price 86.39 (max 12%) | reward/risk vs +20% target = 4.15:1",
+      "value": 0.0482,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

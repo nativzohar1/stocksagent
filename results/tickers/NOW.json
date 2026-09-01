@@ -1,24 +1,17 @@
 {
   "ticker": "NOW",
-  "price": 144.71,
+  "price": 147.99,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
-  "stop": 115.83,
-  "risk_pct": 0.1996,
-  "target_20pct": 173.65,
-  "bounce_date": "2026-08-17",
+  "stop": 116.07,
+  "risk_pct": 0.2157,
+  "target_20pct": 177.59,
+  "bounce_date": "2026-08-18",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
   "recent_bars": [
-    [
-      "2026-08-10",
-      124.72,
-      127.89,
-      123.28,
-      127.44
-    ],
     [
       "2026-08-11",
       126.26,
@@ -116,6 +109,13 @@
       145.72,
       137.8,
       144.71
+    ],
+    [
+      "2026-08-31",
+      142.08,
+      149.6,
+      141.69,
+      147.99
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 144.71",
+      "detail": "USD 147.99",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 144.71 == last close 144.71 (fresh, no override)",
-      "value": 144.71,
+      "detail": "live 147.99 == last close 147.99 (fresh, no override)",
+      "value": 147.99,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=251 | last_bar=2026-08-28 | session=2026-08-28 | history=batch | clean",
+      "detail": "bars=251 | last_bar=2026-08-31 | session=2026-08-31 | history=batch | clean",
       "value": 251,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,8 +157,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "XLK 185.69 > 200SMA 159.09",
-      "value": 185.69,
+      "detail": "XLK 186.50 > 200SMA 159.29",
+      "value": 186.5,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -173,7 +173,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 144.71 > EMA21 125.00 | bounce_date=2026-08-17",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 147.99 > EMA21 127.09 | bounce_date=2026-08-18",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -190,22 +190,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.31,
+      "value": 1.32,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | confirm[none] | price/EMA21 = 1.158 (band 0.85-1.15) | blocked: not on floor; no reversal confirm (vol 1.31x < 1.5x, no RSI-Div); CHASE: price 1.16x EMA21 > 1.15x",
-      "value": 1.158,
+      "detail": "floor[no floor near price] | confirm[none] | price/EMA21 = 1.164 (band 0.85-1.15) | blocked: not on floor; no reversal confirm (vol 1.32x < 1.5x, no RSI-Div); CHASE: price 1.16x EMA21 > 1.15x",
+      "value": 1.164,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock 4.65% [PASS] | B) 20d stock +30.1% vs SPY +3.0% = excess +27.1% [PASS] | passed_via=red-day",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock 4.65% [PASS] | B) 20d stock +29.6% vs SPY +1.2% = excess +28.4% [PASS] | passed_via=red-day",
       "value": 0.0465,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -229,24 +229,24 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-28 (in 60d, window 15-45)",
-      "value": 60,
+      "detail": "earnings 2026-10-28 (in 57d, window 15-45)",
+      "value": 57,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 117.59 x 0.985",
-      "value": 115.83,
+      "detail": "10d low 117.84 x 0.985",
+      "value": 116.07,
       "criterion": "10d-low * 0.985"
     },
     {
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "NO_GO",
-      "detail": "stop 115.83 is 20.0% below price 144.71 (max 12%) | reward/risk vs +20% target = 1.00:1",
-      "value": 0.1996,
+      "detail": "stop 116.07 is 21.6% below price 147.99 (max 12%) | reward/risk vs +20% target = 0.93:1",
+      "value": 0.2157,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
@@ -285,8 +285,8 @@
       "stage": 3,
       "name": "Bounce catalyst anchor (Path E)",
       "status": "NEEDS_LLM",
-      "detail": "AI: the reversal started on bounce_date=2026-08-17 (pivot low 117.59). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. Informational for a Path C entry.",
-      "value": "2026-08-17",
+      "detail": "AI: the reversal started on bounce_date=2026-08-18 (pivot low 117.84). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. Informational for a Path C entry.",
+      "value": "2026-08-18",
       "criterion": "Path E requires a dated, cited event within 3 sessions of bounce_date"
     },
     {

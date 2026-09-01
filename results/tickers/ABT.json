@@ -1,24 +1,17 @@
 {
   "ticker": "ABT",
-  "price": 112.47,
+  "price": 110.36,
   "verdict": "NO_GO",
-  "go_count": 9,
+  "go_count": 10,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
-  "stop": 107.71,
-  "risk_pct": 0.0423,
-  "target_20pct": 134.96,
-  "bounce_date": "2026-08-17",
+  "stop": 107.9,
+  "risk_pct": 0.0223,
+  "target_20pct": 132.43,
+  "bounce_date": "2026-08-31",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
   "recent_bars": [
-    [
-      "2026-08-10",
-      107.41,
-      109.09,
-      107.36,
-      108.62
-    ],
     [
       "2026-08-11",
       108.62,
@@ -113,9 +106,16 @@
     [
       "2026-08-28",
       111.6,
-      112.74,
+      112.75,
       111.11,
       112.47
+    ],
+    [
+      "2026-08-31",
+      111.54,
+      111.64,
+      109.54,
+      110.36
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 112.47",
+      "detail": "USD 110.36",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 112.47 == last close 112.47 (fresh, no override)",
-      "value": 112.47,
+      "detail": "live 110.36 == last close 110.36 (fresh, no override)",
+      "value": 110.36,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=251 | last_bar=2026-08-28 | session=2026-08-28 | history=batch | clean",
+      "detail": "bars=251 | last_bar=2026-08-31 | session=2026-08-31 | history=batch | clean",
       "value": 251,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,8 +157,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 769.35 > 200SMA 707.42",
-      "value": 769.35,
+      "detail": "SPY 767.05 > 200SMA 707.87",
+      "value": 767.05,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -173,7 +173,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 112.47 > EMA21 110.69 | bounce_date=2026-08-17",
+      "detail": "floor[no floor near price] | bounce=True | confirm[none] | close 110.36 < EMA21 110.66 | bounce_date=2026-08-31",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -190,22 +190,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.74,
+      "value": 1.0,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[no floor near price] | confirm[none] | price/EMA21 = 1.016 (band 0.85-1.15) | blocked: not on floor; no reversal confirm (vol 0.74x < 1.5x, no RSI-Div)",
-      "value": 1.016,
+      "detail": "floor[no floor near price] | confirm[none] | price/EMA21 = 0.997 (band 0.85-1.15) | blocked: not on floor; no reversal confirm (vol 1.0x < 1.5x, no RSI-Div)",
+      "value": 0.997,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock 0.68% [PASS] | B) 20d stock +6.4% vs SPY +3.0% = excess +3.4% [PASS] | passed_via=red-day",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock 0.68% [PASS] | B) 20d stock +3.0% vs SPY +1.2% = excess +1.8% [fail] | passed_via=red-day",
       "value": 0.0068,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -228,25 +228,25 @@
     {
       "stage": 2,
       "name": "Next earnings (Catalyst)",
-      "status": "NO_GO",
-      "detail": "earnings 2026-10-14 (in 46d, window 15-45)",
-      "value": 46,
+      "status": "GO",
+      "detail": "earnings 2026-10-14 (in 43d, window 15-45)",
+      "value": 43,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 109.35 x 0.985",
-      "value": 107.71,
+      "detail": "10d low 109.54 x 0.985",
+      "value": 107.9,
       "criterion": "10d-low * 0.985"
     },
     {
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 107.71 is 4.2% below price 112.47 (max 12%) | reward/risk vs +20% target = 4.73:1",
-      "value": 0.0423,
+      "detail": "stop 107.90 is 2.2% below price 110.36 (max 12%) | reward/risk vs +20% target = 8.97:1",
+      "value": 0.0223,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
@@ -285,8 +285,8 @@
       "stage": 3,
       "name": "Bounce catalyst anchor (Path E)",
       "status": "NEEDS_LLM",
-      "detail": "AI: the reversal started on bounce_date=2026-08-17 (pivot low 109.35). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. Informational for a Path C entry.",
-      "value": "2026-08-17",
+      "detail": "AI: the reversal started on bounce_date=2026-08-31 (pivot low 109.54). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. Informational for a Path C entry.",
+      "value": "2026-08-31",
       "criterion": "Path E requires a dated, cited event within 3 sessions of bounce_date"
     },
     {
