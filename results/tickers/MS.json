@@ -1,24 +1,17 @@
 {
   "ticker": "MS",
-  "price": 211.82,
+  "price": 217.15,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
-  "stop": 204.21,
-  "risk_pct": 0.0359,
-  "target_20pct": 254.18,
-  "bounce_date": "2026-08-20",
+  "stop": 205.78,
+  "risk_pct": 0.0524,
+  "target_20pct": 260.58,
+  "bounce_date": "2026-09-01",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
   "recent_bars": [
-    [
-      "2026-08-13",
-      219.3,
-      222.0,
-      217.88,
-      218.38
-    ],
     [
       "2026-08-14",
       217.8,
@@ -114,8 +107,15 @@
       "2026-09-02",
       211.97,
       216.15,
-      210.61,
+      210.6,
       211.82
+    ],
+    [
+      "2026-09-03",
+      213.2,
+      217.81,
+      213.29,
+      217.15
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 211.82",
+      "detail": "USD 217.15",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 211.82 == last close 211.82 (fresh, no override)",
-      "value": 211.82,
+      "detail": "live 217.15 == last close 217.15 (fresh, no override)",
+      "value": 217.15,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=252 | last_bar=2026-09-02 | session=2026-09-02 | history=batch | clean",
+      "detail": "bars=252 | last_bar=2026-09-03 | session=2026-09-03 | history=batch | clean",
       "value": 252,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,8 +157,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 765.16 > 200SMA 708.78",
-      "value": 765.16,
+      "detail": "SPY 773.17 > 200SMA 709.32",
+      "value": 773.17,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -173,7 +173,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (10 touches)] | bounce=True | confirm[none] | close 211.82 < EMA21 214.11 | bounce_date=2026-08-20",
+      "detail": "floor[horizontal support (7 touches)] | bounce=True | confirm[none] | close 217.15 > EMA21 214.38 | bounce_date=2026-09-01",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -190,22 +190,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.82,
+      "value": 0.83,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (10 touches)] | confirm[none] | price/EMA21 = 0.989 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.82x < 1.5x, no RSI-Div)",
-      "value": 0.989,
+      "detail": "floor[horizontal support (7 touches)] | confirm[none] | price/EMA21 = 1.013 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.83x < 1.5x, no RSI-Div)",
+      "value": 1.013,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -3.99% [fail] | B) 20d stock -3.0% vs SPY -0.6% = excess -2.4% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -3.99% [fail] | B) 20d stock +1.6% vs SPY +0.6% = excess +1.0% [fail] | passed_via=none",
       "value": -0.0399,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -229,24 +229,24 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "GO",
-      "detail": "earnings 2026-10-14 (in 42d, window 15-45)",
-      "value": 42,
+      "detail": "earnings 2026-10-14 (in 41d, window 15-45)",
+      "value": 41,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 207.32 x 0.985",
-      "value": 204.21,
+      "detail": "10d low 208.91 x 0.985",
+      "value": 205.78,
       "criterion": "10d-low * 0.985"
     },
     {
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 204.21 is 3.6% below price 211.82 (max 12%) | reward/risk vs +20% target = 5.57:1",
-      "value": 0.0359,
+      "detail": "stop 205.78 is 5.2% below price 217.15 (max 12%) | reward/risk vs +20% target = 3.82:1",
+      "value": 0.0524,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
@@ -285,8 +285,8 @@
       "stage": 3,
       "name": "Bounce catalyst anchor (Path E)",
       "status": "NEEDS_LLM",
-      "detail": "AI: the reversal started on bounce_date=2026-08-20 (pivot low 207.32). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. Informational for a Path C entry.",
-      "value": "2026-08-20",
+      "detail": "AI: the reversal started on bounce_date=2026-09-01 (pivot low 208.91). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. Informational for a Path C entry.",
+      "value": "2026-09-01",
       "criterion": "Path E requires a dated, cited event within 3 sessions of bounce_date"
     },
     {

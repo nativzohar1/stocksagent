@@ -1,24 +1,17 @@
 {
   "ticker": "BRK-B",
-  "price": 505.24,
+  "price": 508.13,
   "verdict": "NO_GO",
   "go_count": 7,
   "blocked_at": "Volatility (Upside DNA)",
   "entry_path": null,
   "stop": 488.24,
-  "risk_pct": 0.0336,
-  "target_20pct": 606.29,
+  "risk_pct": 0.0391,
+  "target_20pct": 609.76,
   "bounce_date": "2026-08-21",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
   "recent_bars": [
-    [
-      "2026-08-13",
-      511.29,
-      512.01,
-      505.56,
-      506.93
-    ],
     [
       "2026-08-14",
       507.24,
@@ -113,9 +106,16 @@
     [
       "2026-09-02",
       503.46,
-      508.92,
+      508.93,
       502.6,
       505.24
+    ],
+    [
+      "2026-09-03",
+      506.6,
+      508.95,
+      505.21,
+      508.13
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 505.24",
+      "detail": "USD 508.13",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 505.24 == last close 505.24 (fresh, no override)",
-      "value": 505.24,
+      "detail": "live 508.13 == last close 508.13 (fresh, no override)",
+      "value": 508.13,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=252 | last_bar=2026-09-02 | session=2026-09-02 | history=batch | clean",
+      "detail": "bars=252 | last_bar=2026-09-03 | session=2026-09-03 | history=batch | clean",
       "value": 252,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,8 +157,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 765.16 > 200SMA 708.78",
-      "value": 765.16,
+      "detail": "SPY 773.17 > 200SMA 709.32",
+      "value": 773.17,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -173,7 +173,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@500.88 / Fib 0.618@492.17; horizontal support (7 touches)] | bounce=True | confirm[none] | close 505.24 > EMA21 504.51 | bounce_date=2026-08-21",
+      "detail": "floor[Fib 0.5@500.88; horizontal support (6 touches)] | bounce=True | confirm[none] | close 508.13 > EMA21 504.84 | bounce_date=2026-08-21",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -190,22 +190,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.44,
+      "value": 1.18,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@500.88 / Fib 0.618@492.17; horizontal support (7 touches)] | confirm[none] | price/EMA21 = 1.001 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.44x < 1.5x, no RSI-Div)",
-      "value": 1.001,
+      "detail": "floor[Fib 0.5@500.88; horizontal support (6 touches)] | confirm[none] | price/EMA21 = 1.007 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.18x < 1.5x, no RSI-Div)",
+      "value": 1.007,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.63% [fail] | B) 20d stock -2.6% vs SPY -0.6% = excess -2.0% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -0.63% [fail] | B) 20d stock -3.1% vs SPY +0.6% = excess -3.7% [fail] | passed_via=none",
       "value": -0.0063,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -229,8 +229,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-11-07 (in 66d, window 15-45)",
-      "value": 66,
+      "detail": "earnings 2026-11-07 (in 65d, window 15-45)",
+      "value": 65,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -245,8 +245,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 488.24 is 3.4% below price 505.24 (max 12%) | reward/risk vs +20% target = 5.94:1",
-      "value": 0.0336,
+      "detail": "stop 488.24 is 3.9% below price 508.13 (max 12%) | reward/risk vs +20% target = 5.11:1",
+      "value": 0.0391,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
