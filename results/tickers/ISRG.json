@@ -1,24 +1,17 @@
 {
   "ticker": "ISRG",
-  "price": 369.83,
+  "price": 366.7,
   "verdict": "NO_GO",
-  "go_count": 11,
+  "go_count": 10,
   "blocked_at": "Relative Strength",
   "entry_path": null,
-  "stop": 359.84,
-  "risk_pct": 0.027,
-  "target_20pct": 443.8,
-  "bounce_date": "2026-08-31",
+  "stop": 357.86,
+  "risk_pct": 0.0241,
+  "target_20pct": 440.04,
+  "bounce_date": "2026-09-04",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
   "recent_bars": [
-    [
-      "2026-08-14",
-      401.02,
-      402.46,
-      394.06,
-      394.51
-    ],
     [
       "2026-08-17",
       392.1,
@@ -112,10 +105,17 @@
     ],
     [
       "2026-09-03",
-      374.75,
+      374.79,
       378.99,
       365.42,
       369.83
+    ],
+    [
+      "2026-09-04",
+      367.81,
+      369.55,
+      363.31,
+      366.7
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 369.83",
+      "detail": "USD 366.7",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 369.83 == last close 369.83 (fresh, no override)",
-      "value": 369.83,
+      "detail": "live 366.70 == last close 366.70 (fresh, no override)",
+      "value": 366.7,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=252 | last_bar=2026-09-03 | session=2026-09-03 | history=batch | clean",
+      "detail": "bars=252 | last_bar=2026-09-04 | session=2026-09-04 | history=batch | clean",
       "value": 252,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,8 +157,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 773.17 > 200SMA 709.32",
-      "value": 773.17,
+      "detail": "SPY 770.19 > 200SMA 709.87",
+      "value": 770.19,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -173,7 +173,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[RSI-Div] | close 369.83 < EMA21 376.46 | bounce_date=2026-08-31",
+      "detail": "floor[horizontal support (3 touches)] | bounce=True | confirm[RSI-Div] | close 366.70 < EMA21 375.57 | bounce_date=2026-09-04",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -190,31 +190,31 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.65,
+      "value": 0.67,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "GO",
-      "detail": "floor[horizontal support (3 touches)] | confirm[RSI-Div] | price/EMA21 = 0.982 (band 0.85-1.15) | ELIGIBLE \u2014 UNCONFIRMED entry, requires LLM event anchor + 5-session time stop",
-      "value": 0.982,
+      "detail": "floor[horizontal support (3 touches)] | confirm[RSI-Div] | price/EMA21 = 0.976 (band 0.85-1.15) | ELIGIBLE \u2014 UNCONFIRMED entry, requires LLM event anchor + 5-session time stop",
+      "value": 0.976,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -2.40% [fail] | B) 20d stock -1.0% vs SPY +0.6% = excess -1.6% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -2.40% [fail] | B) 20d stock -3.2% vs SPY -0.4% = excess -2.8% [fail] | passed_via=none",
       "value": -0.024,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
     {
       "stage": 2,
       "name": "PEG",
-      "status": "GO",
-      "detail": "PEG 1.61 (< 1.8)",
-      "value": 1.61,
+      "status": "NO_GO",
+      "detail": "PEG 1.80 (>= 1.8)",
+      "value": 1.8,
       "criterion": "PEG < 1.8"
     },
     {
@@ -229,24 +229,24 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-20 (in 47d, window 15-45)",
-      "value": 47,
+      "detail": "earnings 2026-10-20 (in 46d, window 15-45)",
+      "value": 46,
       "criterion": "earnings in 15-45 days"
     },
     {
       "stage": 5,
       "name": "Hard stop price",
       "status": "GO",
-      "detail": "10d low 365.32 x 0.985",
-      "value": 359.84,
+      "detail": "10d low 363.31 x 0.985",
+      "value": 357.86,
       "criterion": "10d-low * 0.985"
     },
     {
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 359.84 is 2.7% below price 369.83 (max 12%) | reward/risk vs +20% target = 7.40:1",
-      "value": 0.027,
+      "detail": "stop 357.86 is 2.4% below price 366.70 (max 12%) | reward/risk vs +20% target = 8.30:1",
+      "value": 0.0241,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
@@ -285,8 +285,8 @@
       "stage": 3,
       "name": "Bounce catalyst anchor (Path E)",
       "status": "NEEDS_LLM",
-      "detail": "AI: the reversal started on bounce_date=2026-08-31 (pivot low 365.32). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. MANDATORY \u2014 this ticker is a PATH E (unconfirmed, pre-EMA21) candidate: NO cited dated event => REFUSE the entry.",
-      "value": "2026-08-31",
+      "detail": "AI: the reversal started on bounce_date=2026-09-04 (pivot low 363.31). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. MANDATORY \u2014 this ticker is a PATH E (unconfirmed, pre-EMA21) candidate: NO cited dated event => REFUSE the entry.",
+      "value": "2026-09-04",
       "criterion": "Path E requires a dated, cited event within 3 sessions of bounce_date"
     },
     {

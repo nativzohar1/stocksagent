@@ -1,24 +1,17 @@
 {
   "ticker": "CMCSA",
-  "price": 26.65,
+  "price": 26.49,
   "verdict": "NO_GO",
   "go_count": 9,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
   "stop": 25.88,
-  "risk_pct": 0.0289,
-  "target_20pct": 31.98,
+  "risk_pct": 0.023,
+  "target_20pct": 31.79,
   "bounce_date": "2026-09-01",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
   "recent_bars": [
-    [
-      "2026-08-14",
-      26.31,
-      26.49,
-      26.13,
-      26.18
-    ],
     [
       "2026-08-17",
       25.88,
@@ -112,10 +105,17 @@
     ],
     [
       "2026-09-03",
-      26.98,
+      26.89,
       27.13,
       26.5,
       26.65
+    ],
+    [
+      "2026-09-04",
+      26.57,
+      26.73,
+      26.38,
+      26.49
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 26.65",
+      "detail": "USD 26.49",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 26.65 == last close 26.65 (fresh, no override)",
-      "value": 26.65,
+      "detail": "live 26.49 == last close 26.49 (fresh, no override)",
+      "value": 26.49,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=252 | last_bar=2026-09-03 | session=2026-09-03 | history=batch | clean",
+      "detail": "bars=252 | last_bar=2026-09-04 | session=2026-09-04 | history=batch | clean",
       "value": 252,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,8 +157,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 773.17 > 200SMA 709.32",
-      "value": 773.17,
+      "detail": "SPY 770.19 > 200SMA 709.87",
+      "value": 770.19,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -173,7 +173,7 @@
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@26.46; horizontal support (9 touches)] | bounce=True | confirm[none] | close 26.65 > EMA21 26.16 | bounce_date=2026-09-01",
+      "detail": "floor[Fib 0.5@26.46; horizontal support (7 touches)] | bounce=True | confirm[none] | close 26.49 > EMA21 26.19 | bounce_date=2026-09-01",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -197,15 +197,15 @@
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.5@26.46; horizontal support (9 touches)] | confirm[none] | price/EMA21 = 1.019 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.74x < 1.5x, no RSI-Div)",
-      "value": 1.019,
+      "detail": "floor[Fib 0.5@26.46; horizontal support (7 touches)] | confirm[none] | price/EMA21 = 1.011 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.74x < 1.5x, no RSI-Div)",
+      "value": 1.011,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock 1.74% [PASS] | B) 20d stock +5.9% vs SPY +0.6% = excess +5.3% [PASS] | passed_via=red-day",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock 1.74% [PASS] | B) 20d stock +4.5% vs SPY -0.4% = excess +4.9% [PASS] | passed_via=red-day",
       "value": 0.0174,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -229,8 +229,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-29 (in 56d, window 15-45)",
-      "value": 56,
+      "detail": "earnings 2026-10-29 (in 55d, window 15-45)",
+      "value": 55,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -245,8 +245,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 25.88 is 2.9% below price 26.65 (max 12%) | reward/risk vs +20% target = 6.92:1",
-      "value": 0.0289,
+      "detail": "stop 25.88 is 2.3% below price 26.49 (max 12%) | reward/risk vs +20% target = 8.69:1",
+      "value": 0.023,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

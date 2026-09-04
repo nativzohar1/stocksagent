@@ -1,24 +1,17 @@
 {
   "ticker": "TASE.TA",
-  "price": 13650.0,
+  "price": 13790.0,
   "verdict": "NO_GO",
-  "go_count": 9,
+  "go_count": 10,
   "blocked_at": "Risk geometry (stop distance)",
   "entry_path": null,
   "stop": 11140.35,
-  "risk_pct": 0.1839,
-  "target_20pct": 16380.0,
+  "risk_pct": 0.1921,
+  "target_20pct": 16548.0,
   "bounce_date": "2026-08-21",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
   "recent_bars": [
-    [
-      "2026-08-13",
-      11170.0,
-      12090.0,
-      11020.0,
-      12090.0
-    ],
     [
       "2026-08-14",
       12220.0,
@@ -113,9 +106,16 @@
     [
       "2026-09-02",
       12500.0,
-      13650.0,
+      13130.0,
       12320.0,
-      13650.0
+      13120.0
+    ],
+    [
+      "2026-09-03",
+      13050.0,
+      13790.0,
+      12950.0,
+      13790.0
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "ILA (agorot): yfinance price 13650.0 = ILS 136.50 (divide by 100). Stop/Target are in AGOROT too -> divide by 100 for ILS display. P/L% is currency-agnostic. NEVER read as USD.",
+      "detail": "ILA (agorot): yfinance price 13790.0 = ILS 137.90 (divide by 100). Stop/Target are in AGOROT too -> divide by 100 for ILS display. P/L% is currency-agnostic. NEVER read as USD.",
       "value": "ILA",
       "criterion": "agorot guardrail: .TA price is agorot; show ILS = price/100, not USD"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "LIVE OVERRIDE: lagged daily close 13120.00 -> live 13650.00 (fast_info)",
-      "value": 13650.0,
+      "detail": "LIVE OVERRIDE: lagged daily close 13650.00 -> live 13790.00 (fast_info)",
+      "value": 13790.0,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "SKIP",
-      "detail": "bars=228 | last_bar=2026-09-02 | session=2026-09-03 | history=batch | TASE calendar lag (last bar 2026-09-02 vs session 2026-09-03) \u2014 expected for .TA, not stale",
+      "detail": "bars=228 | last_bar=2026-09-03 | session=2026-09-04 | history=batch | TASE calendar lag (last bar 2026-09-03 vs session 2026-09-04) \u2014 expected for .TA, not stale",
       "value": 228,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,8 +157,8 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "^TA125.TA 4138.86 > 200SMA 4029.93",
-      "value": 4138.86,
+      "detail": "^TA125.TA 4169.55 > 200SMA 4034.08",
+      "value": 4169.55,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
@@ -172,17 +172,17 @@
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
-      "status": "NO_GO",
-      "detail": "floor[Fib 0.618@13575.58] | bounce=True | confirm[none] | close 13650.00 > EMA21 12293.87 | bounce_date=2026-08-21",
+      "status": "GO",
+      "detail": "floor[Fib 0.618@13575.58; horizontal support (3 touches)] | bounce=True | confirm[RSI-Div] | close 13790.00 > EMA21 12386.08 | bounce_date=2026-08-21",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
     {
       "stage": 3,
       "name": "Bullish RSI divergence",
-      "status": "SKIP",
+      "status": "GO",
       "detail": "informational sub-signal",
-      "value": false,
+      "value": true,
       "criterion": "price LL & RSI HL"
     },
     {
@@ -190,22 +190,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 1.85,
+      "value": 1.83,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
-      "status": "GO",
-      "detail": "floor[Fib 0.618@13575.58] | confirm[soft climax 1.85x] | price/EMA21 = 1.110 (band 0.85-1.15) | ELIGIBLE \u2014 UNCONFIRMED entry, requires LLM event anchor + 5-session time stop",
-      "value": 1.11,
-      "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
+      "status": "SKIP",
+      "detail": "Path C already satisfied (confirmed entry) \u2014 Path E not needed",
+      "value": null,
+      "criterion": "floor + bounce + soft confirm + EMA21 band, WITHOUT the EMA21 reclaim"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "GO",
-      "detail": "A) red day 2026-07-27 -1.87% -> stock 0.39% [PASS] | B) 20d stock +11.9% vs ^TA125.TA +2.9% = excess +9.0% [PASS] | passed_via=red-day",
+      "detail": "A) red day 2026-07-27 -1.87% -> stock 0.39% [PASS] | B) 20d stock +11.9% vs ^TA125.TA +3.4% = excess +8.5% [PASS] | passed_via=red-day",
       "value": 0.0039,
       "criterion": "red-day test OR 20d excess return >= +2% vs ^TA125.TA"
     },
@@ -229,8 +229,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-11-10 (in 68d, window 15-45)",
-      "value": 68,
+      "detail": "earnings 2026-11-10 (in 67d, window 15-45)",
+      "value": 67,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -245,8 +245,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "NO_GO",
-      "detail": "stop 11140.35 is 18.4% below price 13650.00 (max 12%) | reward/risk vs +20% target = 1.09:1",
-      "value": 0.1839,
+      "detail": "stop 11140.35 is 19.2% below price 13790.00 (max 12%) | reward/risk vs +20% target = 1.04:1",
+      "value": 0.1921,
       "criterion": "(price-stop)/price <= 12%"
     },
     {
@@ -285,7 +285,7 @@
       "stage": 3,
       "name": "Bounce catalyst anchor (Path E)",
       "status": "NEEDS_LLM",
-      "detail": "AI: the reversal started on bounce_date=2026-08-21 (pivot low 11310.00). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. MANDATORY \u2014 this ticker is a PATH E (unconfirmed, pre-EMA21) candidate: NO cited dated event => REFUSE the entry.",
+      "detail": "AI: the reversal started on bounce_date=2026-08-21 (pivot low 11310.00). Find what happened WITHIN 3 SESSIONS of that date: earnings / guidance / a company disclosure / a regulatory or contract event. A bounce anchored to a dated, cited event is a re-rating; a bounce anchored to nothing is mean-reversion noise. Informational for a Path C entry.",
       "value": "2026-08-21",
       "criterion": "Path E requires a dated, cited event within 3 sessions of bounce_date"
     },

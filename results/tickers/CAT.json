@@ -1,24 +1,17 @@
 {
   "ticker": "CAT",
-  "price": 800.14,
+  "price": 813.94,
   "verdict": "NO_GO",
   "go_count": 8,
   "blocked_at": "Entry trigger (Path C + Path E both failed)",
   "entry_path": null,
   "stop": 759.82,
-  "risk_pct": 0.0504,
-  "target_20pct": 960.17,
+  "risk_pct": 0.0665,
+  "target_20pct": 976.73,
   "bounce_date": "2026-09-02",
   "time_stop_sessions": null,
   "requires_llm_confirmation": false,
   "recent_bars": [
-    [
-      "2026-08-14",
-      854.0,
-      870.99,
-      850.0,
-      856.57
-    ],
     [
       "2026-08-17",
       864.03,
@@ -113,9 +106,16 @@
     [
       "2026-09-03",
       796.9,
-      803.91,
+      803.92,
       781.49,
       800.14
+    ],
+    [
+      "2026-09-04",
+      802.38,
+      821.0,
+      801.0,
+      813.94
     ]
   ],
   "bars_window": 15,
@@ -125,7 +125,7 @@
       "stage": 0,
       "name": "Currency (info only)",
       "status": "GO",
-      "detail": "USD 800.14",
+      "detail": "USD 813.94",
       "value": "USD",
       "criterion": "informational, US dollars"
     },
@@ -141,15 +141,15 @@
       "stage": 0,
       "name": "Live price (fast_info)",
       "status": "GO",
-      "detail": "live 800.14 == last close 800.14 (fresh, no override)",
-      "value": 800.14,
+      "detail": "live 813.94 == last close 813.94 (fresh, no override)",
+      "value": 813.94,
       "criterion": "patch lagged daily bar with live price"
     },
     {
       "stage": 0,
       "name": "Data integrity (info only)",
       "status": "GO",
-      "detail": "bars=252 | last_bar=2026-09-03 | session=2026-09-03 | history=batch | clean",
+      "detail": "bars=252 | last_bar=2026-09-04 | session=2026-09-04 | history=batch | clean",
       "value": 252,
       "criterion": "bar count / NaN / positive price / bar freshness (informational)"
     },
@@ -157,23 +157,23 @@
       "stage": 1,
       "name": "Sector trend (Regime, rank-only)",
       "status": "GO",
-      "detail": "SPY 773.17 > 200SMA 709.32",
-      "value": 773.17,
+      "detail": "SPY 770.19 > 200SMA 709.87",
+      "value": 770.19,
       "criterion": "ETF > 200SMA (rank-only, non-rejecting)"
     },
     {
       "stage": 1,
       "name": "Volatility (Upside DNA)",
       "status": "GO",
-      "detail": "52w range 161.0%",
-      "value": 1.6096,
+      "detail": "52w range 159.6%",
+      "value": 1.5961,
       "criterion": "(52wH-52wL)/52wL >= 40%"
     },
     {
       "stage": 3,
       "name": "Concrete floor + EMA21 breakout",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.618@817.41; horizontal support (4 touches)] | bounce=True | confirm[none] | close 800.14 < EMA21 822.96 | bounce_date=2026-09-02",
+      "detail": "floor[Fib 0.618@817.41; horizontal support (4 touches)] | bounce=True | confirm[none] | close 813.94 < EMA21 822.14 | bounce_date=2026-09-02",
       "value": null,
       "criterion": "on floor (Fib .5/.618 OR 2x support) + bounce + (RSI-Div OR Vol climax) + close>EMA21"
     },
@@ -190,22 +190,22 @@
       "name": "Volume climax",
       "status": "SKIP",
       "detail": "informational sub-signal",
-      "value": 0.98,
+      "value": 1.0,
       "criterion": ">= 2x avg volume"
     },
     {
       "stage": 3,
       "name": "Early entry (Path E)",
       "status": "NO_GO",
-      "detail": "floor[Fib 0.618@817.41; horizontal support (4 touches)] | confirm[none] | price/EMA21 = 0.972 (band 0.85-1.15) | blocked: no reversal confirm (vol 0.98x < 1.5x, no RSI-Div)",
-      "value": 0.972,
+      "detail": "floor[Fib 0.618@817.41; horizontal support (4 touches)] | confirm[none] | price/EMA21 = 0.990 (band 0.85-1.15) | blocked: no reversal confirm (vol 1.0x < 1.5x, no RSI-Div)",
+      "value": 0.99,
       "criterion": "floor + bounce + (RSI-Div OR >=1.5x vol) + 0.85 <= price/EMA21 <= 1.15, WITHOUT the EMA21 reclaim; requires LLM event anchor + time stop"
     },
     {
       "stage": 4,
       "name": "Relative Strength",
       "status": "NO_GO",
-      "detail": "A) red day 2026-07-29 -1.54% -> stock -6.91% [fail] | B) 20d stock -6.6% vs SPY +0.6% = excess -7.2% [fail] | passed_via=none",
+      "detail": "A) red day 2026-07-29 -1.54% -> stock -6.91% [fail] | B) 20d stock -3.4% vs SPY -0.4% = excess -3.0% [fail] | passed_via=none",
       "value": -0.0691,
       "criterion": "red-day test OR 20d excess return >= +2% vs SPY"
     },
@@ -213,8 +213,8 @@
       "stage": 2,
       "name": "PEG",
       "status": "GO",
-      "detail": "PEG 1.36 (< 1.8)",
-      "value": 1.36,
+      "detail": "PEG 1.39 (< 1.8)",
+      "value": 1.39,
       "criterion": "PEG < 1.8"
     },
     {
@@ -229,8 +229,8 @@
       "stage": 2,
       "name": "Next earnings (Catalyst)",
       "status": "NO_GO",
-      "detail": "earnings 2026-10-29 (in 56d, window 15-45)",
-      "value": 56,
+      "detail": "earnings 2026-10-29 (in 55d, window 15-45)",
+      "value": 55,
       "criterion": "earnings in 15-45 days"
     },
     {
@@ -245,8 +245,8 @@
       "stage": 5,
       "name": "Risk geometry (stop distance)",
       "status": "GO",
-      "detail": "stop 759.82 is 5.0% below price 800.14 (max 12%) | reward/risk vs +20% target = 3.97:1",
-      "value": 0.0504,
+      "detail": "stop 759.82 is 6.6% below price 813.94 (max 12%) | reward/risk vs +20% target = 3.01:1",
+      "value": 0.0665,
       "criterion": "(price-stop)/price <= 12%"
     },
     {

@@ -1,7 +1,7 @@
 {
   "scanner_version": "3.6",
-  "generated_utc": "2026-09-03T23:23:20.595249Z",
-  "session_date": "2026-09-03",
+  "generated_utc": "2026-09-04T23:07:56.005090Z",
+  "session_date": "2026-09-04",
   "universe_kind": "live",
   "universe_source": "live: Wikipedia S&P 100 (OEX) constituents table (101 tickers) + sentinel backfill (VST,CEG,CRWD,DDOG,TASE.TA)",
   "n": 106,
@@ -15,7 +15,7 @@
   "batch_history_hits": 106,
   "n_errors": 1,
   "failures": {
-    "HONA": "data: only 57 daily bars (< 200)"
+    "HONA": "data: only 58 daily bars (< 200)"
   },
   "errors": [
     "universe layer 'iShares OEF holdings' failed: OEF holdings CSV: no 'Ticker' header row found"
